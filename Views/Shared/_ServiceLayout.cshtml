@@ -10,16 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link href="~/Content/css/patient_dashboard.css" rel="stylesheet" />
-    @*<script>
-            (function () {
-                const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-                if (isLoggedIn) {
-                    document.documentElement.classList.add("logged-in");
-                }
-            })();
-        </script>*@
 
     @RenderSection("Styles", required: false)
+
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 </head>
 
@@ -92,18 +85,6 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            @*// === XỬ LÝ ĐĂNG XUẤT ===
-            const logoutButton = document.getElementById("dashboard-logout-button");
-            if (logoutButton) {
-                logoutButton.addEventListener("click", function (event) {
-                    event.preventDefault();
-                    localStorage.removeItem("isLoggedIn");
-                    document.documentElement.classList.remove("logged-in");
-
-                    // Chuyển hướng về trang chủ hoặc reload
-                    window.location.href = '@Url.Action("Index", "Home")';
-                });
-            }*@
 
             // === XỬ LÝ BẢO VỆ LINK (Client-side protection) ===
             function handleProtectedLinkClick(event) {
@@ -111,14 +92,14 @@
 
                 // Nếu MVC đã xử lý Authorize rồi thì đoạn này có thể bỏ qua,
                 // nhưng giữ lại để đúng logic cũ của bạn.
-                if (!isLoggedIn) {
+                @*if (!isLoggedIn) {
                     event.preventDefault();
                     const targetPath = event.currentTarget.getAttribute("href");
 
                     // Chuyển hướng đến trang Login
                     const loginUrl = '@Url.Action("Login", "Account")' + '?returnUrl=' + encodeURIComponent(targetPath);
                     window.location.href = loginUrl;
-                }
+                }*@
             }
 
             // Tìm các link cần bảo vệ (Dựa vào class hoặc href cụ thể)

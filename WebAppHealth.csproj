@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AppointmentManageController.cs" />
+    <Compile Include="Controllers\MedicalRecordController.cs" />
     <Compile Include="Models\DataModel\Appointment.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
@@ -194,6 +195,7 @@
     <Compile Include="Models\JobFormViewModel.cs" />
     <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\LookupAppointmentViewModel.cs" />
+    <Compile Include="Models\MedicalRecordViewModel.cs" />
     <Compile Include="Models\MedicineViewModel.cs" />
     <Compile Include="Models\NewsViewModel.cs" />
     <Compile Include="Models\PacsViewModel.cs" />
@@ -324,6 +326,7 @@
     <Content Include="Content\css\lookup_invoice.css" />
     <Content Include="Content\css\medical-news.css" />
     <Content Include="Content\css\noikhoa.css" />
+    <Content Include="Content\css\Results.css" />
     <Content Include="Content\css\staff-login.css" />
     <Content Include="Content\css\patient-guide.css" />
     <Content Include="Content\css\patient_dashboard.css" />
@@ -430,6 +433,7 @@
     <Content Include="Views\AppointmentManage\_AppointmentList.cshtml" />
     <Content Include="Views\AppointmentManage\_AppointmentDetail.cshtml" />
     <Content Include="Views\AppointmentManage\Results.cshtml" />
+    <Content Include="Views\MedicalRecord\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

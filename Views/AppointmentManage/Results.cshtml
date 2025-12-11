@@ -5,171 +5,7 @@
 }
 
 @section Styles {
-    <style>
-
-        .result-container {
-            max-width: 100rem;
-            margin: 0 auto;
-        }
-
-        .page-header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        .page-title {
-            color: #00bfa5;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 3rem;
-        }
-
-        .btn {
-            font-size: 1.5rem;
-        }
-
-        /* --- 2. DANH SÁCH (ACCORDION HEADER) --- */
-        .accordion-item {
-            border: none;
-            border-radius: 8px !important;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            overflow: hidden;
-        }
-
-        .accordion-button {
-            padding: 20px 25px;
-            background: #fff;
-            color: #333;
-            font-size: 1.5rem;
-        }
-
-            .accordion-button:not(.collapsed) {
-                background-color: #e0f2f1; /* Màu nền khi mở */
-                color: #00695c;
-                box-shadow: none;
-            }
-
-            .accordion-button:focus {
-                box-shadow: none;
-            }
-
-        /* Grid layout cho nội dung trong nút header */
-        .header-grid {
-            width: 100%;
-            display: grid;
-            grid-template-columns: 20% 35% 20% 20%;
-            align-items: center;
-            gap: 10px;
-        }
-
-        @@media (max-width: 768px) {
-            .header-grid {
-                grid-template-columns: 1fr;
-                gap: 5px;
-            }
-
-            .header-col {
-                margin-bottom: 5px;
-            }
-
-            .page-title {
-                font-size: 1.5rem;
-            }
-        }
-
-        .header-label {
-            font-size: 0.85rem;
-            color: #777;
-            display: none;
-        }
-
-        @@media (max-width: 768px) {
-            .header-label {
-                display: inline-block;
-                margin-right: 5px;
-            }
-        }
-
-        /* --- 3. CHI TIẾT PHIẾU KHÁM (CARD) --- */
-        .ticket-wrapper {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ticket-top-border {
-            height: 1rem;
-            background-color: var(--main);
-            /*            background: linear-gradient(90deg, #00bfa5, #2196f3);*/
-            width: 100%;
-        }
-
-        .ticket-header h4 {
-            color: #00bfa5;
-            font-weight: 700;
-            margin-top: 2rem;
-            font-size: 2rem;
-        }
-
-        .ticket-body {
-            padding: 30px;
-            font-size: 1.5rem;
-        }
-
-        .info-row {
-            display: flex;
-            margin-bottom: 12px;
-            border-bottom: 1px dashed #eee;
-            padding-bottom: 8px;
-        }
-
-        .info-label {
-            font-weight: 600;
-            width: 140px;
-            flex-shrink: 0;
-        }
-
-        .info-value {
-            font-weight: 500;
-            flex-grow: 1;
-        }
-
-        /* --- 4. BARCODE --- */
-        .barcode-box {
-            border: 2px solid #eee;
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-            background: #fafafa;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .barcode {
-            width: 100%;
-            min-height: 8rem;
-            max-width: 25rem;
-        }
-
-        /* Badge status */
-        .status-badge {
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 1.5rem;
-            font-weight: 600;
-            display: inline-block;
-            text-align: center;
-        }
-    </style>
+    <link href="~/Content/css/Results.css" rel="stylesheet" />
 }
 
 <div class="container py-4 result-container">
@@ -332,67 +168,237 @@
     }
 </div>
 
+<!-- Popup-->
+<div class="modal fade" id="cancelConfirmModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title fw-bold"><i class="fas fa-exclamation-triangle me-2"></i>XÁC NHẬN HỦY</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <p class="mb-1">Bạn có chắc chắn muốn hủy lịch hẹn này?</p>
+                <p class="text-muted small fst-italic">(Hành động này không thể hoàn tác)</p>
+            </div>
+            <div class="modal-footer justify-content-center pb-4 pt-0">
+                <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">Quay lại</button>
+                <button type="button" class="btn btn-danger px-4 rounded-pill fw-bold" id="btn-confirm-cancel-action">
+                    <i class="fas fa-trash-alt me-2"></i>Hủy lịch
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg">
+            <div class="modal-body p-4 text-center">
+                <div id="notify-icon" class="mb-3"></div>
+                <h4 id="notify-title" class="fw-bold mb-2"></h4>
+                <p id="notify-message" class="text-muted mb-4"></p>
+                <button type="button" class="btn btn-primary px-5 rounded-pill" data-bs-dismiss="modal" id="btn-close-notify">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*@section Scripts {
+        <script>
+            $(document).ready(function(){
+
+                // --- HÀM RENDER BARCODE ---
+                function renderBarcodes() {
+                    $(".barcode").each(function(){
+                        var val = $(this).data("value");
+                        if(val && typeof JsBarcode !== 'undefined'){
+                            try {
+                                JsBarcode(this, val, {
+                                    format: "CODE128",
+                                    lineColor: "#000",
+                                    width: 2,
+                                    height: 120,
+                                    displayValue: true,
+                                    fontSize: 16
+                                });
+                            } catch(e) {
+                                console.error("Lỗi tạo barcode:", e);
+                            }
+                        }
+                    });
+                }
+
+                // Gọi lần đầu khi trang load
+                renderBarcodes();
+
+                // Gọi lại khi bấm mở accordion (Fix lỗi barcode bị ẩn/nhỏ khi nằm trong tab ẩn)
+                $('.accordion-button').click(function() {
+                    setTimeout(renderBarcodes, 200); // Đợi hiệu ứng mở xong thì vẽ lại
+                });
+
+                // --- 2. LOGIC HỦY LỊCH VỚI POPUP ---
+                let appointmentIdToCancel = 0;
+                const cancelModal = new bootstrap.Modal(document.getElementById('cancelConfirmModal'));
+                const notifyModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+
+                // Khi bấm nút Hủy trên phiếu
+                $(document).on("click", ".btn-cancel", function(e) {
+                    e.preventDefault();
+                    appointmentIdToCancel = $(this).data("id");
+                    cancelModal.show();
+                });
+
+                // Khi bấm xác nhận trong Modal
+                $("#btn-confirm-cancel-action").click(function() {
+                    const btn = $(this);
+                    const originalHtml = btn.html();
+                    btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Đang xử lý...');
+
+                    $.ajax({
+                        url: '@Url.Action("CancelAppointment", "AppointmentManage")',
+                        type: 'POST',
+                        data: { id: appointmentIdToCancel },
+                        success: function(res) {
+                            cancelModal.hide();
+                            btn.prop('disabled', false).html(originalHtml);
+
+                            if (res.success) {
+                                showNotify("success", "Thành công!", res.message);
+                            } else {
+                                showNotify("error", "Lỗi!", res.message);
+                            }
+                        },
+                        error: function() {
+                            cancelModal.hide();
+                            btn.prop('disabled', false).html(originalHtml);
+                            showNotify("error", "Lỗi mạng!", "Không thể kết nối đến máy chủ.");
+                        }
+                    });
+                });
+
+                // Hàm hiện thông báo kết quả
+                function showNotify(type, title, msg) {
+                    const iconDiv = $("#notify-icon");
+                    const titleEl = $("#notify-title");
+
+                    if(type === "success") {
+                        iconDiv.html('<i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>');
+                        titleEl.removeClass("text-danger").addClass("text-success").text(title);
+                        $("#btn-close-notify").one("click", function() { location.reload(); }); // Reload khi đóng
+                    } else {
+                        iconDiv.html('<i class="fas fa-times-circle text-danger" style="font-size: 4rem;"></i>');
+                        titleEl.removeClass("text-success").addClass("text-danger").text(title);
+                        $("#btn-close-notify").off("click"); // Không reload nếu lỗi
+                    }
+                    $("#notify-message").text(msg);
+                    notifyModal.show();
+                }
+            });
+        </script>
+    }*@
+
 @section Scripts {
     <script>
         $(document).ready(function(){
 
-            // --- HÀM RENDER BARCODE ---
+            // --- 1. RENDER BARCODE (Giữ nguyên) ---
             function renderBarcodes() {
                 $(".barcode").each(function(){
                     var val = $(this).data("value");
                     if(val && typeof JsBarcode !== 'undefined'){
                         try {
                             JsBarcode(this, val, {
-                                format: "CODE128",
-                                lineColor: "#000",
-                                width: 2,
-                                height: 140,
-                                displayValue: true,
-                                fontSize: 16
+                                format: "CODE128", lineColor: "#000",
+                                width: 3, height: 100,
+                                displayValue: true, fontSize: 20, background: "#ffffff"
                             });
-                        } catch(e) {
-                            console.error("Lỗi tạo barcode:", e);
-                        }
+                        } catch(e) { console.error("Lỗi barcode:", e); }
                     }
                 });
             }
-
-            // Gọi lần đầu khi trang load
             renderBarcodes();
+            $('.accordion-button').click(function() { setTimeout(renderBarcodes, 200); });
 
-            // Gọi lại khi bấm mở accordion (Fix lỗi barcode bị ẩn/nhỏ khi nằm trong tab ẩn)
-            $('.accordion-button').click(function() {
-                setTimeout(renderBarcodes, 200); // Đợi hiệu ứng mở xong thì vẽ lại
+            // --- 2. LOGIC HỦY LỊCH VỚI POPUP (CẬP NHẬT) ---
+            let appointmentIdToCancel = 0;
+            const cancelModal = new bootstrap.Modal(document.getElementById('cancelConfirmModal'));
+            const notifyModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+
+            // Khi bấm nút Hủy trên phiếu
+            $(document).on("click", ".btn-cancel", function(e) {
+                e.preventDefault();
+                appointmentIdToCancel = $(this).data("id");
+                cancelModal.show();
             });
 
-            // --- LOGIC HỦY LỊCH ---
-            $(".btn-cancel").click(function(e){
-                e.preventDefault(); // Ngăn sự kiện mặc định
-                if(!confirm("Bạn có chắc chắn muốn HỦY lịch hẹn này không? Hành động này không thể hoàn tác.")) return;
-
-                var id = $(this).data("id");
-                var btn = $(this);
+            // Khi bấm xác nhận trong Modal
+            $("#btn-confirm-cancel-action").click(function() {
+                const btn = $(this);
+                const originalHtml = btn.html();
                 btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Đang xử lý...');
 
                 $.ajax({
                     url: '@Url.Action("CancelAppointment", "AppointmentManage")',
                     type: 'POST',
-                    data: { id: id },
+                    data: { id: appointmentIdToCancel },
                     success: function(res) {
+                        cancelModal.hide();
+                        btn.prop('disabled', false).html(originalHtml);
+
                         if (res.success) {
-                            alert(res.message);
-                            location.reload();
+                            // === XỬ LÝ CẬP NHẬT GIAO DIỆN TẠI CHỖ (KHÔNG RELOAD) ===
+                            updateUiToCancelled(appointmentIdToCancel);
+
+                            showNotify("success", "Thành công!", res.message);
                         } else {
-                            alert(res.message);
-                            btn.prop('disabled', false).html('<i class="fas fa-times me-2"></i>Hủy lịch hẹn');
+                            showNotify("error", "Lỗi!", res.message);
                         }
                     },
                     error: function() {
-                        alert("Lỗi kết nối server.");
-                        btn.prop('disabled', false).html('<i class="fas fa-times me-2"></i>Hủy lịch hẹn');
+                        cancelModal.hide();
+                        btn.prop('disabled', false).html(originalHtml);
+                        showNotify("error", "Lỗi mạng!", "Không thể kết nối đến máy chủ.");
                     }
                 });
             });
+
+            // Hàm cập nhật giao diện sau khi hủy thành công
+            function updateUiToCancelled(id) {
+                // 1. Tìm phần tử cha (Accordion Item)
+                var header = $("#heading-" + id);
+                var body = $("#collapse-" + id);
+
+                // 2. Đổi màu và text của Badge trạng thái
+                var badge = header.find(".status-badge");
+                badge.removeClass("bg-warning bg-success bg-secondary text-dark")
+                     .addClass("bg-danger text-white")
+                     .text("Đã hủy");
+
+                // 3. Thay đổi nút bấm bên trong
+                // Tìm div chứa các nút hành động (class d-grid)
+                var btnContainer = body.find(".d-grid");
+                btnContainer.html('<button class="btn btn-secondary" disabled><i class="fas fa-ban me-2"></i>Lịch hẹn đã hủy</button>');
+            }
+
+            // Hàm hiện thông báo kết quả (Đã bỏ reload)
+            function showNotify(type, title, msg) {
+                const iconDiv = $("#notify-icon");
+                const titleEl = $("#notify-title");
+                const closeBtn = $("#btn-close-notify");
+
+                // Reset sự kiện cũ để tránh reload không mong muốn
+                closeBtn.off("click");
+
+                if(type === "success") {
+                    iconDiv.html('<i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>');
+                    titleEl.removeClass("text-danger").addClass("text-success").text(title);
+                } else {
+                    iconDiv.html('<i class="fas fa-times-circle text-danger" style="font-size: 4rem;"></i>');
+                    titleEl.removeClass("text-success").addClass("text-danger").text(title);
+                }
+                $("#notify-message").text(msg);
+                notifyModal.show();
+            }
         });
     </script>
 }

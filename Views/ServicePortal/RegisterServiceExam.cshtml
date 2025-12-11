@@ -694,7 +694,7 @@
         const slotsContainer = document.getElementById("time-slots-container");
         const lichHenError = document.getElementById("LichHen-error");
 
-        // Kiểm tra chế độ Đổi lịch từ ViewBag (được truyền từ C# xuống JS)
+        // Kiểm tra chế độ Đổi lịch
         const isEditMode = '@(ViewBag.IsReschedule)' === 'True';
 
         const masterTimeSlots = [
@@ -733,7 +733,7 @@
         }
 
         // ============================================================
-        // 3. LOGIC GỌI API & RENDER GRID (ĐÃ SỬA LỖI URL)
+        // 3. LOGIC GỌI API & RENDER GRID
         // ============================================================
         function loadSchedule() {
             const doctorId = document.getElementById("DoctorID").value;
@@ -746,6 +746,7 @@
             slotsContainer.innerHTML = '<div class="text-center p-3"><div class="spinner-border text-primary spinner-border-sm"></div> Đang tải lịch...</div>';
 
             const startDateStr = formatDateISO(currentRenderMonday);
+
             const url = '@Url.Action("GetDoctorSchedule", "ServicePortal")' + `?doctorId=${doctorId}&startDate=${startDateStr}`;
 
             fetch(url)
@@ -856,10 +857,9 @@
             const id = this.value;
             docSelect.innerHTML = '<option value="">Đang tải...</option>';
             docSelect.disabled = true;
-            renderGrid(null);
+            renderGrid(null); // Reset lịch
 
             if(id) {
-                // Sử dụng Url.Action cho bác sĩ luôn để đồng bộ
                 const url = '@Url.Action("GetDoctorsByDepartment", "ServicePortal")' + '?departmentId=' + id;
                 fetch(url)
                     .then(r => r.json())
@@ -906,7 +906,6 @@
 
         function validateForm() {
             let isValid = true;
-
             // Validate Selects
             if(!deptSelect.value) { showError(deptSelect, "DepartmentID-error", "Chọn khoa."); isValid=false; }
             else hideError(deptSelect, "DepartmentID-error");
@@ -914,7 +913,6 @@
             if(!docSelect.value) { showError(docSelect, "DoctorID-error", "Chọn bác sĩ."); isValid=false; }
             else hideError(docSelect, "DoctorID-error");
 
-            // Validate Inputs
             const hoTen = document.getElementById("FullName");
             if(!hoTen.value.trim()){ showError(hoTen, "FullName-error", "Nhập họ tên."); isValid=false; }
             else hideError(hoTen, "FullName-error");
@@ -968,12 +966,19 @@
                 .then(d => {
                     btn.disabled = false; btn.innerText = oldText;
                     if(d.success) {
-                        // --- ĐIỀN POPUP AN TOÀN ---
+
+                        // === LOGIC MỚI: KIỂM TRA ĐỔI LỊCH (ĐỂ KHÔNG HIỆN POPUP) ===
+                        if (d.isUpdate) {
+                            alert(d.message);
+                            window.location.href = '@Url.Action("Results", "AppointmentManage")';
+                            return; // Dừng lại ở đây, không chạy code popup bên dưới
+                        }
+
+                        // === LOGIC CŨ: HIỆN POPUP (NẾU LÀ TẠO MỚI) ===
                         const setText = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
 
                         setText("popup-ho-ten", document.getElementById("FullName").value);
 
-                        // Lấy text từ select option an toàn
                         if (deptSelect.selectedIndex >= 0)
                             setText("popup-chuyen-khoa", deptSelect.options[deptSelect.selectedIndex].text);
                         if (docSelect.selectedIndex >= 0)
@@ -990,7 +995,7 @@
                         }
 
                         if(typeof JsBarcode !== 'undefined' && d.bookingCode) {
-                            JsBarcode("#checkin-barcode", d.bookingCode, { format: "CODE128", displayValue: true, height: 50, width: 350, fontSize: 14 });
+                            JsBarcode("#checkin-barcode", d.bookingCode, { format: "CODE128", displayValue: true, height: 50, fontSize: 14 });
                         }
                         document.getElementById("popup").classList.add("show");
                     } else {

@@ -25,9 +25,11 @@ namespace WebAppHealth.Models.DataModel
         public string Diagnosis { get; set; }
         public string DoctorNotes { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
+        public Nullable<int> DoctorID { get; set; }
     
         public virtual Appointment Appointment { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PrescriptionDetail> PrescriptionDetails { get; set; }
+        public virtual Doctor Doctor { get; set; }
     }
 }
