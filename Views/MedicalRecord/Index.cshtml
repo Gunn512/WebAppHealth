@@ -1,0 +1,235 @@
+﻿@model List<WebAppHealth.Models.ViewModels.MedicalHistoryItem>
+@{
+    ViewBag.Title = "Hồ Sơ Bệnh Án";
+    Layout = "~/Views/Shared/_ServiceLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/Content/css/lookup_exam_results.css" rel="stylesheet" />
+}
+
+<div class="container-main">
+    <div id="loading" class="loading-overlay">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div id="appointment-list-view">
+        <header class="form-header">
+            <h1>HỒ SƠ BỆNH ÁN</h1>
+            <p>Toàn bộ lịch sử khám bệnh của bạn tại bệnh viện.</p>
+        </header>
+
+        <div class="appointment-list-container">
+            <div class="appointment-list-header">
+                <div class="col-item col-date">Ngày khám</div>
+                <div class="col-item col-spec">Chuyên khoa</div>
+                <div class="col-item col-doc">Bác sĩ</div>
+                <div class="col-item col-type">Loại khám</div>
+            </div>
+
+            @if (Model != null && Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <div class="appointment-list-row" data-record-id="@item.RecordID">
+                        <div class="col-item col-date" data-label="Ngày khám">@item.DateExam</div>
+                        <div class="col-item col-spec" data-label="Chuyên khoa">@item.DepartmentName</div>
+                        <div class="col-item col-doc" data-label="Bác sĩ">BS. @item.DoctorName</div>
+                        <div class="col-item col-type" data-label="Loại khám">@item.Type</div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="p-4 text-center text-muted">
+                    <p>Bạn chưa có lịch sử khám bệnh nào.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div id="appointment-detail-view" style="display: none">
+        <nav class="breadcrumb-nav">
+            <button type="button" id="back-to-list-btn" class="back-link">
+                <i class="fa-solid fa-arrow-left me-2"></i> Quay lại danh sách
+            </button>
+        </nav>
+
+        <header class="form-header">
+            <h1 id="detail-header-title">Chi Tiết Lần Khám</h1>
+        </header>
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="detail-section side-section">
+                    <h3><i class="fa-solid fa-circle-info me-2"></i> Thông Tin Cơ Bản</h3>
+                    <div class="section-content">
+                        <p><strong>Ngày khám:</strong> <span id="detail-date"></span></p>
+                        <p><strong>Chuyên khoa:</strong> <span id="detail-spec"></span></p>
+                        <p><strong>Bác sĩ:</strong> <span id="detail-doctor"></span></p>
+                        <p><strong>Số bệnh án:</strong> <span id="detail-record-id"></span></p>
+                    </div>
+                </div>
+
+                <div class="detail-section side-section">
+                    <h3><i class="fa-solid fa-calendar-check me-2"></i> Ghi Chú & Tái Khám</h3>
+                    <div class="section-content">
+                        <p><strong>Lời dặn bác sĩ:</strong></p>
+                        <p class="lv1" id="detail-notes"></p>
+                        <p>
+                            <strong>Hẹn tái khám:</strong>
+                            <span id="detail-followup" class="fw-bold text-danger"></span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="detail-section">
+                    <h3><i class="fa-solid fa-stethoscope me-2"></i> Chẩn Đoán</h3>
+                    <div class="section-content">
+                        <p><strong>Chẩn đoán:</strong></p>
+                        <ul id="detail-diagnosis-list">
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3><i class="fa-solid fa-pills me-2"></i> Đơn Thuốc</h3>
+                    <div class="section-content table-responsive">
+                        <table class="prescription-table">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên thuốc - Hàm lượng</th>
+                                    <th>SL</th>
+                                    <th>Hướng dẫn dùng</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detail-prescription-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="detail-section side-section">
+                    <h3><i class="fa-solid fa-vial me-2"></i> Kết Quả CLS</h3>
+                    <div class="section-content" id="detail-files">
+                        <p class="text-muted fst-italic">Không có dữ liệu hình ảnh cho lần khám này.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const listView = document.getElementById("appointment-list-view");
+            const detailView = document.getElementById("appointment-detail-view");
+            const backBtn = document.getElementById("back-to-list-btn");
+            const loading = document.getElementById("loading");
+            const clickableRows = document.querySelectorAll(".appointment-list-row");
+
+            // Element binding
+            const detailHeader = document.getElementById("detail-header-title");
+            const detailDate = document.getElementById("detail-date");
+            const detailSpec = document.getElementById("detail-spec");
+            const detailDoctor = document.getElementById("detail-doctor");
+            const detailRecordId = document.getElementById("detail-record-id");
+            const detailNotes = document.getElementById("detail-notes");
+            const detailFollowup = document.getElementById("detail-followup");
+            const detailDiagnosisList = document.getElementById("detail-diagnosis-list");
+            const prescriptionBody = document.getElementById("detail-prescription-body");
+
+            // --- CLICK ROW: FETCH DATA TỪ SERVER ---
+            clickableRows.forEach((row) => {
+                row.addEventListener("click", function (e) {
+                    const recordId = this.dataset.recordId;
+
+                    // Hiển thị loading
+                    loading.style.display = "block";
+
+                    // Gọi AJAX lấy chi tiết
+                    fetch('/MedicalRecord/GetDetail?recordId=' + recordId)
+                        .then(response => response.json())
+                        .then(res => {
+                            loading.style.display = "none";
+
+                            if (res.success) {
+                                const data = res.data;
+                                fillDetailData(data);
+
+                                // Chuyển view
+                                listView.style.display = "none";
+                                detailView.style.display = "block";
+                                window.scrollTo(0, 0);
+                            } else {
+                                alert(res.message);
+                            }
+                        })
+                        .catch(err => {
+                            loading.style.display = "none";
+                            console.error(err);
+                            alert("Có lỗi xảy ra khi tải dữ liệu.");
+                        });
+                });
+            });
+
+            // --- FUNCTION ĐỔ DỮ LIỆU VÀO VIEW ---
+            function fillDetailData(data) {
+                detailHeader.textContent = `Chi Tiết Lần Khám (Ngày ${data.DateExam})`;
+                detailDate.textContent = data.DateExam;
+                detailSpec.textContent = data.DepartmentName;
+                detailDoctor.textContent = `BS. ${data.DoctorName}`;
+                detailRecordId.textContent = data.PatientCode;
+                detailNotes.textContent = data.DoctorNotes || "Không có ghi chú.";
+                detailFollowup.textContent = data.ReExamDate;
+
+                // Xử lý Chẩn đoán (Diagnosis) - Tách dòng nếu có dấu xuống dòng
+                detailDiagnosisList.innerHTML = "";
+                if (data.Diagnosis) {
+                    const lines = data.Diagnosis.split('\n');
+                    lines.forEach(line => {
+                        if (line.trim()) {
+                            const li = document.createElement("li");
+                            li.className = "lv1";
+                            li.textContent = line;
+                            detailDiagnosisList.appendChild(li);
+                        }
+                    });
+                } else {
+                    detailDiagnosisList.innerHTML = "<li class='lv1'>Chưa cập nhật chẩn đoán</li>";
+                }
+
+                // Xử lý Đơn thuốc
+                prescriptionBody.innerHTML = "";
+                if (data.Prescriptions && data.Prescriptions.length > 0) {
+                    data.Prescriptions.forEach(p => {
+                        const tr = `
+                                <tr>
+                                    <td>${p.Stt}</td>
+                                    <td>${p.MedicineName}</td>
+                                    <td>${p.Quantity} ${p.Unit}</td>
+                                    <td>${p.Usage}</td>
+                                </tr>
+                            `;
+                        prescriptionBody.insertAdjacentHTML('beforeend', tr);
+                    });
+                } else {
+                    prescriptionBody.innerHTML = "<tr><td colspan='4' class='text-center'>Không có đơn thuốc.</td></tr>";
+                }
+            }
+
+            // --- QUAY LẠI ---
+            backBtn.addEventListener("click", function () {
+                detailView.style.display = "none";
+                listView.style.display = "block";
+                window.scrollTo(0, 0);
+            });
+        });
+    </script>
+}

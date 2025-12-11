@@ -1,0 +1,180 @@
+﻿
+.result-container {
+    max-width: 100rem;
+    margin: 0 auto;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.page-title {
+    color: #00bfa5;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 3rem;
+}
+
+.btn {
+    font-size: 1.5rem;
+}
+/* --- 2. DANH SÁCH (ACCORDION HEADER) --- */
+.accordion-item {
+    border: none;
+    border-radius: 8px !important;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.accordion-button {
+    padding: 20px 25px;
+    background: #fff;
+    color: #333;
+    font-size: 1.5rem;
+}
+
+    .accordion-button:not(.collapsed) {
+        background-color: #e0f2f1; /* Màu nền khi mở */
+        color: #00695c;
+        box-shadow: none;
+    }
+
+    .accordion-button:focus {
+        box-shadow: none;
+    }
+/* Grid layout cho nội dung trong nút header */
+.header-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 20% 35% 20% 20%;
+    align-items: center;
+    gap: 10px;
+}
+
+@@media (max-width: 768px) {
+    .header-grid {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+
+    .header-col {
+        margin-bottom: 5px;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+}
+
+.header-label {
+    font-size: 0.85rem;
+    color: #777;
+    display: none;
+}
+
+@@media (max-width: 768px) {
+    .header-label {
+        display: inline-block;
+        margin-right: 5px;
+    }
+}
+/* --- 3. CHI TIẾT PHIẾU KHÁM (CARD) --- */
+.ticket-wrapper {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.ticket-top-border {
+    height: 1rem;
+    background-color: var(--main);
+    /*            background: linear-gradient(90deg, #00bfa5, #2196f3);*/
+    width: 100%;
+}
+
+.ticket-header h4 {
+    color: #00bfa5;
+    font-weight: 700;
+    margin-top: 2rem;
+    font-size: 2rem;
+}
+
+.ticket-body {
+    padding: 30px;
+    font-size: 1.5rem;
+}
+
+.info-row {
+    display: flex;
+    margin-bottom: 12px;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 8px;
+}
+
+.info-label {
+    font-weight: 600;
+    width: 140px;
+    flex-shrink: 0;
+}
+
+.info-value {
+    font-weight: 500;
+    flex-grow: 1;
+}
+/* --- 4. BARCODE --- */
+.barcode-box {
+    border: 2px solid #eee;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    background: #fafafa;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.barcode {
+    width: 100%;
+    min-height: 8rem;
+    max-width: 25rem;
+}
+/* Badge status */
+.status-badge {
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: inline-block;
+    text-align: center;
+}
+/* Popup*/
+.modal-content {
+    border-radius: 15px;
+    overflow: hidden;
+    border: none;
+}
+
+.btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-body {
+    font-size: 1.8rem;
+}
+
+.modal-footer {
+    border-top: none;
+}

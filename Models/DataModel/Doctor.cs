@@ -19,6 +19,7 @@ namespace WebAppHealth.Models.DataModel
         {
             this.Schedules = new HashSet<Schedule>();
             this.Appointments = new HashSet<Appointment>();
+            this.MedicalRecords = new HashSet<MedicalRecord>();
         }
     
         public int DoctorID { get; set; }
@@ -37,5 +38,7 @@ namespace WebAppHealth.Models.DataModel
         public virtual Position Position1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Appointment> Appointments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MedicalRecord> MedicalRecords { get; set; }
     }
 }

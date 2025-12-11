@@ -61,6 +61,7 @@
     <Property Name="PositionID" Type="Int32" />
     <NavigationProperty Name="Position1" Relationship="HealthDBModel.FK_Doctors_Positions" FromRole="Doctor" ToRole="Position" />
     <NavigationProperty Name="Appointments" Relationship="HealthDBModel.FK_Appointments_Doctors" FromRole="Doctor" ToRole="Appointment" />
+    <NavigationProperty Name="MedicalRecords" Relationship="HealthDBModel.FK_MedicalRecords_Doctors" FromRole="Doctor" ToRole="MedicalRecord" />
   </EntityType>
   <EntityType Name="Invoice">
     <Key>
@@ -85,6 +86,8 @@
     <Property Name="CreatedDate" Type="DateTime" Precision="3" />
     <NavigationProperty Name="Appointment" Relationship="Self.FK__MedicalRe__Appoi__5FB337D6" FromRole="MedicalRecords" ToRole="Appointments" />
     <NavigationProperty Name="PrescriptionDetails" Relationship="Self.FK__Prescript__Recor__656C112C" FromRole="MedicalRecords" ToRole="PrescriptionDetails" />
+    <Property Name="DoctorID" Type="Int32" />
+    <NavigationProperty Name="Doctor" Relationship="HealthDBModel.FK_MedicalRecords_Doctors" FromRole="MedicalRecord" ToRole="Doctor" />
   </EntityType>
   <EntityType Name="Medicine">
     <Key>
@@ -479,6 +482,10 @@
       <End Role="Doctor" EntitySet="Doctors" />
       <End Role="Appointment" EntitySet="Appointments" />
     </AssociationSet>
+    <AssociationSet Name="FK_MedicalRecords_Doctors" Association="HealthDBModel.FK_MedicalRecords_Doctors">
+      <End Role="Doctor" EntitySet="Doctors" />
+      <End Role="MedicalRecord" EntitySet="MedicalRecords" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="TriAn">
     <Key>
@@ -601,6 +608,18 @@
         <PropertyRef Name="DoctorID" />
       </Principal>
       <Dependent Role="Appointment">
+        <PropertyRef Name="DoctorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MedicalRecords_Doctors">
+    <End Type="HealthDBModel.Doctor" Role="Doctor" Multiplicity="0..1" />
+    <End Type="HealthDBModel.MedicalRecord" Role="MedicalRecord" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Doctor">
+        <PropertyRef Name="DoctorID" />
+      </Principal>
+      <Dependent Role="MedicalRecord">
         <PropertyRef Name="DoctorID" />
       </Dependent>
     </ReferentialConstraint>

@@ -128,6 +128,7 @@
           <Property Name="Diagnosis" Type="nvarchar(max)" />
           <Property Name="DoctorNotes" Type="nvarchar(max)" />
           <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="DoctorID" Type="int" />
         </EntityType>
         <EntityType Name="Medicines">
           <Key>
@@ -488,6 +489,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MedicalRecords_Doctors">
+          <End Role="Doctors" Type="Self.Doctors" Multiplicity="0..1" />
+          <End Role="MedicalRecords" Type="Self.MedicalRecords" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctors">
+              <PropertyRef Name="DoctorID" />
+            </Principal>
+            <Dependent Role="MedicalRecords">
+              <PropertyRef Name="DoctorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="HealthDBModelStoreContainer">
           <EntitySet Name="Appointments" EntityType="Self.Appointments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Candidates" EntityType="Self.Candidates" Schema="dbo" store:Type="Tables" />
@@ -577,6 +590,10 @@
             <End Role="Positions" EntitySet="Positions" />
             <End Role="Doctors" EntitySet="Doctors" />
           </AssociationSet>
+          <AssociationSet Name="FK_MedicalRecords_Doctors" Association="Self.FK_MedicalRecords_Doctors">
+            <End Role="Doctors" EntitySet="Doctors" />
+            <End Role="MedicalRecords" EntitySet="MedicalRecords" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -643,6 +660,7 @@
           <Property Name="PositionID" Type="Int32" />
           <NavigationProperty Name="Position1" Relationship="HealthDBModel.FK_Doctors_Positions" FromRole="Doctor" ToRole="Position" />
           <NavigationProperty Name="Appointments" Relationship="HealthDBModel.FK_Appointments_Doctors" FromRole="Doctor" ToRole="Appointment" />
+          <NavigationProperty Name="MedicalRecords" Relationship="HealthDBModel.FK_MedicalRecords_Doctors" FromRole="Doctor" ToRole="MedicalRecord" />
         </EntityType>
         <EntityType Name="Invoice">
           <Key>
@@ -667,6 +685,8 @@
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Appointment" Relationship="Self.FK__MedicalRe__Appoi__5FB337D6" FromRole="MedicalRecords" ToRole="Appointments" />
           <NavigationProperty Name="PrescriptionDetails" Relationship="Self.FK__Prescript__Recor__656C112C" FromRole="MedicalRecords" ToRole="PrescriptionDetails" />
+          <Property Name="DoctorID" Type="Int32" />
+          <NavigationProperty Name="Doctor" Relationship="HealthDBModel.FK_MedicalRecords_Doctors" FromRole="MedicalRecord" ToRole="Doctor" />
         </EntityType>
         <EntityType Name="Medicine">
           <Key>
@@ -1061,6 +1081,10 @@
             <End Role="Doctor" EntitySet="Doctors" />
             <End Role="Appointment" EntitySet="Appointments" />
           </AssociationSet>
+          <AssociationSet Name="FK_MedicalRecords_Doctors" Association="HealthDBModel.FK_MedicalRecords_Doctors">
+            <End Role="Doctor" EntitySet="Doctors" />
+            <End Role="MedicalRecord" EntitySet="MedicalRecords" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="TriAn">
           <Key>
@@ -1187,6 +1211,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MedicalRecords_Doctors">
+          <End Type="HealthDBModel.Doctor" Role="Doctor" Multiplicity="0..1" />
+          <End Type="HealthDBModel.MedicalRecord" Role="MedicalRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Doctor">
+              <PropertyRef Name="DoctorID" />
+            </Principal>
+            <Dependent Role="MedicalRecord">
+              <PropertyRef Name="DoctorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1261,6 +1297,7 @@
           <EntitySetMapping Name="MedicalRecords">
             <EntityTypeMapping TypeName="HealthDBModel.MedicalRecord">
               <MappingFragment StoreEntitySet="MedicalRecords">
+                <ScalarProperty Name="DoctorID" ColumnName="DoctorID" />
                 <ScalarProperty Name="RecordID" ColumnName="RecordID" />
                 <ScalarProperty Name="AppointmentID" ColumnName="AppointmentID" />
                 <ScalarProperty Name="Diagnosis" ColumnName="Diagnosis" />

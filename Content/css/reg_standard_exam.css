@@ -1,160 +1,7 @@
-html, body {
+/*html, body {
     font-family: Montserrat;
-}
+}*/
 
-
-/* =================================================================
-                            HEADER
-================================================================= */
-.portal-main {
-    padding: 0;
-}
-
-.portal-header {
-    width: 100%;
-    background-color: var(--main) !important;
-    padding: 0 12rem !important;
-    justify-content: center;
-}
-
-.portal-logo {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-}
-
-    .portal-logo img {
-        height: 4rem;
-    }
-
-.portal-auth-links {
-    font-size: 1.8rem;
-}
-
-.fa-user-shield {
-    margin-right: 1rem !important;
-    color: #fff !important;
-}
-
-#profileDropdown {
-    font-size: 1.6rem;
-    font-weight: 600;
-}
-
-/* Dropdown */
-.portal-auth-links .auth-link-login,
-.portal-auth-links .dropdown-toggle {
-    display: inline-flex;
-    align-items: center;
-    color: var(--white);
-    text-decoration: none;
-    font-size: 1.6rem;
-    font-weight: 500;
-    transition: opacity 0.3s ease;
-    padding: 2rem;
-    &:hover
-
-{
-    background-color: #01cdb5 !important;
-}
-
-}
-
-.portal-auth-links .dropdown-menu {
-    padding: unset;
-    display: block;
-    font-size: 1.6rem;
-}
-
-    .portal-auth-links .dropdown-menu a {
-        padding: 1rem 5rem !important;
-    }
-
-@media (min-width: 992px) {
-    .portal-auth-links .dropdown:hover .dropdown-menu {
-        display: block;
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-        pointer-events: auto;
-    }
-
-    .portal-auth-links .dropdown .dropdown-menu {
-        display: block;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(10px);
-        transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
-        pointer-events: none;
-    }
-}
-
-/* =================================================================
-STYLE CHO DROPDOWN HỒ SƠ
-================================================================= */
-.portal-auth-links .auth-link-login,
-.portal-auth-links .dropdown-toggle {
-    display: inline-flex;
-    align-items: center;
-    color: var(--white);
-    text-decoration: none;
-    font-size: 1.6rem;
-    font-weight: 500;
-    transition: opacity 0.3s ease;
-    padding: 2rem;
-    &:hover
-
-{
-    background-color: #01cdb5;
-}
-
-}
-
-.portal-auth-links .dropdown-menu {
-    display: block;
-    font-size: 1.6rem;
-}
-
-    .portal-auth-links .dropdown-menu a {
-        padding: 1rem 5rem;
-    }
-
-@media (min-width: 992px) {
-    .portal-auth-links .dropdown:hover .dropdown-menu {
-        display: block;
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-        pointer-events: auto;
-    }
-
-    .portal-auth-links .dropdown .dropdown-menu {
-        display: block;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(10px);
-        transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
-        pointer-events: none;
-    }
-}
-
-/* HỒ SƠ CỦA TÔI */
-.auth-link-login {
-    display: inline-flex;
-    align-items: center;
-}
-
-.auth-link-profile-dropdown {
-    display: none;
-}
-
-html.logged-in .auth-link-login {
-    display: none;
-}
-
-html.logged-in .auth-link-profile-dropdown {
-    display: block;
-}
 /* =================================================================
                                 FORM
 ================================================================= */
@@ -533,6 +380,9 @@ form {
 
 .popup-content p {
     margin-bottom: 1rem;
+    width: 100%;
+    max-width: 800rem;
+    max-height: 90vh;
 }
 
 .qr-code-placeholder {
@@ -550,7 +400,9 @@ form {
 
     .qr-code-placeholder img {
         width: 100%;
-        height: 100%;
+        max-width: 15rem;
+        height: auto;
+        display: block;
     }
 
 .popup-info {

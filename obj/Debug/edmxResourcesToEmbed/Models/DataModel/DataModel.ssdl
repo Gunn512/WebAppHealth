@@ -123,6 +123,7 @@
     <Property Name="Diagnosis" Type="nvarchar(max)" />
     <Property Name="DoctorNotes" Type="nvarchar(max)" />
     <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="DoctorID" Type="int" />
   </EntityType>
   <EntityType Name="Medicines">
     <Key>
@@ -483,6 +484,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_MedicalRecords_Doctors">
+    <End Role="Doctors" Type="Self.Doctors" Multiplicity="0..1" />
+    <End Role="MedicalRecords" Type="Self.MedicalRecords" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Doctors">
+        <PropertyRef Name="DoctorID" />
+      </Principal>
+      <Dependent Role="MedicalRecords">
+        <PropertyRef Name="DoctorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityContainer Name="HealthDBModelStoreContainer">
     <EntitySet Name="Appointments" EntityType="Self.Appointments" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Candidates" EntityType="Self.Candidates" Schema="dbo" store:Type="Tables" />
@@ -571,6 +584,10 @@
     <AssociationSet Name="FK_Doctors_Positions" Association="Self.FK_Doctors_Positions">
       <End Role="Positions" EntitySet="Positions" />
       <End Role="Doctors" EntitySet="Doctors" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MedicalRecords_Doctors" Association="Self.FK_MedicalRecords_Doctors">
+      <End Role="Doctors" EntitySet="Doctors" />
+      <End Role="MedicalRecords" EntitySet="MedicalRecords" />
     </AssociationSet>
   </EntityContainer>
 </Schema>

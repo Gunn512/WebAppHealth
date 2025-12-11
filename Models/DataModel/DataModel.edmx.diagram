@@ -45,6 +45,7 @@
         <EntityTypeShape EntityType="HealthDBModel.SystemConfig" Width="1.5" PointX="11.625" PointY="12.125" />
         <EntityTypeShape EntityType="HealthDBModel.Faq" Width="1.5" PointX="20.625" PointY="1.125" />
         <AssociationConnector Association="HealthDBModel.FK_Appointments_Doctors" />
+        <AssociationConnector Association="HealthDBModel.FK_MedicalRecords_Doctors" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

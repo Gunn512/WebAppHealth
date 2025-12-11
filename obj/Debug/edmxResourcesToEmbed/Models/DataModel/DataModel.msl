@@ -69,6 +69,7 @@
     <EntitySetMapping Name="MedicalRecords">
       <EntityTypeMapping TypeName="HealthDBModel.MedicalRecord">
         <MappingFragment StoreEntitySet="MedicalRecords">
+          <ScalarProperty Name="DoctorID" ColumnName="DoctorID" />
           <ScalarProperty Name="RecordID" ColumnName="RecordID" />
           <ScalarProperty Name="AppointmentID" ColumnName="AppointmentID" />
           <ScalarProperty Name="Diagnosis" ColumnName="Diagnosis" />

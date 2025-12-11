@@ -40,14 +40,16 @@ namespace WebAppHealth.Controllers
                 return Json(new { success = false, message = "Không tìm thấy lịch hẹn nào." });
             }
 
-            // Map sang ViewModel
+            // Map dữ liệu sang ViewModel
             var resultList = listAppt.Select(item => new AppointmentDetailVM
             {
                 AppointmentID = item.AppointmentID,
                 MaKCB = item.AppointmentCode,
                 HoTen = item.FullName,
                 NgaySinh = item.DOB.HasValue ? item.DOB.Value.ToString("dd/MM/yyyy") : "",
-                DoiTuong = item.HasHealthInsurance == true ? "Bảo hiểm y tế" : "Dịch vụ",
+                DoiTuong = !string.IsNullOrEmpty(item.AppointmentCode) && item.AppointmentCode.StartsWith("TBHDV")
+               ? "Khám dịch vụ"
+               : "Khám thường",
                 NgayKham = item.AppointmentDate.HasValue ? item.AppointmentDate.Value.ToString("dd/MM/yyyy") : "",
                 GioKham = item.TimeSlot,
                 ChuyenKhoa = item.DepartmentID.HasValue ? db.Departments.Find(item.DepartmentID)?.Name : "Khoa Khám Bệnh",
@@ -74,6 +76,30 @@ namespace WebAppHealth.Controllers
                 return RedirectToAction("Index");
             }
             TempData.Keep("SearchResults"); // Giữ lại data nếu user F5 1 lần
+            return View(model);
+
+            var ids = model.Select(x => x.AppointmentID).ToList();
+
+            // Truy vấn trạng thái mới nhất từ Database
+            var freshStatuses = db.Appointments
+                                  .Where(a => ids.Contains(a.AppointmentID))
+                                  .Select(a => new { a.AppointmentID, a.Status })
+                                  .ToList();
+
+            // Cập nhật lại Status vào model hiển thị
+            foreach (var item in model)
+            {
+                var freshItem = freshStatuses.FirstOrDefault(x => x.AppointmentID == item.AppointmentID);
+                if (freshItem != null)
+                {
+                    item.Status = freshItem.Status;
+                }
+            }
+            // ================================================
+
+            // Lưu ngược lại vào TempData để dùng cho lần reload sau (nếu có)
+            TempData["SearchResults"] = model;
+
             return View(model);
         }
 
