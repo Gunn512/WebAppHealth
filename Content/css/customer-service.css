@@ -1,0 +1,95 @@
+.service-list li.main-list {
+  position: relative;
+  padding: 0 0 0.5rem 1rem;
+}
+
+.service-list li {
+  font-size: 1.5rem !important;
+  color: var(--dark-gray);
+  padding: 0 2rem !important;
+}
+
+.service-list a::before {
+  content: "♦";
+  position: absolute;
+  color: var(--main);
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+  left: -0.5rem;
+  top: 0rem;
+  transform: translateY(50%);
+}
+
+.service-list a:hover {
+  color: var(--main);
+  text-decoration: underline;
+}
+
+.content-section .title-list {
+  text-decoration: none;
+  font-size: 1.8rem;
+}
+
+.content-section .title-list span {
+  font-weight: 700;
+}
+
+.content-section .img {
+  text-align: right;
+}
+
+.content-section img {
+  display: inline-block !important;
+  width: 90%;
+}
+
+/* MODAL */
+.modal-goi-kham.modal-content {
+  width: 90rem;
+  height: auto;
+  margin: auto;
+}
+
+.modal-goi-kham .modal-header {
+  background-color: var(--main);
+  height: 6rem;
+/*  padding: 0 2rem 3rem;*/
+  position: relative;
+  justify-content: center;
+}
+
+.modal-goi-kham .modal-header .modal-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--white);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.modal-goi-kham .modal-header .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+  position: absolute;
+  right: 1.5rem;
+}
+
+.modal-goi-kham .modal-body {
+  background-color: var(--white);
+  padding: 3rem;
+}
+
+.modal-goi-kham .modal-footer {
+  border-top: 1px solid #dee2e6;
+  background-color: var(--white);
+  justify-content: flex-end;
+  border-radius: 0 0 0.3rem 0.3rem;
+}
+
+.modal-goi-kham .modal-footer .btn {
+  background-color: var(--main);
+  border-color: var(--main);
+  font-size: 1.6rem;
+  padding: 0.8rem 2rem;
+}
+.modal-goi-kham .modal-footer .btn:hover {
+  opacity: 0.8;
+}

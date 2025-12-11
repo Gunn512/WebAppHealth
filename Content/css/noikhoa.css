@@ -1,0 +1,128 @@
+.sticky-sidebar {
+  position: sticky;
+  top: 5rem;
+  border-left: 3px dotted #eee;
+  z-index: 100;
+}
+
+.page-container .content-section p {
+  text-align: justify;
+}
+
+.page-container .content-section p {
+  text-align: justify;
+}
+
+.content-section img {
+  margin-top: 3rem;
+}
+
+.content-section .content-list span {
+  color: red;
+  font-weight: 600;
+}
+
+.content-section .content-list li::before {
+  display: none;
+}
+
+.personnel-section h3 {
+  margin-top: 5rem;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.personnel-section .row {
+  margin-left: 2rem;
+}
+
+.personnel-list li.main-list,
+.service-list li.main-list {
+  position: relative;
+  padding: 0 0 0.5rem 1rem;
+}
+
+.personnel-list li.main-list::before,
+.service-list li.main-list::before {
+  content: "♦";
+  position: absolute;
+  color: var(--main);
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+  left: -0.5rem;
+  top: 0.3rem;
+}
+
+.personnel-list li a,
+.service-list li a {
+  color: var(--dark-gray);
+  transition: all 0.3s ease;
+}
+
+.personnel-list li a:hover {
+  color: var(--main);
+  text-decoration: underline;
+}
+
+.personnel-list .doctor-list {
+  position: relative;
+}
+
+.personnel-list .doctor-list li {
+  margin-left: 3rem;
+}
+
+.personnel-list .list-dropdown {
+  border-left: 1px dotted var(--main);
+}
+
+.list-dropdown li {
+  margin: 0.6rem 0;
+  position: relative;
+}
+
+.list-dropdown li::before {
+  content: "-----♦";
+  position: absolute;
+  color: var(--main);
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+  left: -4rem;
+  top: 0.3rem;
+}
+
+.personnel-section .img:nth-child(even) {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.personnel-section .img:nth-child(old) {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.personnel-section img {
+  width: 30rem;
+  height: 20rem;
+  object-fit: cover;
+}
+
+.content-section .title-list {
+  font-weight: 700;
+  margin: 1.5rem 0;
+  margin-left: 0;
+  text-decoration: underline;
+}
+
+.content-section p {
+  margin-left: 2.5rem;
+}
+
+.content-section .content-list {
+  margin-left: 1.5rem;
+}
+
+.content-section li {
+  margin-bottom: 0.9rem;
+}

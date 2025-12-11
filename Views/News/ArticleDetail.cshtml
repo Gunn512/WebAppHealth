@@ -1,0 +1,105 @@
+﻿@using WebAppHealth.Models
+@model WebAppHealth.News
+
+@{
+    ViewBag.Title = Model.Title;
+    Layout = "~/Views/Shared/_HealthLayout.cshtml";
+
+    var sidebarList = ViewBag.SidebarNews as List<News>;
+
+    var breadcrumbs = new List<BreadcrumbItem>
+{
+        new BreadcrumbItem { Title = "Tin tức", Url = "" },
+        new BreadcrumbItem {
+            Title = Model.NewsCategory?.CategoryName ?? "Danh mục",
+            Url = Url.Action("MedicalNews", "News")
+        },
+        new BreadcrumbItem { Title = Model.Title, Url = "" }
+    };
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/intro.css" />
+    <link rel="stylesheet" href="~/Content/css/medical-news.css" />
+    <link rel="stylesheet" href="~/Content/css/article.css" />
+}
+
+<section class="banner-title">
+    <div class="container">
+        @Html.Partial("_SectionTitle", "CHI TIẾT TIN TỨC")
+    </div>
+</section>
+
+<section class="main-news page-container news-page-container py-5">
+    <div class="container">
+
+        @Html.Partial("_Breadcrumb", breadcrumbs)
+
+        <div class="row">
+
+            <div class="col-lg-8">
+                <article class="content-section">
+                    <h1 class="fw-bold mb-3">@Model.Title</h1>
+
+                    <div class="article-meta">
+                        <span>
+                            Bởi  <span class="author">@Model.Author</span>
+                        </span>
+                        <span class="me-3">
+                            <i class="fa-regular fa-calendar-days me-1"></i>
+                            @(Model.PublishDate.HasValue ? Model.PublishDate.Value.ToString("dd/MM/yyyy HH:mm") : "")
+                        </span>
+                        <span class="folder">
+                            <i class="fa-solid fa-folder-open me-1"></i>
+                            @(Model.NewsCategory?.CategoryName ?? "Tin tức")
+                        </span>
+                    </div>
+
+
+                    <div class="article-content">
+                        @Html.Raw(Model.Content)
+                    </div>
+                </article>
+
+                <div class="mb-4">
+                    <a href="@Url.Action("MedicalNews", "News")" class="btn btn-outline-primary">
+                        <i class="fa-solid fa-arrow-left me-2"></i> Trở về
+                    </a>
+                </div>
+            </div>
+
+            <aside class="col-lg-4 mt-5 mt-lg-0 sidebar">
+                <div class="widget">
+                    <div class="sidebar-widget-group news-sidebar-widget-group mb-4">
+                        <h3>Tin nổi bật</h3>
+                        <ul class="list-group list-group-flush">
+                            @if (sidebarList != null && sidebarList.Any())
+                            {
+                                foreach (var item in sidebarList)
+                                {
+                                    <li class="list-group-item">
+                                        <a href="@Url.Action("ArticleDetail", "News", new { id = item.NewsID })">
+                                            @item.Title
+                                        </a>
+                                        <div class="tag-lable">
+                                            <span class="badge-main">
+                                                @(item.NewsCategory?.CategoryName ?? "Tin tức")
+                                            </span>
+                                            <div class="text-muted mb-2">
+                                                <i class="fa-regular fa-calendar-days" aria-hidden="true"></i>
+                                                <span class="date ms-1">
+                                                    @(item.PublishDate.HasValue ? item.PublishDate.Value.ToString("dd-MM-yyyy") : "")
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </div>
+</section>

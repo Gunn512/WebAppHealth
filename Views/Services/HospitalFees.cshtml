@@ -1,0 +1,86 @@
+﻿@using WebAppHealth.Models
+@model List<ServiceModel>
+@{
+    ViewBag.Title = "Giá viện phí";
+    Layout = "~/Views/Shared/_HealthLayout.cshtml";
+
+    var breadcrumbs = new List<BreadcrumbItem>
+{
+        new BreadcrumbItem { Title = "Dịch vụ", Url = "#" },
+        new BreadcrumbItem { Title = "Giá viện phí", Url = "" }
+    };
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/intro.css" />
+    <link rel="stylesheet" href="~/Content/css/noikhoa.css" />
+    <link rel="stylesheet" href="~/Content/css/customer-service.css" />
+    <link rel="stylesheet" href="~/Content/css/patient-guide.css" />
+    <link rel="stylesheet" href="~/Content/css/hospital-fees.css" />
+}
+
+<section class="banner-title">
+    <div class="container">
+        @Html.Partial("_SectionTitle", "GIÁ VIỆN PHÍ")
+    </div>
+</section>
+
+<main class="page-container">
+    <div class="container">
+        @Html.Partial("_Breadcrumb", breadcrumbs)
+
+        <div class="mt-4">
+            <section class="content-section" data-aos="fade-up" data-aos-duration="1000">
+                <h2>Bảng giá viện phí Bệnh Viện Đa Khoa Tam Bình</h2>
+
+                <div class="pdf-button-group process-buttons">
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var doc in Model)
+                        {
+                            var activeClass = doc.IsActive ? "active" : "";
+                            var fullPath = Url.Content("~/asset/" + doc.FileName);
+
+                            <button class="pdf-tab-button @activeClass"
+                                    data-pdf-src="@fullPath">
+                                @doc.Title
+                            </button>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-danger">Không tìm thấy tài liệu nào.</p>
+                    }
+                </div>
+
+                <div class="pdf-viewer-container">
+                    <iframe id="pdf-viewer" src="" frameborder="0" width="100%" height="100%"></iframe>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const buttons = document.querySelectorAll(".pdf-tab-button");
+            const pdfViewer = document.getElementById("pdf-viewer");
+            const activeBtn = document.querySelector(".pdf-tab-button.active");
+
+            if (activeBtn && pdfViewer) {
+                pdfViewer.src = activeBtn.getAttribute("data-pdf-src");
+            }
+
+            buttons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    const pdfSrc = button.getAttribute("data-pdf-src");
+                    if (pdfViewer && pdfSrc) pdfViewer.src = pdfSrc;
+
+                    buttons.forEach((btn) => btn.classList.remove("active"));
+                    button.classList.add("active");
+                });
+            });
+        });
+    </script>
+}

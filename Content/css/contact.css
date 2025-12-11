@@ -1,0 +1,50 @@
+.contact-box {
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px;
+    transition: all 0.3s ease;
+    min-height: 20rem;
+    border: 1px solid #dfdfdf;
+}
+
+    .contact-box .icon-box {
+        color: #00a67e;
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .contact-box .fas{
+        color: var(--main);
+    }
+
+    .contact-box h3 {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--gray-dark);
+        margin-bottom: 1rem;
+    }
+
+    .contact-box p {
+        text-align: center;
+        color: #666;
+        margin-bottom: 5px;
+        font-size: 1.6rem;
+        line-height: 1.5;
+    }
+
+/* 2. Tiêu đề các mục bên dưới */
+.section-heading {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--main);
+    position: relative;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+/* 3. Tinh chỉnh Iframe */
+.fb-page-container,
+.map-container {
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}

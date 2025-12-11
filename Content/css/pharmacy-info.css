@@ -1,0 +1,156 @@
+.search-bar-section {
+  width: 60%;
+}
+
+.search-bar-section .form-control {
+  font-size: 1.5rem;
+  padding: 1rem 1.2rem;
+  outline: none !important;
+  box-shadow: 0 0 2px transparent !important;
+  border-radius: 0.5rem 0 0 0.5rem !important;
+  margin-right: 1rem;
+}
+
+.search-bar-section .form-control:focus {
+  box-shadow: 0 0 2px var(--main) !important;
+  border: 1px solid transparent !important;
+  outline: none !important;
+}
+
+.search-bar-section .search-label {
+  background-color: transparent !important;
+  border: none !important;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-right: 3rem;
+}
+
+.search-bar-section .search-button {
+  background-color: var(--main);
+  border: 1px solid transparent;
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: 0 1.5rem;
+  border-radius: 0.5rem !important;
+  transition: all 0.3s ease;
+}
+
+.search-bar-section .search-button:hover {
+  color: var(--main);
+  background-color: transparent;
+  border: 1px solid var(--main);
+}
+
+/* Item thuốc */
+
+.drug-item {
+  margin-bottom: 4rem;
+  min-height: 25rem;
+}
+
+.drug-item .img {
+  width: 33rem;
+  height: 25rem;
+  background-color: var(--white);
+}
+
+.drug-item .drug-image {
+  width: 100%;
+  height: 100% !important;
+  object-fit: cover;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+}
+
+.drug-item .card-body {
+  padding: 2rem;
+  height: 25rem;
+}
+
+.drug-title a {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--gray-dark);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.drug-title a::before {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 5rem;
+  height: 0.1rem;
+  background-color: var(--main);
+  top: 3rem;
+  left: 0;
+}
+
+.drug-title a:hover {
+  color: var(--main);
+}
+
+.drug-details {
+  list-style: none;
+  padding: 0;
+  margin-top: 1.5rem;
+}
+.drug-details li {
+  font-size: 1.5rem;
+  color: var(--gray-dark);
+  margin-bottom: 0.8rem;
+  line-height: 1.6;
+}
+
+.drug-details .box-content {
+  display: flex;
+}
+
+.drug-details .title {
+  min-width: 18rem;
+  font-weight: 600;
+}
+
+
+/* Trang tài liệu đính kèm*/
+.pdf-container {
+    width: 100%;
+    height: 800px;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.instruction-container h1.section-title {
+    color: var(--main);
+    margin-bottom: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.btn{
+    font-size:1.5rem;
+}
+
+.btn-outline-secondary {
+    color: var(--main) !important;
+    background-color: transparent !important;
+    border: 1px solid var(--main) !important;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover{
+    color: #fff !important;
+    background-color: var(--main) !important;
+}
+
+.btn-primary {
+    color: #fff !important;
+    background-color: var(--main) !important;
+    border: 1px solid var(--main) !important;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    color: var(--main) !important;
+    background-color: transparent !important;
+}

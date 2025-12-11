@@ -1,0 +1,173 @@
+﻿@model WebAppHealth.User
+@{
+    ViewBag.Title = "Đăng ký tài khoản";
+    Layout = "~/Views/Shared/_ServiceLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/login-register.css" />
+    @*<style>
+            /* Tùy chỉnh màu thông báo lỗi */
+            .validation-summary-errors {
+                color: #dc3545;
+                background-color: #f8d7da;
+                border-color: #f5c6cb;
+                padding: 10px;
+                border-radius: 5px;
+                margin-bottom: 15px;
+                list-style: none;
+            }
+        </style>*@
+}
+
+
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+        <div class="auth-container">
+
+            <form action="@Url.Action("Register", "Account")"
+                  method="POST"
+                  class="auth-form needs-validation"
+                  novalidate
+                  id="registerForm">
+
+                @Html.AntiForgeryToken()
+
+                <h2 class="auth-title text-center mb-4">ĐĂNG KÝ TÀI KHOẢN</h2>
+
+                @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                <div class="mb-3">
+                    <label for="PhoneNumber" class="form-label">Số điện thoại</label>
+                    <input type="tel"
+                           class="form-control"
+                           id="PhoneNumber"
+                           name="PhoneNumber"
+                           placeholder="Nhập số điện thoại"
+                           pattern="[0-9]{10}"
+                           required />
+                    <div class="invalid-feedback">Vui lòng nhập số điện thoại hợp lệ (10 số).</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="Email" class="form-label">Email</label>
+                    <input type="email"
+                           class="form-control"
+                           id="Email"
+                           name="Email"
+                           placeholder="Nhập địa chỉ Email"
+                           required />
+                    <div class="invalid-feedback">Vui lòng nhập email hợp lệ.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="PasswordHash" class="form-label">Mật khẩu</label>
+                    <div class="password-field-container position-relative">
+                        <input type="password"
+                               class="form-control"
+                               id="PasswordHash"
+                               name="PasswordHash"
+                               placeholder="Mật khẩu"
+                               minlength="6"
+                               required />
+
+                        <span class="toggle-password position-absolute top-50 end-0 translate-middle-y me-3"
+                              style="cursor: pointer; z-index: 10;">
+                            <i class="fa-regular fa-eye-slash"></i>
+                        </span>
+                        <div class="invalid-feedback">Vui lòng nhập mật khẩu (tối thiểu 6 ký tự).</div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="passwordConfirm" class="form-label">Nhập lại mật khẩu</label>
+                    <div class="password-field-container position-relative">
+                        <input type="password"
+                               class="form-control"
+                               id="passwordConfirm"
+                               placeholder="Nhập lại mật khẩu"
+                               required />
+
+                        <span class="toggle-password position-absolute top-50 end-0 translate-middle-y me-3"
+                              style="cursor: pointer; z-index: 10;">
+                            <i class="fa-regular fa-eye-slash"></i>
+                        </span>
+
+                        <div class="invalid-feedback" id="confirm-msg">
+                            Vui lòng nhập lại mật khẩu.
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success auth-button w-100">
+                    Đăng ký
+                </button>
+
+                <div class="auth-links justify-content-center mt-3 text-center">
+                    <a href="@Url.Action("Login", "Account")">Đã có tài khoản? Đăng nhập ngay</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // 1. BOOTSTRAP VALIDATION & PASSWORD MATCH CHECK
+            var form = document.getElementById("registerForm");
+            var password = document.getElementById("PasswordHash");
+            var confirmPassword = document.getElementById("passwordConfirm");
+            var confirmMsg = document.getElementById("confirm-msg");
+
+            form.addEventListener("submit", function (event) {
+                // Reset custom error
+                confirmPassword.setCustomValidity("");
+
+                // Kiểm tra mật khẩu khớp nhau
+                if (password.value !== confirmPassword.value) {
+                    confirmPassword.setCustomValidity("Mật khẩu không khớp");
+                    confirmMsg.textContent = "Mật khẩu nhập lại không khớp.";
+                }
+
+                // Kiểm tra tính hợp lệ chung
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add("was-validated");
+            }, false);
+
+            // Sự kiện khi người dùng đang nhập lại mật khẩu -> tự động check
+            confirmPassword.addEventListener("input", function () {
+                if (password.value === confirmPassword.value) {
+                    confirmPassword.setCustomValidity("");
+                } else {
+                    confirmPassword.setCustomValidity("Mật khẩu không khớp");
+                    confirmMsg.textContent = "Mật khẩu nhập lại không khớp.";
+                }
+            });
+
+            // 2. XỬ LÝ ẨN/HIỆN MẬT KHẨU (Eye Icon)
+            var toggleButtons = document.querySelectorAll(".toggle-password");
+            toggleButtons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    var input = this.previousElementSibling;
+                    var icon = this.querySelector("i");
+
+                    if (input.type === "password") {
+                        input.type = "text";
+                        icon.classList.remove("fa-eye-slash");
+                        icon.classList.add("fa-eye");
+                    } else {
+                        input.type = "password";
+                        icon.classList.remove("fa-eye");
+                        icon.classList.add("fa-eye-slash");
+                    }
+                });
+            });
+        });
+    </script>
+}
+

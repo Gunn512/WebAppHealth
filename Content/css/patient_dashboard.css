@@ -1,0 +1,229 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+:root {
+    --main: #01cdb5;
+    --blue: #007bff;
+    --indigo: #6610f2;
+    --purple: #6f42c1;
+    --pink: #e83e8c;
+    --red: #dc3545;
+    --orange: #fd7e14;
+    --yellow: #ffc107;
+    --green: #28a745;
+    --teal: #20c997;
+    --cyan: #17a2b8;
+    --white: #fff;
+    --gray: #6c757d;
+    --gray-dark: #343a40;
+    --primary: #007bff;
+    --secondary: #6c757d;
+    --success: #28a745;
+    --info: #17a2b8;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --light-gray: #f4f4f4;
+    --medium-gray: #ddd;
+    --dark-gray: #333;
+    --disabled-bg: #eee;
+    --error-color: #d9534f;
+    --font-family-sans-serif: Montserrat, Roboto, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    --font-family-monospace: "Courier New", Courier, monospace;
+}
+
+html {
+    font-size: 62.5%;
+    line-height: 1.6;
+    font-family: var(--font-family-sans-serif);
+}
+
+body {
+    font-size: 1.6rem;
+    color: var(--gray-dark);
+    max-width: 100vw;
+    overflow-x: hidden;
+    background-color: #f6f9f7 !important;
+}
+
+/* ================  Header ============= */
+.portal-header {
+    width: 100%;
+    height: 6rem;
+    background-color: var(--main);
+    padding: 0rem 12rem !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.portal-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+.portal-logo img {
+  height: 4rem;
+}
+
+.fa-user {
+  margin-right: 0.5rem;
+}
+
+/* =================================================================
+STYLE CHO DROPDOWN HỒ SƠ
+================================================================= */
+.portal-auth-links .auth-link-login,
+.portal-auth-links .dropdown-toggle {
+  display: inline-flex;
+  align-items: center;
+  color: var(--white);
+  text-decoration: none;
+  font-size: 1.6rem;
+  font-weight: 500;
+  transition: opacity 0.3s ease;
+  padding: 2rem;
+
+  &:hover {
+    background-color: #01cdb5;
+  }
+}
+
+.portal-auth-links .dropdown-menu {
+  padding: unset;
+  display: block;
+  font-size: 1.6rem;
+}
+
+.portal-auth-links .dropdown-menu a {
+  padding: 1rem 6rem;
+}
+
+@media (min-width: 992px) {
+  .portal-auth-links .dropdown:hover .dropdown-menu {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .portal-auth-links .dropdown .dropdown-menu {
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+  }
+}
+
+/* HỒ SƠ CỦA TÔI */
+.auth-link-login {
+  display: inline-flex;
+  align-items: center;
+}
+
+/*.auth-link-profile-dropdown {
+  display: none;
+}
+
+html.logged-in .auth-link-login {
+  display: none;
+}
+html.logged-in .auth-link-profile-dropdown {
+  display: block;
+}*/
+
+/* Main */
+.portal-main {
+  width: 100vw;
+  padding: 10rem 0;
+  background-color: #e8fbf3;
+}
+
+.portal-card {
+  display: block;
+  text-decoration: none;
+  background-color: var(--white);
+  border-bottom: 0.4rem solid var(--main);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  height: 100%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.portal-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.portal-card .portal-card-img-wrapper {
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+}
+
+.portal-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.portal-card:hover img {
+  transform: scale(1.05);
+}
+
+.portal-card h5 {
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: var(--gray-dark);
+  padding: 1.5rem 1rem;
+  margin: 0;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.4;
+  transition: color 0.3s ease;
+}
+
+.portal-card:hover h5 {
+  color: var(--main);
+}
+
+.portal-copyright {
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 1.2rem;
+  color: var(--gray);
+  background-color: #e9e9e9;
+  border-top: 1px solid #ddd;
+}
+.portal-copyright a {
+  color: var(--main);
+  text-decoration: none;
+}
+
+.portal-copyright a:hover {
+  text-decoration: underline;
+}
+
+.copyright {
+    background-color: #f0f1f1;
+    font-size: 1.5rem;
+}
+
+    .copyright p {
+        text-align: center;
+        color: var(--gray);
+    }
+
+    .copyright a {
+        color: var(--main) !important;
+    }
+
+        .copyright a:hover {
+            text-decoration: underline;
+        }

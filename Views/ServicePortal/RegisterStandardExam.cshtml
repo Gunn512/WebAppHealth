@@ -1,0 +1,456 @@
+﻿@model WebAppHealth.Models.RegisterExamViewModel
+@{
+    ViewBag.Title = "Đăng ký khám thường";
+    Layout = "~/Views/Shared/_ServiceLayout.cshtml";
+    bool isReschedule = ViewBag.IsReschedule == true;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/reg_standard_exam.css" />
+}
+
+<header class="form-header">
+    <h1>@(isReschedule ? "THAY ĐỔI LỊCH KHÁM THƯỜNG" : "ĐẶT LỊCH HẸN KHÁM THƯỜNG")</h1>
+</header>
+
+<form id="exam-form" novalidate>
+
+    @if (isReschedule)
+    {
+        <input type="hidden" name="OldAppointmentId" value="@ViewBag.RescheduleId" />
+    }
+
+    <div class="form-group">
+        <label for="FullName">Họ và Tên<span class="required-asterisk">*</span></label>
+        <input type="text" id="FullName" name="FullName" placeholder="Nguyễn Văn A"
+               value="@(Model?.FullName)" />
+        <span class="error-message" id="FullName-error">Vui lòng nhập họ và tên.</span>
+    </div>
+
+    <div class="form-group">
+        <label for="DOB">Ngày sinh<span class="required-asterisk">*</span></label>
+        <input type="date" id="DOB" name="DOB"
+               value="@(Model?.DOB.HasValue == true ? Model.DOB.Value.ToString("yyyy-MM-dd") : "")" />
+        <span class="error-message" id="DOB-error">Vui lòng chọn ngày sinh.</span>
+    </div>
+
+    <div class="form-group">
+        <label>Giới tính<span class="required-asterisk">*</span></label>
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="Gender" value="Nam"
+                       @(Model?.Gender == "Nam" ? "checked" : "") /> Nam
+            </label>
+            <label>
+                <input type="radio" name="Gender" value="Nữ"
+                       @(Model?.Gender == "Nữ" ? "checked" : "") /> Nữ
+            </label>
+        </div>
+        <span class="error-message" id="Gender-error">Vui lòng chọn giới tính.</span>
+    </div>
+
+    <div class="form-group">
+        <label for="CCCD">Số CCCD<span class="required-asterisk">*</span></label>
+        <input type="text" id="CCCD" name="CCCD" placeholder="Nhập 12 số CCCD" maxlength="12"
+               value="@(Model?.CCCD)" />
+        <span class="error-message" id="CCCD-error">Vui lòng nhập đủ 12 số CCCD.</span>
+    </div>
+
+    <div class="form-group">
+        <label for="Phone">Số điện thoại<span class="required-asterisk">*</span></label>
+        <input type="tel" id="Phone" name="Phone" placeholder="09xxxxxxxx"
+               value="@(Model?.Phone)" />
+        <span class="error-message" id="Phone-error">Vui lòng nhập số điện thoại hợp lệ.</span>
+    </div>
+
+    <div class="form-group">
+        <label for="Address">Địa chỉ<span class="required-asterisk">*</span></label>
+        <input type="text" id="Address" name="Address" placeholder="Địa chỉ chi tiết"
+               value="@(Model?.Address)" />
+        <span class="error-message" id="Address-error">Vui lòng nhập địa chỉ.</span>
+    </div>
+
+    <div class="form-group">
+        <label>Bảo hiểm y tế (BHYT)</label>
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="HasHealthInsurance" id="bhyt-co" value="1"
+                       @(Model?.HasHealthInsurance == "1" ? "checked" : "") /> Có
+            </label>
+            <label>
+                <input type="radio" name="HasHealthInsurance" id="bhyt-khong" value="0"
+                       @(Model?.HasHealthInsurance != "1" ? "checked" : "") /> Không
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="HealthInsuranceNumber">Số BHYT</label>
+        <input type="text" id="HealthInsuranceNumber" name="HealthInsuranceNumber"
+               placeholder="Nhập 15 ký tự số BHYT"
+               value="@(Model?.HealthInsuranceNumber)"
+               @(Model?.HasHealthInsurance == "1" ? "" : "disabled") />
+        <span class="error-message" id="HealthInsuranceNumber-error">Vui lòng nhập số BHYT (15 ký tự).</span>
+    </div>
+
+    <div class="form-group">
+        <label for="DepartmentID">Chọn chuyên khoa</label>
+        <select id="DepartmentID" name="DepartmentID" required>
+            <option value="">-- Vui lòng chọn chuyên khoa --</option>
+            @if (ViewBag.Departments != null)
+            {
+                foreach (var item in (SelectList)ViewBag.Departments)
+                {
+                    // Logic Selected
+                    var selected = (Model != null && Model.DepartmentID.ToString() == item.Value) ? "selected" : "";
+                    <option value="@item.Value" @selected>@item.Text</option>
+                }
+            }
+        </select>
+        <span class="error-message" id="DepartmentID-error">Vui lòng chọn chuyên khoa.</span>
+    </div>
+
+    <div class="form-group">
+        <label for="Symptoms">Mô tả tình trạng bệnh</label>
+        <textarea id="Symptoms" name="Symptoms" rows="4" placeholder="Mô tả ngắn gọn triệu chứng...">@(Model?.Symptoms)</textarea>
+    </div>
+
+    <fieldset class="form-group fieldset-group" id="lich-hen-group">
+        <legend class="fieldset-legend">
+            <span>Chọn Ngày và Giờ khám @(isReschedule ? "(MỚI)" : "")</span>
+            <div class="week-navigation">
+                <button type="button" id="btn-tuan-nay" class="week-nav-btn disabled">&lt; Tuần này</button>
+                <button type="button" id="btn-tuan-sau" class="week-nav-btn">Tuần sau &gt;</button>
+            </div>
+        </legend>
+        <div class="time-slots-container" id="time-slots-container"></div>
+        <span class="error-message" id="LichHen-error">Vui lòng chọn một mốc thời gian khám.</span>
+    </fieldset>
+
+    <div class="commitment-group">
+        <div>
+            <input type="checkbox" id="cam-ket" name="CamKet" />
+            <label for="cam-ket">Tôi cam kết thông tin là đúng sự thật.<span class="required-asterisk">*</span></label>
+        </div>
+        <span class="error-message" id="CamKet-error">Bạn phải đồng ý với cam kết.</span>
+    </div>
+
+    <button type="submit" id="submit-button" class="submit-btn">@(isReschedule ? "CẬP NHẬT LỊCH" : "ĐĂNG KÝ")</button>
+</form>
+
+
+<div class="popup-overlay" id="popup">
+    <div class="popup-content">
+        <button type="button" class="popup-close-icon" id="popup-return-btn">&times;</button>
+        <h2>@(isReschedule ? "Cập nhật thành công!" : "Đăng ký thành công!")</h2>
+        <p>Vui lòng chuyển khoản để hoàn tất.</p>
+        <div class="row mt-3 pt-3 border-top">
+            <div class="col-7 text-center p-8 popup-box">
+                <div class="qr-code-placeholder" id="payment-qr">
+                    <img src="~/asset/QRCode.jpg" alt="Mã QR thanh toán" style="max-width:100%; height:auto;" />
+                </div>
+                <div class="bank-info">
+                    <p><strong>Ngân hàng:</strong> <span>VIETCOMBANK</span></p>
+                    <p><strong>Tên thụ hưởng:</strong> <span>BỆNH VIỆN ĐA KHOA TAM BÌNH</span></p>
+                    <p><strong>Số tài khoản:</strong> <span>12345678945330</span></p>
+                    <p><strong>Tổng cộng:</strong> <span id="popup-total-cost" style="font-weight: bold; color: #d9534f"></span></p>
+                    <p><strong>Nội dung CK:</strong> <span>HO TEN - SDT - DK KCB TRUC TUYEN QUA WEBSITE</span></p>
+                </div>
+            </div>
+            <div class="col-5 p-8 popup-box">
+                <div class="popup-info">
+                    <p><strong>Họ tên:</strong> <span id="popup-ho-ten"></span></p>
+                    <p><strong>Chuyên khoa:</strong> <span id="popup-chuyen-khoa"></span></p>
+                    <p><strong>Lịch hẹn:</strong> <span id="popup-lich-hen"></span></p>
+                    <p><strong>SĐT:</strong> <span id="popup-sdt"></span></p>
+                    <p><strong>CCCD:</strong> <span id="popup-cccd"></span></p>
+                </div>
+                <div class="mt-4">
+                    <p class="mb-1 qr-box" style="font-weight: bold; text-align: left">
+                        Mã check-in (đưa mã cho nhân viên):
+                    </p>
+                    <svg id="checkin-barcode" class="qr-checkin-container"></svg>
+                </div>
+            </div>
+        </div>
+        <button type="button" id="popup-finish-btn" class="popup-btn">Xong</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // === PHẦN 1: LOGIC LỊCH HẸN ===
+
+            // Ngày sinh max = hôm qua
+            const dobInput = document.getElementById("DOB");
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            dobInput.max = yesterday.toISOString().split("T")[0];
+
+            const slotsContainer = document.getElementById("time-slots-container");
+            const lichHenError = document.getElementById("LichHen-error");
+            const btnTuanNay = document.getElementById("btn-tuan-nay");
+            const btnTuanSau = document.getElementById("btn-tuan-sau");
+
+            const timeSlots = [
+                { label: "07:00 - 08:00", value: "07:00-08:00" },
+                { label: "08:00 - 09:00", value: "08:00-09:00" },
+                { label: "09:00 - 10:00", value: "09:00-10:00" },
+                { label: "10:00 - 11:00", value: "10:00-11:00" },
+                { label: "13:00 - 14:00", value: "13:00-14:00" },
+                { label: "14:00 - 15:00", value: "14:00-15:00" },
+            ];
+
+            const dayLabels = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật"];
+
+            function getMonday(d) {
+                d = new Date(d);
+                d.setHours(0, 0, 0, 0);
+                var day = d.getDay(), diff = d.getDate() - day + (day == 0 ? -6 : 1);
+                return new Date(d.setDate(diff));
+            }
+
+            function formatDate(date) {
+                const d = date.getDate().toString().padStart(2, "0");
+                const m = (date.getMonth() + 1).toString().padStart(2, "0");
+                return `${d}/${m}`;
+            }
+
+            function hideGroupError() {
+                document.getElementById("lich-hen-group").classList.remove("error");
+                lichHenError.classList.remove("show");
+            }
+
+            function renderWeek(mondayDate) {
+                slotsContainer.innerHTML = "";
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+
+                for (let i = 0; i < 7; i++) {
+                    const currentDay = new Date(mondayDate);
+                    currentDay.setDate(mondayDate.getDate() + i);
+                    if (currentDay.getDay() === 0) continue; // Bỏ CN
+
+                    const dayName = dayLabels[i];
+                    const dayDate = formatDate(currentDay);
+
+                    const dayGroup = document.createElement("div");
+                    dayGroup.className = "day-group";
+                    dayGroup.innerHTML = `<strong>${dayName} <span class="day-date">(${dayDate})</span></strong>`;
+
+                    const slotsDiv = document.createElement("div");
+                    slotsDiv.className = "slots";
+
+                    const isDisableDay = currentDay <= now;
+
+                    timeSlots.forEach((slot) => {
+                        const label = document.createElement("label");
+                        const input = document.createElement("input");
+                        input.type = "radio";
+                        input.name = "LichHen";
+                        input.value = `${dayName}_${dayDate}_${slot.value}`;
+                        input.addEventListener("click", hideGroupError);
+
+                        const span = document.createElement("span");
+                        span.textContent = slot.label;
+
+                        if (isDisableDay) {
+                            input.disabled = true;
+                            label.style.opacity = "0.5";
+                            label.style.cursor = "not-allowed";
+                        }
+
+                        label.appendChild(input);
+                        label.appendChild(span);
+                        slotsDiv.appendChild(label);
+                    });
+
+                    dayGroup.appendChild(slotsDiv);
+                    slotsContainer.appendChild(dayGroup);
+                }
+            }
+
+            const today = new Date();
+            const currentMonday = getMonday(today);
+            const nextMonday = new Date(currentMonday);
+            nextMonday.setDate(currentMonday.getDate() + 7);
+
+            btnTuanNay.addEventListener("click", function () {
+                renderWeek(currentMonday);
+                btnTuanNay.classList.add("btn-primary"); btnTuanNay.classList.remove("btn-outline-primary");
+                btnTuanSau.classList.remove("btn-primary"); btnTuanSau.classList.add("btn-outline-primary");
+            });
+
+            btnTuanSau.addEventListener("click", function () {
+                renderWeek(nextMonday);
+                btnTuanSau.classList.add("btn-primary"); btnTuanSau.classList.remove("btn-outline-primary");
+                btnTuanNay.classList.remove("btn-primary"); btnTuanNay.classList.add("btn-outline-primary");
+            });
+
+            btnTuanNay.click(); // Init
+
+            // === PHẦN 2: LOGIC FORM & VALIDATION ===
+            const form = document.getElementById("exam-form");
+            const popup = document.getElementById("popup");
+            const radioBhytCo = document.getElementById("bhyt-co");
+            const radioBhytKhong = document.getElementById("bhyt-khong");
+            const inputSoBhyt = document.getElementById("HealthInsuranceNumber");
+
+            function toggleBhytInput() {
+                if (radioBhytCo.checked) {
+                    inputSoBhyt.disabled = false;
+                } else {
+                    inputSoBhyt.disabled = true;
+                    inputSoBhyt.value = "";
+                    inputSoBhyt.classList.remove("error");
+                    document.getElementById("HealthInsuranceNumber-error").classList.remove("show");
+                }
+            }
+            radioBhytCo.addEventListener("change", toggleBhytInput);
+            radioBhytKhong.addEventListener("change", toggleBhytInput);
+
+            function showError(input, errorId, msg) {
+                input.classList.add("error");
+                const errEl = document.getElementById(errorId);
+                if (errEl) { errEl.textContent = msg; errEl.classList.add("show"); }
+            }
+            function hideError(input, errorId) {
+                input.classList.remove("error");
+                document.getElementById(errorId).classList.remove("show");
+            }
+
+            const sdtRegex = /^(0[3|5|7|8|9])+([0-9]{8})\b$/;
+            const cccdRegex = /^\d{12}$/;
+
+            function validateForm() {
+                let isValid = true;
+                const hoTen = document.getElementById("FullName");
+                const dobInput = document.getElementById("DOB");
+                const cccd = document.getElementById("CCCD");
+                const sdt = document.getElementById("Phone");
+                const diaChi = document.getElementById("Address");
+                const chuyenKhoa = document.getElementById("DepartmentID");
+                const lichHen = document.querySelector('input[name="LichHen"]:checked');
+                const camKet = document.getElementById("cam-ket");
+                const dobValue = new Date(dobInput.value);
+                const today = new Date(); today.setHours(0,0,0,0);
+
+                // Họ tên
+                if (!hoTen.value.trim()) { showError(hoTen, "FullName-error", "Nhập họ tên."); isValid = false; }
+                else hideError(hoTen, "FullName-error");
+
+                // Ngày sinh
+                if (!dobInput.value) { showError(dobInput, "DOB-error", "Chọn ngày sinh."); isValid = false; }
+                else if (dobValue >= today) { showError(dobInput, "DOB-error", "Ngày sinh không hợp lệ."); isValid = false; }
+                else hideError(dobInput, "DOB-error");
+
+                // Giới tính
+                if (!document.querySelector('input[name="Gender"]:checked')) {
+                    document.querySelector(".radio-group").classList.add("error");
+                    document.getElementById("Gender-error").classList.add("show");
+                    isValid = false;
+                } else {
+                    document.querySelector(".radio-group").classList.remove("error");
+                    document.getElementById("Gender-error").classList.remove("show");
+                }
+
+                // CCCD
+                if (!cccd.value.trim()) { showError(cccd, "CCCD-error", "Nhập CCCD."); isValid = false; }
+                else if (!cccdRegex.test(cccd.value)) { showError(cccd, "CCCD-error", "CCCD 12 số."); isValid = false; }
+                else hideError(cccd, "CCCD-error");
+
+                // SĐT
+                if (!sdt.value.trim()) { showError(sdt, "Phone-error", "Nhập SĐT."); isValid = false; }
+                else if (!sdtRegex.test(sdt.value)) { showError(sdt, "Phone-error", "SĐT sai."); isValid = false; }
+                else hideError(sdt, "Phone-error");
+
+                // Địa chỉ
+                if (!diaChi.value.trim()) { showError(diaChi, "Address-error", "Nhập địa chỉ."); isValid = false; }
+                else hideError(diaChi, "Address-error");
+
+                // BHYT
+                if (radioBhytCo.checked) {
+                    if (!inputSoBhyt.value.trim()) { showError(inputSoBhyt, "HealthInsuranceNumber-error", "Nhập số BHYT."); isValid = false; }
+                    else if (inputSoBhyt.value.length < 10) { showError(inputSoBhyt, "HealthInsuranceNumber-error", "Số BHYT quá ngắn."); isValid = false; }
+                    else hideError(inputSoBhyt, "HealthInsuranceNumber-error");
+                }
+
+                // Chuyên khoa
+                if (!chuyenKhoa.value) { showError(chuyenKhoa, "DepartmentID-error", "Chọn khoa."); isValid = false; }
+                else hideError(chuyenKhoa, "DepartmentID-error");
+
+                // Lịch hẹn
+                if (!lichHen) {
+                    document.getElementById("lich-hen-group").classList.add("error");
+                    document.getElementById("LichHen-error").classList.add("show");
+                    isValid = false;
+                } else hideGroupError();
+
+                // Cam kết
+                if (!camKet.checked) { showError(camKet, "CamKet-error", "Cần cam kết."); isValid = false; }
+                else hideError(camKet, "CamKet-error");
+
+                return isValid;
+            }
+
+            // === PHẦN 3: SUBMIT FORM ===
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+                if (validateForm()) {
+                    const formData = new FormData(form);
+                    const submitBtn = document.getElementById("submit-button");
+                    const originalText = submitBtn.innerText;
+                    submitBtn.disabled = true; submitBtn.innerText = "Đang xử lý...";
+
+                    fetch('@Url.Action("RegisterStandardExam", "ServicePortal")', {
+                        method: 'POST', body: formData
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        submitBtn.disabled = false; submitBtn.innerText = originalText;
+                        if (data.success) {
+                            // --- ĐIỀN POPUP AN TOÀN ---
+                            const setText = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+
+                            setText("popup-ho-ten", document.getElementById("FullName").value);
+                            setText("popup-sdt", document.getElementById("Phone").value);
+                            setText("popup-cccd", document.getElementById("CCCD").value);
+
+                            const deptSelect = document.getElementById("DepartmentID");
+                            setText("popup-chuyen-khoa", deptSelect.options[deptSelect.selectedIndex].text);
+
+                            const lichHenRadio = document.querySelector('input[name="LichHen"]:checked');
+                            const lichHenText = lichHenRadio.nextElementSibling.textContent;
+                            const dayName = lichHenRadio.closest(".day-group").querySelector("strong").textContent;
+                            setText("popup-lich-hen", `${dayName} - ${lichHenText}`);
+
+                            const isBhyt = document.querySelector('input[name="HasHealthInsurance"]:checked').value === "1";
+                            setText("popup-total-cost", isBhyt ? "20.000 VNĐ" : "80.000 VNĐ");
+
+                            if (typeof JsBarcode !== 'undefined') {
+                                JsBarcode("#checkin-barcode", data.bookingCode, { format: "CODE128", displayValue: true, height: 50, width: 350, fontSize: 14 });
+                            }
+                            popup.classList.add("show");
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(e => {
+                        console.error(e);
+                        submitBtn.disabled = false; submitBtn.innerText = originalText;
+                        alert("Lỗi kết nối server.");
+                    });
+                } else {
+                    const err = document.querySelector(".error");
+                    if(err) err.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            });
+
+            document.getElementById("popup-finish-btn").addEventListener("click", () => window.location.href = '@Url.Action("PatientDashboard", "ServicePortal")');
+            document.getElementById("popup-return-btn").addEventListener("click", () => popup.classList.remove("show"));
+        });
+    </script>
+}

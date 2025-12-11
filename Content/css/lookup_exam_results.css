@@ -1,0 +1,274 @@
+body {
+  background-color: #e3e3e3;
+}
+
+.lv1 {
+  margin-left: 3rem;
+}
+
+.container-main {
+  width: 100rem;
+  background-color: #fff !important;
+  min-height: 100vh;
+  margin: 3rem auto;
+}
+.container-main .form-header {
+  text-align: center;
+  margin: 2rem auto;
+  padding: 2rem 3rem;
+  border-bottom: 2px solid #ddd;
+}
+.container-main .form-header h1 {
+  color: #fff;
+  font-weight: 600;
+  font-size: 3rem;
+}
+.container-main .form-header p {
+  font-size: 1.5rem;
+  color: #fff;
+  margin-top: 1rem;
+}
+
+/*
+ * VIEW 1: DANH SÁCH LỊCH SỬ KHÁM
+ */
+.appointment-list-container {
+  background-color: #ffffff;
+  border: 1px solid #212529;
+  overflow: hidden;
+  margin: 2rem 5rem;
+}
+
+.appointment-list-header,
+.appointment-list-row {
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 1.5rem 1.8rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.appointment-list-header {
+  background-color: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.appointment-list-row {
+  color: #333;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+.appointment-list-row:hover {
+  background-color: #eafffa; /* Màu xanh nhạt khi hover */
+}
+.appointment-list-row:last-child {
+  border-bottom: none;
+}
+
+/* Cập nhật: Logic 4 cột mới */
+.col-item {
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  word-break: break-word;
+  font-size: 1.4rem !important;
+}
+.col-date {
+  flex-basis: 20%;
+}
+.col-spec {
+  flex-basis: 30%;
+}
+.col-doc {
+  flex-basis: 30%;
+}
+.col-type {
+  flex-basis: 20%;
+}
+
+/* Ẩn label trên desktop */
+.col-item[data-label] {
+  font-size: 1rem;
+}
+.col-item[data-label]::before {
+  display: none;
+}
+.breadcrumb-nav {
+  padding-left: 3rem;
+  margin-bottom: 1.5rem;
+}
+.back-link {
+  background: none;
+  border: none;
+  color: var(--dark-gray);
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-top: 3rem;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.back-link:hover {
+  text-decoration: underline;
+  color: var(--main);
+}
+
+#detail-header-title {
+  text-transform: uppercase;
+}
+
+.detail-section {
+  background-color: #ffffff;
+  border-radius: 0.8rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin: 2rem 1rem;
+  overflow: hidden;
+  border: 1px solid #7f7f7f !important;
+}
+.detail-section h3 {
+  background-color: #f6f5f5;
+  border-bottom: 1px solid #e9ecef;
+  padding: 1rem 1.5rem;
+  font-size: 1.6rem !important;
+  font-weight: bold;
+  color: var(--main);
+  margin-bottom: 0;
+  text-transform: uppercase;
+}
+.detail-section h3 i {
+  color: var(main);
+}
+
+.section-content {
+  padding: 1.3rem;
+  font-size: 1.5rem !important;
+}
+.section-content p,
+.section-content ul,
+.section-content li {
+  margin-bottom: 1.3rem;
+  color: #333;
+}
+.section-content p:last-child,
+.section-content ul:last-child {
+  margin-bottom: 0;
+}
+.section-content ul {
+  padding-left: 2rem;
+}
+.section-content p strong {
+  color: #212529;
+  min-width: 12rem;
+  display: inline-block;
+}
+
+.prescription-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.prescription-table th,
+.prescription-table td {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.prescription-table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.prescription-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.file-link {
+  display: block;
+  background-color: #f6f5f5 !important;
+  /* border: 1px solid #cce5ff; */
+  border-radius: 5px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 2.5rem !important;
+  text-decoration: none;
+  color: var(--dark-gray);
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.file-link:hover {
+  background-color: #ffffff !important;
+  color: var(--main);
+}
+
+.file-link i {
+  margin-right: 0.75rem;
+  color: #dc3545;
+}
+
+.file-link:has(i.fa-file-image) i {
+  color: #28a745;
+}
+
+@media (max-width: 991px) {
+  .col-lg-8,
+  .col-lg-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-header h1 {
+    font-size: 1.75rem;
+  }
+  .form-header p {
+    font-size: 1rem;
+  }
+
+  .appointment-list-header {
+    display: none;
+  }
+
+  .appointment-list-row {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  /* Cập nhật: Bỏ flex-basis cho mobile */
+  .col-item {
+    flex-basis: auto;
+    width: 100%;
+    padding: 0.35rem 0;
+    font-size: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed #eee;
+  }
+  .col-item:last-child {
+    border-bottom: none;
+  }
+
+  .col-item[data-label]::before {
+    content: attr(data-label);
+    display: inline-block;
+    font-weight: bold;
+    color: #555;
+    margin-right: 1rem;
+  }
+
+  .section-content p strong {
+    min-width: unset;
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #555;
+  }
+  .section-content p {
+    line-height: 1.6;
+  }
+}

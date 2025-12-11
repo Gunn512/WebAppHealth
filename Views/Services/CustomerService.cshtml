@@ -1,0 +1,231 @@
+﻿@using WebAppHealth.Models
+@model List<Service>
+
+@{
+    ViewBag.Title = "Dịch vụ";
+    Layout = "~/Views/Shared/_HealthLayout.cshtml";
+
+    // 1. Breadcrumb
+    var breadcrumbs = new List<BreadcrumbItem>
+{
+        new BreadcrumbItem { Title = "Dịch vụ", Url = "" },
+        new BreadcrumbItem { Title = "Dịch vụ khách hàng", Url = "" }
+    };
+
+    // 2. Sidebar
+    var sidebarItems = new List<SidebarItem>
+{
+        new SidebarItem { Title = "Khám sức khỏe theo thông tư và các gói khám tầm soát bệnh", Url = "#kham-suc-khoe" },
+        new SidebarItem { Title = "Cấp cứu ngoại viện", Url = "#cap-cuu" },
+        new SidebarItem { Title = "Huấn luyện sơ cấp cứu", Url = "#huan-luyen" },
+        new SidebarItem { Title = "Hợp đồng phối hợp cấp cứu tại chỗ", Url = "#hop-dong" },
+        new SidebarItem { Title = "Đại lý bảo hiểm y tế", Url = "#bhyt" }
+    };
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/intro.css" />
+    <link rel="stylesheet" href="~/Content/css/noikhoa.css" />
+    <link rel="stylesheet" href="~/Content/css/customer-service.css" />
+}
+
+<section class="banner-title">
+    <div class="container">
+        @Html.Partial("_SectionTitle", "DỊCH VỤ")
+    </div>
+</section>
+
+<main class="page-container">
+    <div class="container">
+        @Html.Partial("_Breadcrumb", breadcrumbs)
+
+        <div class="mt-4">
+            <div class="row">
+                <div class="col-lg-3">
+                    <nav id="sidebarMenu" class="sticky-sidebar nav flex-column">
+                        @if (sidebarItems != null)
+                        {
+                            foreach (var item in sidebarItems)
+                            {
+                                <a class="nav-link" href="@item.Url">@item.Title</a>
+                            }
+                        }
+                    </nav>
+                </div>
+
+                <div class="col-lg-9">
+
+                    <section id="kham-suc-khoe" class="content-section" data-aos="fade-right" data-aos-delay="550" data-aos-duration="1000">
+                        <h2>Khám sức khỏe theo thông tư</h2>
+
+                        <div class="content-list">
+                            <div class="service-section">
+                                <div class="row">
+                                    <p>Để phục vụ nhu cầu khám tầm soát sức khỏe của cộng đồng, Bệnh viện chúng tôi đã triển khai tốt các dịch vụ khám, tư vấn, theo dõi và chăm sóc sức khỏe cho cá nhân và doanh nghiệp một cách nhanh chóng, hiệu quả và chuyên nghiệp nhất.</p>
+
+                                    <div class="col-md-6">
+                                        <div class="title-list">Các gói khám bao gồm:</div>
+
+                                        @if (Model != null && Model.Any())
+                                        {
+                                            <ul class="service-list">
+                                                @foreach (var service in Model)
+                                                {
+                                                    string folderPath = "~/asset/";
+                                                    string defaultFileName = "banner_03.jpg";
+                                                    string fileName = string.IsNullOrEmpty(service.Image) ? defaultFileName : service.Image;
+                                                    string fullImagePath = folderPath + fileName;
+
+                                                    <li class="main-list">
+                                                        <a href="#"
+                                                           class="text-decoration-none"
+                                                           data-bs-toggle="modal"
+                                                           data-bs-target="#servicelModal"
+                                                           data-image="@Url.Content(fullImagePath)"
+                                                           data-title="@service.Name">
+                                                            @service.Name
+                                                        </a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-muted fst-italic">Đang cập nhật danh sách gói khám...</p>
+                                        }
+
+                                        <p class="title-list">
+                                            Số điện thoại tư vấn: <span>1900066883</span>
+                                        </p>
+                                    </div>
+
+                                    <div class="col-md-6 img">
+                                        <img src="~/asset/banner_03.jpg" class="img-fluid rounded shadow-sm" alt="Khám sức khỏe" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="cap-cuu" class="content-section" data-aos="fade-left" data-aos-delay="550" data-aos-duration="1000">
+                        <h2>Cấp Cứu Ngoại Viện</h2>
+                        <div class="content-list">
+                            <div class="service-section">
+                                <div class="row">
+                                    <div class="col-md-6 img">
+                                        <img src="~/asset/banner_02.jpg" class="img-fluid rounded shadow-sm" alt="Cấp cứu ngoại viện" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p>Cấp cứu ngoại viện góp phần mang lại sự sống cho người bệnh, hỗ trợ người bệnh vượt qua nguy hiểm trong tình huống khẩn cấp.</p>
+                                        <p>Bệnh viện chúng tôi sẵn sàng phục vụ 24/24 với đội ngũ nhân viên chuyên nghiệp được đào tạo chuyên sâu về sơ cấp cứu cùng đầy đủ phương tiện và trang thiết giúp nhanh chóng xử lý cấp cứu tại chỗ với thời gian nhanh nhất.</p>
+                                        <p>Nếu bạn gặp những vấn đề khẩn cấp về tình trạng sức khỏe như tai nạn, bệnh cấp tính nghiêm trọng, bị thương, hãy gọi khoa Cấp cứu - Bệnh viện ĐKKKV Thủ Đức theo số <span>+(84) 28 38966894</span> để được hỗ trợ dịch vụ hoặc đến ngay khoa Cấp cứu của bệnh viện để được xử lý kịp thời.</p>
+                                        <p class="title-list">Cấp cứu vệ tinh 115: <a href="#">Chi tiết tại đây</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="huan-luyen" class="content-section" data-aos="fade-right" data-aos-delay="550" data-aos-duration="1000">
+                        <h2>Huấn Luyện Sơ Cấp Cứu</h2>
+                        <div class="content-list">
+                            <div class="service-section">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p>Huấn luyện sơ cấp cứu là khóa học cung cấp những kiến thức cơ bản về sơ cứu vết thương và hướng dẫn những thao tác thực hiện để có thể trợ giúp hay chữa trị lúc ban đầu cho nạn nhân trước khi có xe cứu thương, hoặc được nhân viên y tế chữa trị.</p>
+                                        <p>Bệnh viện chúng tôi đã và đang triển khai tốt loại hình dịch vụ này nhằm hỗ trợ và cung cấp kiến thức cơ bản cho mọi đối tượng, đặc biệt là các Công ty, Doanh nghiệp, các Cơ quan, Đơn vị để họ có thể xử lý ban đầu khi bị tai nạn lao động.</p>
+                                        <p>Khi cần được hỗ trợ, hãy gọi số điện thoại <span>1900066883</span> để được nhân viên tư vấn.</p>
+                                    </div>
+                                    <div class="col-md-6 img">
+                                        <img src="~/asset/banner_04.jpg" class="img-fluid rounded shadow-sm" alt="Huấn luyện sơ cấp cứu" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="hop-dong" class="content-section" data-aos="fade-left" data-aos-delay="550" data-aos-duration="1000">
+                        <h2>Hợp Đồng Phối Hợp Cấp Cứu Tại Chỗ</h2>
+                        <div class="content-list">
+                            <div class="service-section">
+                                <div class="row">
+                                    <div class="col-md-6 img">
+                                        <img src="~/asset/banner_05.jpg" class="img-fluid rounded shadow-sm" alt="Hợp đồng phối hợp" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p>Loại hình dịch vụ này của Chúng tôi nhằm phối hợp hỗ trợ cho các Công ty, Doanh nghiệp, các Cơ quan, Đơn vị trong việc cấp cứu người bệnh khi họ có nhu cầu trong thời gian sớm nhất.</p>
+                                        <p><strong>Đối tượng:</strong> Tất cả các Công ty, Doanh nghiệp, các Cơ quan, Đơn vị đóng trong địa bàn và khu vực lân cận.</p>
+                                        <p><strong>Hình thức hoạt động:</strong> Có xe cứu thương, trang thiết bị và đội ngũ nhân viên phục vụ 24/24 các trường hợp vượt quá khả năng xử lý chuyên môn của đơn vị trong vòng 30 phút kể từ khi nhận được tin báo.</p>
+                                        <p class="title-list">Số điện thoại tư vấn: <span>1900066883</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="bhyt" class="content-section" data-aos="fade-right" data-aos-delay="550" data-aos-duration="1000">
+                        <h2>Đại Lý Bảo Hiểm Y Tế</h2>
+                        <div class="content-list">
+                            <div class="service-section">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p>Hiện tại Bệnh viện của chúng tôi đã triển khai đại lý bán BHYT nhằm đáp ứng nhu cầu cũng như hỗ trợ tất cả đối tượng người dân có nhu cầu đăng ký khám chữa bệnh ban đầu tại Bệnh viện Đa khoa khu vực Thủ Đức.</p>
+                                        <p>Chúng tôi với đội ngũ nhân viên nhiệt tình, năng động sẽ tư vấn, hỗ trợ người dân các thủ tục một cách đơn giản và nhanh nhất.</p>
+                                        <p class="title-list">Số điện thoại tư vấn: <span>1900066883</span></p>
+                                    </div>
+                                    <div class="col-md-6 img">
+                                        <img src="~/asset/banner_06.jpg" class="img-fluid rounded shadow-sm" alt="Bảo hiểm y tế" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="modal fade" id="servicelModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content modal-goi-kham">
+            <div class="modal-header">
+                <h5 class="modal-title" id="serviceModalLabel">Chi tiết gói khám</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="modalServiceImage" src="" class="img-fluid" alt="Chi tiết gói khám" style="width: 100%" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" style="background-color: var(--main); border-color: var(--main)">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var serviceModal = document.getElementById("servicelModal");
+
+            if (serviceModal) {
+                serviceModal.addEventListener("show.bs.modal", function (event) {
+                    // Lấy element được click
+                    var button = event.relatedTarget;
+
+                    // Lấy dữ liệu từ data attributes
+                    var imageSrc = button.getAttribute("data-image");
+                    var title = button.getAttribute("data-title"); // Lấy từ attribute data-title thay vì textContent để chính xác hơn
+
+                    // Cập nhật Modal
+                    var modalTitle = serviceModal.querySelector("#serviceModalLabel");
+                    var modalImage = serviceModal.querySelector("#modalServiceImage");
+
+                    modalTitle.textContent = title;
+                    modalImage.src = imageSrc;
+                });
+            }
+        });
+    </script>
+}
