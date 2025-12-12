@@ -1,0 +1,165 @@
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 !important;
+/*    overflow-y: auto;*/
+}
+
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+/* Ẩn trên một số trình duyệt khác nếu có */
+input[type="password"]::-webkit-contacts-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+}
+
+.portal-main{
+    padding: 8rem 0;
+}
+
+.auth-container {
+  background-color: var(--white);
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.07);
+  margin: 2rem auto;
+}
+
+.auth-form {
+    padding: 3rem 4rem;
+}
+
+.auth-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--main);
+    text-align: center;
+    margin-bottom: 3.5rem;
+}
+
+.auth-form .form-label {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--gray-dark);
+    margin-bottom: 1rem;
+}
+
+.auth-form .form-control {
+    font-size: 1.6rem;
+    padding: 0.5rem 1.2rem;
+    margin-bottom: 2rem;
+}
+
+    .auth-form .form-control:focus {
+        border-color: var(--main) !important;
+        box-shadow: none !important;
+    }
+
+.auth-form .form-check-label {
+    font-size: 1.5rem;
+}
+
+.auth-form .form-check-input:checked {
+    background-color: var(--main);
+    border-color: var(--main);
+}
+
+.auth-button {
+    width: 100%;
+    font-size: 1.8rem;
+    font-weight: 600;
+    padding: 1rem;
+    background-color: var(--main);
+    border-color: var(--main);
+    transition: all 0.3s ease;
+}
+
+    .auth-button:hover {
+        background-color: transparent;
+        border-color: var(--main);
+        color: var(--main);
+    }
+
+.auth-links {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+    .auth-links a {
+        text-decoration: none;
+    }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+.password-field-container {
+    position: relative;
+}
+
+    .password-field-container .form-control {
+        padding-right: 40px;
+    }
+/* Eyes */
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    font-size: 1.2rem !important;
+    color: var(--main);
+    cursor: pointer;
+    z-index: 10;
+    border: none;
+    background: transparent;
+    padding: 0;
+}
+
+.invalid-feedback {
+    font-size: 1.2rem;
+    color: #dc3545;
+    margin-top: -1.5rem;
+    margin-left: 2rem;
+}
+
+    .invalid-feedback::before {
+        content: "(*) ";
+    }
+
+/* Tắt viền đỏ/xanh và icon X/check của Bootstrap */
+.was-validated .form-control:invalid,
+.was-validated .form-control:valid {
+    border-color: #ced4da !important;
+    background-image: none !important;
+}
+
+    /* Khi focus, viền lúc nào cũng là màu xanh lá (--main) */
+    .was-validated .form-control:invalid:focus,
+    .was-validated .form-control:valid:focus,
+    .form-control:focus {
+        border-color: var(--main) !important;
+        box-shadow: 0 0 0 0.25rem rgba(0, 176, 154, 0.25) !important;
+    }
+
+    .alert{
+        margin-bottom: 1.5rem !important;
+    }
+
+    .alert ul{
+        margin-bottom: unset !important;
+    }

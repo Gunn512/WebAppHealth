@@ -1,0 +1,432 @@
+﻿@{
+    string IsActive(string controller, string action = null)
+    {
+        var routeData = ViewContext.RouteData.Values;
+        var currentController = routeData["controller"] as string;
+        var currentAction = routeData["action"] as string;
+
+        var isActive = string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase);
+
+        if (isActive && !string.IsNullOrEmpty(action))
+        {
+            isActive = string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase);
+        }
+
+        return isActive ? "active" : "";
+    }
+}
+
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title | Bệnh Viện Đa Khoa Tam Bình</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="~/asset/logo_03.png" type="image/x-icon" />
+
+    <!-- Bootrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+
+    <!-- Material icon -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons&family=Material+Icons+Outlined&family=Material+Icons+Round&family=Material+Icons+Sharp&family=Material+Icons+Two+Tone"
+          rel="stylesheet" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="~/Content/css/index.css" />
+    <link rel="stylesheet" href="~/Content/css/share.css" />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <style>
+        body {
+            background: linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url('@Url.Content("~/asset/medical-background.jpg")');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+    </style>
+    @RenderSection("Styles", required: false)
+</head>
+<body style="font-family: Montserrat;">
+    <!-- =========================== HEADER ================================= -->
+    @if (ViewBag.HideHeaderFooter != true)
+    {
+        <header class="header-top d-none d-lg-block">
+            <div class="container d-flex justify-content-between align-items-center py-2 h-100">
+
+                <div class="header-top-item">
+                    <a href="@Url.Action("Index", "Home")" class="logo">
+                        <img src="~/asset/logo_01.png" alt="logo" style="height: 50px" />
+                    </a>
+                </div>
+
+                <div class="header-top-item d-flex align-items-center">
+                    <div class="header-icon fs-4 me-2">
+                        <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                    </div>
+                    <a href="tel:1900033116" class="header-link text-decoration-none">Tổng đài CSKH: 1900033116</a>
+                </div>
+
+                <div class="header-top-item d-flex align-items-center">
+                    <div class="header-icon fs-4 me-2">
+                        <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                    </div>
+                    <a href="tel:02838966894" class="header-link text-decoration-none">
+                        Hotline: @WebAppHealth.Models.ConfigHelper.Get("Hotline")
+                    </a>
+                </div>
+
+                <div class="header-top-item d-flex align-items-center">
+                    <div class="header-icon fs-4 me-2">
+                        <i class="fa-solid fa-address-book" aria-hidden="true"></i>
+                    </div>
+                    <a href="@Url.Action("PatientDashboard","ServicePortal")"
+                       target="_blank"
+                       class="header-link text-decoration-none">
+                        Đặt lịch khám bệnh trực tuyến tại đây hoặc gọi @WebAppHealth.Models.ConfigHelper.Get("Telephone_1")
+                    </a>
+                </div>
+            </div>
+        </header>
+    }
+
+    <!-- =============================== NAVBAR =============================== -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top"
+         id="mainNavbar">
+        <div class="container">
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- ICON HOME -->
+                    <li class="nav-item @IsActive("Home", "Index")">
+                        <a class="nav-link "
+                           aria-current="page"
+                           href="@Url.Action("Index","Home")">
+                            <i class="material-icons" aria-hidden="true">home</i>
+                        </a>
+                    </li>
+
+                    <!-- GIỚI THIỆU -->
+                    <li class="nav-item @IsActive("Intro")">
+                        <a class="nav-link " href="@Url.Action("Index","Intro")">Giới thiệu</a>
+                    </li>
+
+                    <!-- KHÁM CHỮA BỆNH -->
+                    <li class="nav-item dropdown @IsActive("Departments")">
+                        <a class="nav-link dropdown-toggle "
+                           href="#"
+                           id="khamChuaBenhDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            Khám chữa bệnh
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="khamChuaBenhDropdown">
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("Calender","Departments")">Lịch khám chữa bệnh</a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("InternalMedicine","Departments")">Nội khoa</a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("Surgery","Departments")">Ngoại khoa</a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("Paraclinical","Departments")">Cận lâm sàng</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- DỊCH VỤ -->
+                    <li class="nav-item dropdown @IsActive("Services")">
+                        <a class="nav-link dropdown-toggle "
+                           href="#"
+                           id="dichVuDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            Dịch vụ
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dichVuDropdown">
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("CustomerService","Services")">Dịch vụ khách hàng</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("PatientGuide","Services")">Hướng dẫn quy trình - quy định</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("HospitalFees","Services")">Giá viện phí</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- TIN TỨC -->
+                    <li class="nav-item dropdown @IsActive("News")">
+                        <a class="nav-link dropdown-toggle "
+                           href="#"
+                           id="tinTucDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            Tin tức
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="tinTucDropdown">
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("MedicalNews","News")">Y học</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("Events","News")">Sự kiện</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("PharmacyInfo","News")">Thông tin dược</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("AdministrativeReform","News")">Cải cách hành chính</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- TUYỂN DỤNG -->
+                    <li class="nav-item dropdown @IsActive("Careers")">
+                        <a class="nav-link dropdown-toggle "
+                           href="#"
+                           id="tuyenDungDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            Tuyển dụng
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="tuyenDungDropdown">
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("JobOpenings","Careers")">Tuyển dụng</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- DÀNH CHO NHÂN VIÊN -->
+                    <li class="nav-item dropdown @IsActive("Staff")">
+                        <a class="nav-link dropdown-toggle "
+                           href="#"
+                           id="nhanVienDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            Dành cho nhân viên
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="nhanVienDropdown">
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("StaffLogin","Staff")">Pacs</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- LIÊN HỆ - HỎI ĐÁP -->
+                    <li class="nav-item dropdown @IsActive("ContactUs")">
+                        <a class="nav-link dropdown-toggle "
+                           href="#"
+                           id="lienHeDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            Liên hệ - Hỏi đáp
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="lienHeDropdown">
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("Contact","ContactUs")">Liên hệ</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="@Url.Action("FAQ","ContactUs")">Hỏi đáp</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- ICON KÍNH LÚP -->
+                    @*<li class="nav-item dropdown click-to-open">
+                              <a class="nav-link"
+                                 href="#"
+                                 id="searchDropdown"
+                                 role="button"
+                                 data-bs-toggle="dropdown"
+                                 aria-expanded="false"
+                                 data-bs-auto-close="outside">
+                                  <i class="material-icons" aria-hidden="true">search</i>
+                              </a>
+
+                              <div class="dropdown-menu dropdown-menu-end p-2"
+                                   aria-labelledby="searchDropdown">
+                                  <form action="/search" method="GET">
+                                      <div class="input-group">
+                                          <input class="form-control"
+                                                 type="search"
+                                                 name="keyword"
+                                                 placeholder="Nhập từ khóa..."
+                                                 aria-label="Tìm kiếm" />
+                                          <button class="btn btn-success"
+                                                  type="submit"
+                                                  style="
+                          background-color: var(--main);
+                          border-color: var(--main);
+                        ">
+                                              <i class="fa-solid fa-magnifying-glass"></i>
+                                          </button>
+                                      </div>
+                                  </form>
+                              </div>
+                          </li>*@
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="content">
+        @RenderBody()
+    </div>
+    <!-- =============================== FOOTER ======================================= -->
+    @if (ViewBag.HideHeaderFooter != true)
+    {
+        <footer class="main-footer pt-5 pb-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-12 text-center text-lg-start mb-4">
+                        <img src="~/asset/logo_01.png"
+                             alt="Logo Bệnh viện"
+                             class="footer-logo bg-white p-2 rounded"
+                             style="max-width: 20rem" />
+                    </div>
+
+                    <div class="col-lg-5 col-md-6 mb-4">
+                        <h3 class="footer-col__title h5 section-title">
+                            Thông tin liên hệ
+                            <div class="underline">
+                                <div class="line line1"></div>
+                                <div class="line line2"></div>
+                            </div>
+                        </h3>
+                        <ul class="contact-list list-unstyled">
+                            <li class="d-flex mb-2">
+                                <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                                <span class="contact-label">Địa chỉ:</span>
+                                <span>@WebAppHealth.Models.ConfigHelper.Get("Address")</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                                <span class="contact-label">Email:</span>
+                                <span>@WebAppHealth.Models.ConfigHelper.Get("Email")</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                                <span class="contact-label">Email(Phản hồi):</span>
+                                <span>@WebAppHealth.Models.ConfigHelper.Get("Email_CSKH")</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <i class="fa-solid fa-fax" aria-hidden="true"></i>
+                                <span class="contact-label">Fax:</span>
+                                <span>@WebAppHealth.Models.ConfigHelper.Get("Fax")</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <i class="fa-solid fa-phone" aria-hidden="true"></i>
+                                <span class="contact-label">Điện thoại:</span>
+                                <span>@WebAppHealth.Models.ConfigHelper.Get("Telephone_1")</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <i class="fa-solid fa-phone-volume" aria-hidden="true"></i>
+                                <span class="contact-label">Điện thoại đường dây nóng (Bệnh Viện):</span>
+                                <span class="contact-hotline">@WebAppHealth.Models.ConfigHelper.Get("Hotline")</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <i class="fa-solid fa-phone-volume" aria-hidden="true"></i>
+                                <span class="contact-label">Điện thoại đường dây nóng (Ngành Y Tế):</span>
+                                <span class="contact-hotline">@WebAppHealth.Models.ConfigHelper.Get("Telephone_healtht")</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <h3 class="footer-col__title h5 section-title">
+                            Kết nối với chúng tôi
+                            <div class="underline">
+                                <div class="line line1"></div>
+                                <div class="line line2"></div>
+                            </div>
+                        </h3>
+                        <div class="social-links mb-3">
+                            <a href="#" class="social-links__icon">
+                                <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
+                            </a>
+                            <a href="#" class="social-links__icon">
+                                <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+                            </a>
+                        </div>
+
+                        <h3 class="footer-col__title h5 section-title">
+                            Đường dẫn hữu ích
+                            <div class="underline">
+                                <div class="line line1"></div>
+                                <div class="line line2"></div>
+                            </div>
+                        </h3>
+                        <ul class="useful-links list-unstyled">
+                            <li><a href="@Url.Action("Index", "Doctors")">Tìm bác sĩ</a></li>
+                            <li><a href="@Url.Action("FAQ", "ContactUs")">Hỏi đáp</a></li>
+                            <li><a href="@Url.Action("PatientGuide", "Services")">Hướng dẫn</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+
+        <!-- ============================= COPYRIGHT ======================================== -->
+        <section class="copyright bg-black text-white text-center p-3">
+            <p class="mb-0">
+                Copyright ©2025 - Bản quyền thuộc về BỆNH VIỆN ĐA KHOA TAM BÌNH -
+                Phát triển bởi
+                <a href="#" class="text-white">GunnNguyen</a>
+            </p>
+        </section>
+
+
+        <!-- ============================= BACK-TO-TOP ======================================= -->
+        <a href="#" class="back-to-top">
+            <i class="fa-solid fa-chevron-up" aria-hidden="true"></i>
+        </a>
+    }
+
+
+    <!-- =============================== ASSET & JAVACRIPT ================================== -->
+    <!-- Bootrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <!-- Share JS -->
+    <script src="~/Scripts/js/index.js"></script>
+    <script src="~/Scripts/js/share.js"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

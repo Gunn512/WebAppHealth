@@ -1,0 +1,49 @@
+﻿@using WebAppHealth.Models
+
+@{
+    ViewBag.Title = "Lịch Khám Chữa Bệnh";
+    Layout = "~/Views/Shared/_HealthLayout.cshtml";
+
+    var breadcrumbs = new List<BreadcrumbItem>
+{
+        new BreadcrumbItem { Title = "Dịch vụ", Url = "#" },
+        new BreadcrumbItem { Title = "Giá viện phí", Url = "" }
+    };
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/intro.css" />
+}
+
+<section class="banner-title">
+    <div class="container">
+        @Html.Partial("_SectionTitle", "LỊCH KHÁM CHỮA BỆNH")
+    </div>
+</section>
+
+<main class="page-container">
+    <div class="container">
+        @Html.Partial("_Breadcrumb", breadcrumbs)
+
+        <div class="mt-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <section id="lich-su" class="content-section" data-aos="fade-up">
+                        <h2>Lịch khám khu bảo hiểm y tế thường</h2>
+                        <img src="@Url.Content("~/asset/banner_03.jpg")" alt="Lịch khám BHYT" class="img-fluid" />
+                    </section>
+
+                    <section id="tong-quan" class="content-section" data-aos="fade-up">
+                        <h2>Lịch khám khu khám bệnh theo yêu cầu</h2>
+                        <img src="@Url.Content("~/asset/banner_02.jpg")" alt="Lịch khám yêu cầu" class="img-fluid" />
+                    </section>
+
+                    <section id="tam-nhin" class="content-section" data-aos="fade-up">
+                        <h2>Lịch khám phòng khám VIP</h2>
+                        <img src="@Url.Content("~/asset/banner_06.jpg")" alt="Lịch khám VIP" class="img-fluid" />
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

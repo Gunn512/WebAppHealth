@@ -1,0 +1,56 @@
+﻿@using WebAppHealth.Models
+@model WebAppHealth.Medicine
+
+@{
+    ViewBag.Title = "Tài liệu: " + Model.Name;
+    Layout = "~/Views/Shared/_HealthLayout.cshtml";
+
+    // Giả sử bạn lưu file PDF trong thư mục ~/asset/
+    var pdfUrl = Url.Content("~/asset/" + Model.InstructionFile);
+
+    var breadcrumbs = new List<BreadcrumbItem>
+{
+        new BreadcrumbItem { Title = "Tin tức", Url = "#!" },
+        new BreadcrumbItem { Title = "Thông tin thuốc", Url = Url.Action("PharmacyInfo", "News") },
+        new BreadcrumbItem { Title = "Tài liệu đính kèm", Url = "" }
+    };
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/intro.css" />
+    <link rel="stylesheet" href="~/Content/css/medical-news.css" />
+    <link rel="stylesheet" href="~/Content/css/pharmacy-info.css" />
+}
+
+<section class="banner-title">
+    <div class="container">
+        @Html.Partial("_SectionTitle", "TÀI LIỆU ĐÍNH KÈM")
+    </div>
+</section>
+
+<section class="page-container py-5 instruction-container">
+    <div class="container">
+        @Html.Partial("_Breadcrumb", breadcrumbs)
+
+        <h1 class="mb-4 section-title">Tài liệu đính kèm: @Model.Name.ToUpper()</h1>
+
+        <div class="row">
+            <div class="col-12">
+                <iframe src="@pdfUrl" class="pdf-container" frameborder="0">
+                    Trình duyệt của bạn không hỗ trợ xem PDF trực tiếp.
+                    <a href="@pdfUrl">Bấm vào đây để tải về.</a>
+                </iframe>
+            </div>
+
+            <div class="col-12 mt-4 text-center">
+                <a href="@Url.Action("PharmacyInfo", "News")" class="btn btn-outline-secondary">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Quay lại
+                </a>
+                <a href="@Url.Action("DownloadInstruction", "News", new { id = Model.MedicineID })"
+                   class="btn btn-primary">
+                    <i class="fa-solid fa-download me-2"></i> Tải về
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

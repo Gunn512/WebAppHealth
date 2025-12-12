@@ -1,0 +1,17 @@
+﻿@using WebAppHealth.Models
+@model List<SidebarItem>
+
+@*class="sticky-sidebar nav flex-column shadow-sm p-3 mb-5 bg-white rounded"*@
+<nav id="sidebarMenu" class="sticky-sidebar nav flex-column">
+    @if (Model != null && Model.Any())
+    {
+        foreach (var item in Model)
+        {
+            <a class="nav-link @(item.IsActive ? "active" : "")" href="@item.Url">
+                @*<i class="fa-solid fa-chevron-right me-2 text-muted" style="font-size: 0.8rem;"></i>*@
+                @item.Title
+            </a>
+        }
+    }
+</nav>
+

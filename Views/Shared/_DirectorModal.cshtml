@@ -1,0 +1,37 @@
+﻿<div class="modal fade" id="personnelModal" tabindex="-1" aria-labelledby="personnelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="personnelModalLabel">Thông tin Bác Sĩ</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <img id="modalPersonnelImage" src="" class="img-fluid rounded shadow-sm mb-2" alt="Ảnh bác sĩ" style="max-height: 300px; object-fit: cover;" />
+                    </div>
+                    <div class="col-md-8">
+                        <h3 id="modalPersonnelName" class="text-primary fw-bold"></h3>
+                        <span id="modalPersonnelRole" class="badge bg-secondary fs-6 mb-3"></span>
+
+                        <table class="table table-striped mt-3">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 130px" class="fw-bold">Học vị/Bio:</td>
+                                    <td id="modalPersonnelHocVi"></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Chuyên khoa:</td>
+                                    <td id="modalPersonnelChuyenKhoa"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>

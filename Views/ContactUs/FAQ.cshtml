@@ -1,0 +1,180 @@
+﻿@using WebAppHealth.Models
+@model WebAppHealth.Models.FaqViewModel
+@{
+    ViewBag.Title = "Hỏi đáp Y tế";
+    Layout = "~/Views/Shared/_HealthLayout.cshtml";
+
+    var breadcrumbs = new List<BreadcrumbItem>
+{
+        new BreadcrumbItem { Title = "Liên hệ - Hỏi đáp", Url = "#" },
+        new BreadcrumbItem { Title = "Hỏi đáp", Url = "" }
+    };
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/intro.css" />
+    <link rel="stylesheet" href="~/Content/css/medical-news.css" />
+    <link rel="stylesheet" href="~/Content/css/faq.css" />
+}
+
+<section class="banner-title">
+    <div class="container">
+        @Html.Partial("_SectionTitle", "HỎI ĐÁP")
+    </div>
+</section>
+
+<section class="main-news page-container news-page-container py-5">
+    <div class="container">
+        @Html.Partial("_Breadcrumb", breadcrumbs)
+
+        <div class="row">
+
+            <div class="col-lg-8 px-4 mb-5">
+
+                @if (Model.ListFaq != null && Model.ListFaq.Any())
+                {
+                    foreach (var item in Model.ListFaq)
+                    {
+                        // Xử lý tên viết tắt cho Avatar
+                        string shortName = "KH";
+                        if (!string.IsNullOrEmpty(item.FullName))
+                        {
+                            var arr = item.FullName.Trim().Split(' ');
+                            if (arr.Length > 0)
+                            {
+                                shortName = arr[0].Substring(0, 1) + (arr.Length > 1 ? arr[arr.Length - 1].Substring(0, 1) : "");
+                            }
+                        }
+
+                        <div class="qa-item mb-5">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="user-avatar bg-secondary text-white rounded d-flex justify-content-center align-items-center me-2"
+                                     style="width: 30px; height: 30px; font-size: 14px">
+                                    @shortName
+                                </div>
+                                <div>
+                                    <span class="fw-bold">@item.FullName</span>
+                                    <small class="text-muted ms-2">
+                                        @(item.CreatedAt.HasValue ? item.CreatedAt.Value.ToString("dd/MM/yyyy") : "")
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="question-content mb-2">
+                                <p class="lv1">@item.Question</p>
+                            </div>
+
+                            <a href="#" class="text-decoration-underline text-muted fst-italic small mb-3 d-block">Trả lời</a>
+
+                            <div class="hospital-reply bg-light p-3 rounded ms-4 border-start border-success border-4">
+                                <div class="d-flex align-items-center justify-content-end mb-2">
+                                    <img src="~/asset/logo_03.png" alt="Logo" width="24" class="me-2" />
+                                    <span class="fw-bold text-success">Bệnh Viện Đa Khoa Khu Vực Tam Bình</span>
+                                </div>
+                                <p class="mb-0 text-secondary">
+                                    @Html.Raw(item.Answer)
+                                </p>
+                            </div>
+                        </div>
+                        <hr class="my-4 text-muted opacity-25" />
+                    }
+                }
+                else
+                {
+                    <p class="text-center">Chưa có câu hỏi nào.</p>
+                }
+
+                @if (Model.TotalPages > 1)
+                {
+                    <nav aria-label="Phân trang" class="mt-5">
+                        <ul class="pagination justify-content-center">
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("FAQ", new { page = i })">@i</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+            </div>
+
+            <div class="col-lg-4 ps-4 form-box">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-light">
+                        <h2 class="fw-bold h4">Bạn cần hỏi gì?</h2>
+                    </div>
+                    <div class="card-body p-4">
+
+                        @using (Html.BeginForm("SubmitQuestion", "ContactUs", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger mb-3" })
+
+                            <div class="mb-3">
+                                @Html.TextBoxFor(m => m.NewQuestion.FullName, new { @class = "form-control bg-white", placeholder = "Họ và tên *" })
+                                @Html.ValidationMessageFor(m => m.NewQuestion.FullName, "", new { @class = "text-danger small" })
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    @Html.TextBoxFor(m => m.NewQuestion.Age, new { @class = "form-control bg-white", placeholder = "Tuổi", type = "number" })
+                                    @Html.ValidationMessageFor(m => m.NewQuestion.Age, "", new { @class = "text-danger small" })
+                                </div>
+                                <div class="col-6">
+                                    @Html.TextBoxFor(m => m.NewQuestion.PhoneNumber, new { @class = "form-control bg-white", placeholder = "SĐT *" })
+                                    @Html.ValidationMessageFor(m => m.NewQuestion.PhoneNumber, "", new { @class = "text-danger small" })
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                @Html.TextBoxFor(m => m.NewQuestion.Address, new { @class = "form-control bg-white", placeholder = "Địa chỉ" })
+                            </div>
+
+                            <div class="mb-3">
+                                @Html.TextBoxFor(m => m.NewQuestion.Email, new { @class = "form-control bg-white", placeholder = "Email" })
+                                @Html.ValidationMessageFor(m => m.NewQuestion.Email, "", new { @class = "text-danger small" })
+                            </div>
+
+                            <div class="mb-3">
+                                @Html.TextAreaFor(m => m.NewQuestion.Question, new { @class = "form-control bg-white", rows = "5", placeholder = "Câu hỏi của bạn *" })
+                                @Html.ValidationMessageFor(m => m.NewQuestion.Question, "", new { @class = "text-danger small" })
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn text-white px-4 py-2 fw-bold">Gửi câu hỏi</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="position-fixed end-0 p-3" style="z-index: 1100; top: 12rem;">
+                <div id="successToast" class="toast align-items-center text-white bg-success" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="fa-regular fa-circle-check me-2"></i> @TempData["SuccessMessage"]
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        }
+</section>
+
+@section Scripts {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var toastEl = document.getElementById('successToast');
+                if (toastEl) {
+                    var toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+                    toast.show();
+                }
+            });
+        </script>
+    }

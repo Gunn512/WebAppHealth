@@ -1,0 +1,589 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="HealthDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Appointment">
+    <Key>
+      <PropertyRef Name="AppointmentID" />
+    </Key>
+    <Property Name="AppointmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PatientID" Type="Int32" />
+    <Property Name="ScheduleID" Type="Int32" />
+    <Property Name="ServiceID" Type="Int32" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="Symptoms" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Patient" Relationship="Self.FK__Appointme__Patie__59FA5E80" FromRole="Appointments" ToRole="Patients" />
+    <NavigationProperty Name="Schedule" Relationship="Self.FK__Appointme__Sched__5AEE82B9" FromRole="Appointments" ToRole="Schedules" />
+    <NavigationProperty Name="Service" Relationship="Self.FK__Appointme__Servi__5BE2A6F2" FromRole="Appointments" ToRole="Services" />
+    <NavigationProperty Name="Invoices" Relationship="Self.FK__Invoices__Appoin__693CA210" FromRole="Appointments" ToRole="Invoices" />
+    <NavigationProperty Name="MedicalRecords" Relationship="Self.FK__MedicalRe__Appoi__5FB337D6" FromRole="Appointments" ToRole="MedicalRecords" />
+    <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="DOB" Type="DateTime" Precision="0" />
+    <Property Name="Gender" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="CCCD" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="HasHealthInsurance" Type="Boolean" />
+    <Property Name="HealthInsuranceNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="DepartmentID" Type="Int32" />
+    <Property Name="AppointmentDate" Type="DateTime" Precision="0" />
+    <Property Name="TimeSlot" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IsConfirm" Type="Boolean" />
+    <Property Name="AppointmentCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Department">
+    <Key>
+      <PropertyRef Name="DepartmentID" />
+    </Key>
+    <Property Name="DepartmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="slug" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Doctors" Relationship="Self.FK__Doctors__Departm__4AB81AF0" FromRole="Departments" ToRole="Doctors" />
+    <Property Name="ImageUrl" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Doctor">
+    <Key>
+      <PropertyRef Name="DoctorID" />
+    </Key>
+    <Property Name="DoctorID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserID" Type="Int32" />
+    <Property Name="DepartmentID" Type="Int32" />
+    <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Avatar" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="Bio" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Department" Relationship="Self.FK__Doctors__Departm__4AB81AF0" FromRole="Doctors" ToRole="Departments" />
+    <NavigationProperty Name="User" Relationship="Self.FK__Doctors__UserID__49C3F6B7" FromRole="Doctors" ToRole="Users" />
+    <NavigationProperty Name="Schedules" Relationship="Self.FK__Schedules__Docto__5535A963" FromRole="Doctors" ToRole="Schedules" />
+    <Property Name="Degree" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="PositionID" Type="Int32" />
+    <NavigationProperty Name="Position1" Relationship="HealthDBModel.FK_Doctors_Positions" FromRole="Doctor" ToRole="Position" />
+  </EntityType>
+  <EntityType Name="Invoice">
+    <Key>
+      <PropertyRef Name="InvoiceID" />
+    </Key>
+    <Property Name="InvoiceID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InvoiceCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="AppointmentID" Type="Int32" />
+    <Property Name="TotalAmount" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="PaymentStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="PaymentMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Appointment" Relationship="Self.FK__Invoices__Appoin__693CA210" FromRole="Invoices" ToRole="Appointments" />
+  </EntityType>
+  <EntityType Name="MedicalRecord">
+    <Key>
+      <PropertyRef Name="RecordID" />
+    </Key>
+    <Property Name="RecordID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AppointmentID" Type="Int32" />
+    <Property Name="Diagnosis" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="DoctorNotes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Appointment" Relationship="Self.FK__MedicalRe__Appoi__5FB337D6" FromRole="MedicalRecords" ToRole="Appointments" />
+    <NavigationProperty Name="PrescriptionDetails" Relationship="Self.FK__Prescript__Recor__656C112C" FromRole="MedicalRecords" ToRole="PrescriptionDetails" />
+  </EntityType>
+  <EntityType Name="Medicine">
+    <Key>
+      <PropertyRef Name="MedicineID" />
+    </Key>
+    <Property Name="MedicineID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Unit" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Price" Type="Decimal" Precision="18" Scale="0" />
+    <NavigationProperty Name="PrescriptionDetails" Relationship="Self.FK__Prescript__Medic__66603565" FromRole="Medicines" ToRole="PrescriptionDetails" />
+    <Property Name="Image" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="ActiveIngredient" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Concentration" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="DrugGroup" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="DosageForm" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Manufacturer" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Packaging" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="InstructionFile" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="News">
+    <Key>
+      <PropertyRef Name="NewsID" />
+    </Key>
+    <Property Name="NewsID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CategoryID" Type="Int32" />
+    <Property Name="Title" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Image" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="PublishDate" Type="DateTime" Precision="3" />
+    <Property Name="Author" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="NewsCategory" Relationship="Self.FK__News__CategoryID__6EF57B66" FromRole="News" ToRole="NewsCategories" />
+  </EntityType>
+  <EntityType Name="NewsCategory">
+    <Key>
+      <PropertyRef Name="CategoryID" />
+    </Key>
+    <Property Name="CategoryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CategoryName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" />
+    <NavigationProperty Name="News" Relationship="Self.FK__News__CategoryID__6EF57B66" FromRole="NewsCategories" ToRole="News" />
+  </EntityType>
+  <EntityType Name="Patient">
+    <Key>
+      <PropertyRef Name="PatientID" />
+    </Key>
+    <Property Name="PatientID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserID" Type="Int32" />
+    <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Gender" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="DateOfBirth" Type="DateTime" Precision="0" />
+    <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="InsuranceNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Appointments" Relationship="Self.FK__Appointme__Patie__59FA5E80" FromRole="Patients" ToRole="Appointments" />
+    <NavigationProperty Name="User" Relationship="Self.FK__Patients__UserID__44FF419A" FromRole="Patients" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="PrescriptionDetail">
+    <Key>
+      <PropertyRef Name="PrescriptionID" />
+    </Key>
+    <Property Name="PrescriptionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RecordID" Type="Int32" />
+    <Property Name="MedicineID" Type="Int32" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="UsageInstruction" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="MedicalRecord" Relationship="Self.FK__Prescript__Recor__656C112C" FromRole="PrescriptionDetails" ToRole="MedicalRecords" />
+    <NavigationProperty Name="Medicine" Relationship="Self.FK__Prescript__Medic__66603565" FromRole="PrescriptionDetails" ToRole="Medicines" />
+  </EntityType>
+  <EntityType Name="Schedule">
+    <Key>
+      <PropertyRef Name="ScheduleID" />
+    </Key>
+    <Property Name="ScheduleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DoctorID" Type="Int32" />
+    <Property Name="DateWork" Type="DateTime" Precision="0" />
+    <Property Name="SlotID" Type="Int32" />
+    <Property Name="Status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Appointments" Relationship="Self.FK__Appointme__Sched__5AEE82B9" FromRole="Schedules" ToRole="Appointments" />
+    <NavigationProperty Name="Doctor" Relationship="Self.FK__Schedules__Docto__5535A963" FromRole="Schedules" ToRole="Doctors" />
+    <NavigationProperty Name="TimeSlot" Relationship="Self.FK__Schedules__SlotI__5629CD9C" FromRole="Schedules" ToRole="TimeSlots" />
+  </EntityType>
+  <EntityType Name="Service">
+    <Key>
+      <PropertyRef Name="ServiceID" />
+    </Key>
+    <Property Name="ServiceID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ServiceCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Price" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Appointments" Relationship="Self.FK__Appointme__Servi__5BE2A6F2" FromRole="Services" ToRole="Appointments" />
+    <Property Name="Image" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="TimeSlot">
+    <Key>
+      <PropertyRef Name="SlotID" />
+    </Key>
+    <Property Name="SlotID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StartTime" Type="Time" Precision="7" />
+    <Property Name="EndTime" Type="Time" Precision="7" />
+    <Property Name="IsActive" Type="Boolean" />
+    <NavigationProperty Name="Schedules" Relationship="Self.FK__Schedules__SlotI__5629CD9C" FromRole="TimeSlots" ToRole="Schedules" />
+  </EntityType>
+  <EntityType Name="UserOTP">
+    <Key>
+      <PropertyRef Name="OTPID" />
+    </Key>
+    <Property Name="OTPID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserID" Type="Int32" />
+    <Property Name="Code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="OtpType" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="ExpiredAt" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="User" Relationship="Self.FK__UserOTP__UserID__4D94879B" FromRole="UserOTP" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PasswordHash" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Role" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="IsActive" Type="Boolean" />
+    <NavigationProperty Name="Doctors" Relationship="Self.FK__Doctors__UserID__49C3F6B7" FromRole="Users" ToRole="Doctors" />
+    <NavigationProperty Name="Patients" Relationship="Self.FK__Patients__UserID__44FF419A" FromRole="Users" ToRole="Patients" />
+    <NavigationProperty Name="UserOTPs" Relationship="Self.FK__UserOTP__UserID__4D94879B" FromRole="Users" ToRole="UserOTP" />
+  </EntityType>
+  <Association Name="FK__Appointme__Patie__59FA5E80">
+    <End Role="Patients" Type="Self.Patient" Multiplicity="0..1" />
+    <End Role="Appointments" Type="Self.Appointment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Patients">
+        <PropertyRef Name="PatientID" />
+      </Principal>
+      <Dependent Role="Appointments">
+        <PropertyRef Name="PatientID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Appointme__Sched__5AEE82B9">
+    <End Role="Schedules" Type="Self.Schedule" Multiplicity="0..1" />
+    <End Role="Appointments" Type="Self.Appointment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Schedules">
+        <PropertyRef Name="ScheduleID" />
+      </Principal>
+      <Dependent Role="Appointments">
+        <PropertyRef Name="ScheduleID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Appointme__Servi__5BE2A6F2">
+    <End Role="Services" Type="Self.Service" Multiplicity="0..1" />
+    <End Role="Appointments" Type="Self.Appointment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Services">
+        <PropertyRef Name="ServiceID" />
+      </Principal>
+      <Dependent Role="Appointments">
+        <PropertyRef Name="ServiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Invoices__Appoin__693CA210">
+    <End Role="Appointments" Type="Self.Appointment" Multiplicity="0..1" />
+    <End Role="Invoices" Type="Self.Invoice" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Appointments">
+        <PropertyRef Name="AppointmentID" />
+      </Principal>
+      <Dependent Role="Invoices">
+        <PropertyRef Name="AppointmentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__MedicalRe__Appoi__5FB337D6">
+    <End Role="Appointments" Type="Self.Appointment" Multiplicity="0..1" />
+    <End Role="MedicalRecords" Type="Self.MedicalRecord" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Appointments">
+        <PropertyRef Name="AppointmentID" />
+      </Principal>
+      <Dependent Role="MedicalRecords">
+        <PropertyRef Name="AppointmentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Doctors__Departm__4AB81AF0">
+    <End Role="Departments" Type="Self.Department" Multiplicity="0..1" />
+    <End Role="Doctors" Type="Self.Doctor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Departments">
+        <PropertyRef Name="DepartmentID" />
+      </Principal>
+      <Dependent Role="Doctors">
+        <PropertyRef Name="DepartmentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Doctors__UserID__49C3F6B7">
+    <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Doctors" Type="Self.Doctor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Doctors">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Schedules__Docto__5535A963">
+    <End Role="Doctors" Type="Self.Doctor" Multiplicity="0..1" />
+    <End Role="Schedules" Type="Self.Schedule" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Doctors">
+        <PropertyRef Name="DoctorID" />
+      </Principal>
+      <Dependent Role="Schedules">
+        <PropertyRef Name="DoctorID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Prescript__Recor__656C112C">
+    <End Role="MedicalRecords" Type="Self.MedicalRecord" Multiplicity="0..1" />
+    <End Role="PrescriptionDetails" Type="Self.PrescriptionDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MedicalRecords">
+        <PropertyRef Name="RecordID" />
+      </Principal>
+      <Dependent Role="PrescriptionDetails">
+        <PropertyRef Name="RecordID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Prescript__Medic__66603565">
+    <End Role="Medicines" Type="Self.Medicine" Multiplicity="0..1" />
+    <End Role="PrescriptionDetails" Type="Self.PrescriptionDetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Medicines">
+        <PropertyRef Name="MedicineID" />
+      </Principal>
+      <Dependent Role="PrescriptionDetails">
+        <PropertyRef Name="MedicineID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__News__CategoryID__6EF57B66">
+    <End Role="NewsCategories" Type="Self.NewsCategory" Multiplicity="0..1" />
+    <End Role="News" Type="Self.News" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="NewsCategories">
+        <PropertyRef Name="CategoryID" />
+      </Principal>
+      <Dependent Role="News">
+        <PropertyRef Name="CategoryID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Patients__UserID__44FF419A">
+    <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Patients" Type="Self.Patient" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Patients">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Schedules__SlotI__5629CD9C">
+    <End Role="TimeSlots" Type="Self.TimeSlot" Multiplicity="0..1" />
+    <End Role="Schedules" Type="Self.Schedule" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TimeSlots">
+        <PropertyRef Name="SlotID" />
+      </Principal>
+      <Dependent Role="Schedules">
+        <PropertyRef Name="SlotID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__UserOTP__UserID__4D94879B">
+    <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+    <End Role="UserOTP" Type="Self.UserOTP" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="UserOTP">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="HealthDBContext" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Appointments" EntityType="Self.Appointment" />
+    <EntitySet Name="Departments" EntityType="Self.Department" />
+    <EntitySet Name="Doctors" EntityType="Self.Doctor" />
+    <EntitySet Name="Invoices" EntityType="Self.Invoice" />
+    <EntitySet Name="MedicalRecords" EntityType="Self.MedicalRecord" />
+    <EntitySet Name="Medicines" EntityType="Self.Medicine" />
+    <EntitySet Name="News" EntityType="Self.News" />
+    <EntitySet Name="NewsCategories" EntityType="Self.NewsCategory" />
+    <EntitySet Name="Patients" EntityType="Self.Patient" />
+    <EntitySet Name="PrescriptionDetails" EntityType="Self.PrescriptionDetail" />
+    <EntitySet Name="Schedules" EntityType="Self.Schedule" />
+    <EntitySet Name="Services" EntityType="Self.Service" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <EntitySet Name="TimeSlots" EntityType="Self.TimeSlot" />
+    <EntitySet Name="UserOTPs" EntityType="Self.UserOTP" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK__Appointme__Patie__59FA5E80" Association="Self.FK__Appointme__Patie__59FA5E80">
+      <End Role="Patients" EntitySet="Patients" />
+      <End Role="Appointments" EntitySet="Appointments" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Appointme__Sched__5AEE82B9" Association="Self.FK__Appointme__Sched__5AEE82B9">
+      <End Role="Schedules" EntitySet="Schedules" />
+      <End Role="Appointments" EntitySet="Appointments" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Appointme__Servi__5BE2A6F2" Association="Self.FK__Appointme__Servi__5BE2A6F2">
+      <End Role="Services" EntitySet="Services" />
+      <End Role="Appointments" EntitySet="Appointments" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Invoices__Appoin__693CA210" Association="Self.FK__Invoices__Appoin__693CA210">
+      <End Role="Appointments" EntitySet="Appointments" />
+      <End Role="Invoices" EntitySet="Invoices" />
+    </AssociationSet>
+    <AssociationSet Name="FK__MedicalRe__Appoi__5FB337D6" Association="Self.FK__MedicalRe__Appoi__5FB337D6">
+      <End Role="Appointments" EntitySet="Appointments" />
+      <End Role="MedicalRecords" EntitySet="MedicalRecords" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Doctors__Departm__4AB81AF0" Association="Self.FK__Doctors__Departm__4AB81AF0">
+      <End Role="Departments" EntitySet="Departments" />
+      <End Role="Doctors" EntitySet="Doctors" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Doctors__UserID__49C3F6B7" Association="Self.FK__Doctors__UserID__49C3F6B7">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Doctors" EntitySet="Doctors" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Schedules__Docto__5535A963" Association="Self.FK__Schedules__Docto__5535A963">
+      <End Role="Doctors" EntitySet="Doctors" />
+      <End Role="Schedules" EntitySet="Schedules" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Prescript__Recor__656C112C" Association="Self.FK__Prescript__Recor__656C112C">
+      <End Role="MedicalRecords" EntitySet="MedicalRecords" />
+      <End Role="PrescriptionDetails" EntitySet="PrescriptionDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Prescript__Medic__66603565" Association="Self.FK__Prescript__Medic__66603565">
+      <End Role="Medicines" EntitySet="Medicines" />
+      <End Role="PrescriptionDetails" EntitySet="PrescriptionDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK__News__CategoryID__6EF57B66" Association="Self.FK__News__CategoryID__6EF57B66">
+      <End Role="NewsCategories" EntitySet="NewsCategories" />
+      <End Role="News" EntitySet="News" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Patients__UserID__44FF419A" Association="Self.FK__Patients__UserID__44FF419A">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Patients" EntitySet="Patients" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Schedules__SlotI__5629CD9C" Association="Self.FK__Schedules__SlotI__5629CD9C">
+      <End Role="TimeSlots" EntitySet="TimeSlots" />
+      <End Role="Schedules" EntitySet="Schedules" />
+    </AssociationSet>
+    <AssociationSet Name="FK__UserOTP__UserID__4D94879B" Association="Self.FK__UserOTP__UserID__4D94879B">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="UserOTP" EntitySet="UserOTPs" />
+    </AssociationSet>
+    <EntitySet Name="TriAns" EntityType="HealthDBModel.TriAn" />
+    <EntitySet Name="Documents" EntityType="HealthDBModel.Document" />
+    <EntitySet Name="Videos" EntityType="HealthDBModel.Video" />
+    <EntitySet Name="Positions" EntityType="HealthDBModel.Position" />
+    <AssociationSet Name="FK_Doctors_Positions" Association="HealthDBModel.FK_Doctors_Positions">
+      <End Role="Position" EntitySet="Positions" />
+      <End Role="Doctor" EntitySet="Doctors" />
+    </AssociationSet>
+    <EntitySet Name="Recruitments" EntityType="HealthDBModel.Recruitment" />
+    <EntitySet Name="Candidates" EntityType="HealthDBModel.Candidate" />
+    <EntitySet Name="SystemConfigs" EntityType="HealthDBModel.SystemConfig" />
+    <EntitySet Name="Faqs" EntityType="HealthDBModel.Faq" />
+  </EntityContainer>
+  <EntityType Name="TriAn">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Document">
+    <Key>
+      <PropertyRef Name="DocID" />
+    </Key>
+    <Property Name="DocID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="LinkUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="Category" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="IsNew" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="Video">
+    <Key>
+      <PropertyRef Name="VideoID" />
+    </Key>
+    <Property Name="VideoID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Thumbnail" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="YoutubeLink" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Position">
+    <Key>
+      <PropertyRef Name="PositionID" />
+    </Key>
+    <Property Name="PositionID" Type="Int32" Nullable="false" />
+    <Property Name="PositionName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Doctors" Relationship="HealthDBModel.FK_Doctors_Positions" FromRole="Position" ToRole="Doctor" />
+  </EntityType>
+  <Association Name="FK_Doctors_Positions">
+    <End Type="HealthDBModel.Position" Role="Position" Multiplicity="0..1" />
+    <End Type="HealthDBModel.Doctor" Role="Doctor" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Position">
+        <PropertyRef Name="PositionID" />
+      </Principal>
+      <Dependent Role="Doctor">
+        <PropertyRef Name="PositionID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Recruitment">
+    <Key>
+      <PropertyRef Name="RecruitmentID" />
+    </Key>
+    <Property Name="RecruitmentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="Deadline" Type="DateTime" Precision="3" />
+    <Property Name="WorkLocation" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Department" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+    <Property Name="Requirements" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsActive" Type="Boolean" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="Candidate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FullName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Gender" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="IdentityCard" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="IssueDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="IssuePlace" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="Hometown" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="Phone" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="Address" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Qualification" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="School" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="TrainingSystem" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="GraduationYear" Type="Int32" Nullable="false" />
+    <Property Name="Rank" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LanguageCert" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="InformaticsCert" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Experience" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CvUrl" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="CertUrls" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="Status" Type="Int32" />
+  </EntityType>
+  <EntityType Name="SystemConfig">
+    <Key>
+      <PropertyRef Name="ConfigKey" />
+    </Key>
+    <Property Name="ConfigKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="ConfigValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Faq">
+    <Key>
+      <PropertyRef Name="FaqID" />
+    </Key>
+    <Property Name="FaqID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Question" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Answer" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsPublished" Type="Boolean" />
+    <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Age" Type="Int32" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+    <Property Name="AnsweredAt" Type="DateTime" Precision="3" />
+  </EntityType>
+</Schema>

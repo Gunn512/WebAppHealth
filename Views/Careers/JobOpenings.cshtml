@@ -1,0 +1,160 @@
+﻿@using WebAppHealth.Models
+@model List<Recruitment>
+
+@{
+    ViewBag.Title = "Tuyển dụng";
+    Layout = "~/Views/Shared/_HealthLayout.cshtml";
+
+    var breadcrumbs = new List<BreadcrumbItem>
+{
+        new BreadcrumbItem { Title = "Tuyển dụng - Đào tạo", Url = "#"},
+        new BreadcrumbItem { Title = "Tuyển dụng", Url = "" }
+    };
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/intro.css" />
+    <link rel="stylesheet" href="~/Content/css/medical-news.css" />
+    <link rel="stylesheet" href="~/Content/css/recruitment.css" />
+}
+
+<section class="banner-title">
+    <div class="container">
+        @Html.Partial("_SectionTitle", "TUYỂN DỤNG")
+    </div>
+</section>
+
+<section class="main-news page-container news-page-container py-5">
+    <div class="container">
+        <div class="row" data-aos="fade-up" data-aos-duration="1000">
+          
+                @Html.Partial("_Breadcrumb", breadcrumbs)
+
+            <div class="col-lg-12">
+
+                <section class="recruitment-categories" data-aos="fade-up">
+                    <div class="category-box category-vienchuc">
+                        <div>TUYỂN DỤNG VIÊN CHỨC</div>
+                        <a href="#!" class="title">Thông báo tuyển dụng lao động tháng @DateTime.Now.Month/@DateTime.Now.Year</a>
+                    </div>
+                </section>
+
+                <section class="recruitment-categories" data-aos="fade-up">
+                    <div class="category-box category-vienchuc">
+                        <div>TUYỂN DỤNG LAO ĐỘNG</div>
+                    </div>
+                </section>
+
+                <section id="job-list" class="content-section mt-5">
+
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var job in Model)
+                        {
+                            <div class="row g-0 job-item">
+                                <div class="col-md-9 left-content">
+                                    <div class="content-group">
+                                        <h3>@job.Title</h3>
+                                        <ul class="job-item-details">
+                                            <li>
+                                                <i class="fa-solid fa-users"></i>
+                                                <strong>Số lượng:</strong> @job.Quantity
+                                            </li>
+                                            <li>
+                                                <i class="fa-regular fa-calendar-times"></i>
+                                                <strong>Hết hạn:</strong>
+                                                @(job.Deadline.HasValue ? job.Deadline.Value.ToString("dd-MM-yyyy") : "Liên hệ")
+                                            </li>
+                                            <li>
+                                                <i class="fa-solid fa-location-dot"></i>
+                                                <strong>Nơi làm việc:</strong> @job.WorkLocation
+                                            </li>
+                                            <li>
+                                                <i class="fa-solid fa-briefcase"></i>
+                                                <strong>Khoa:</strong> @job.Department
+                                            </li>
+                                        </ul>
+
+                                        <div class="job-item-footer">
+                                            <a href="#"
+                                               class="view-job-detail"
+                                               data-bs-toggle="modal"
+                                               data-bs-target="#jobDetailModal"
+                                               data-title="@job.Title"
+                                               data-yeucau="@job.Requirements"
+                                               data-mota="@job.Description">
+                                                Xem chi tiết mô tả công việc
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 right-content">
+                                    <div class="button-group">
+                                        <div class="job-buttons">
+                                            <a href="@Url.Action("JobForm", "Careers")" class="btn btn-apply">Ứng tuyển ngay</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                    <div class="alert alert-info text-center">Hiện tại chưa có vị trí tuyển dụng nào.</div>
+                    }
+
+                </section>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="jobDetailModal" tabindex="-1" aria-labelledby="jobDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="jobDetailModalLabel">Mô tả công việc</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body job-modal-body">
+                <h4 id="modalJobTitle" class="mb-3 fw-bold" style="font-size:2rem; color:var(--main); text-transform:uppercase;"></h4>
+
+                <h5 class="fw-bold">Yêu cầu:</h5>
+                <div id="modalJobYeuCau" class="mb-3 lv1" style="white-space: pre-line;"></div>
+
+                <h5 class="fw-bold">Mô tả:</h5>
+                <div id="modalJobMoTa" class="lv1" style="white-space: pre-line;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var jobModal = document.getElementById("jobDetailModal");
+            if (jobModal) {
+                jobModal.addEventListener("show.bs.modal", function (event) {
+                    var button = event.relatedTarget;
+
+                    // Lấy data
+                    var title = button.getAttribute("data-title");
+                    var yeuCau = button.getAttribute("data-yeucau");
+                    var moTa = button.getAttribute("data-mota");
+
+                    // Đổ data vào modal
+                    jobModal.querySelector("#modalJobTitle").textContent = title;
+
+                    // Sử dụng innerHTML để hiển thị được thẻ <br> hoặc <ul> nếu trong DB có lưu HTML
+                    jobModal.querySelector("#modalJobYeuCau").innerHTML = yeuCau;
+                    jobModal.querySelector("#modalJobMoTa").innerHTML = moTa;
+                });
+            }
+        });
+    </script>
+}

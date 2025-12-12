@@ -1,0 +1,396 @@
+﻿@using WebAppHealth.Models
+@model List<Department>
+
+@{
+    ViewBag.Title = "Cận lâm sàng";
+    Layout = "~/Views/Shared/_HealthLayout.cshtml";
+
+    // Lấy Dictionary từ Controller
+    var positionMap = ViewBag.PositionMap as Dictionary<int, string>;
+
+    // 1. Breadcrumb
+    var breadcrumbs = new List<BreadcrumbItem>
+{
+        new BreadcrumbItem { Title = "Khám chữa bệnh", Url = "" },
+        new BreadcrumbItem { Title = "Cận lâm sàng", Url = "" }
+    };
+
+    // 2. Sidebar
+    var sidebarItems = new List<SidebarItem>();
+    if (Model != null)
+    {
+        foreach (var dept in Model)
+        {
+            sidebarItems.Add(new SidebarItem { Title = dept.Name, Url = "#" + dept.slug });
+        }
+    }
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/intro.css" />
+    <link rel="stylesheet" href="~/Content/css/noikhoa.css" />
+}
+
+@helper RenderDoctors(string deptName, List<Department> model, Dictionary<int, string> posMap)
+{
+    var dept = model.FirstOrDefault(d => d.Name.Equals(deptName, StringComparison.OrdinalIgnoreCase));
+
+    if (dept != null && dept.Doctors != null && dept.Doctors.Any())
+    {
+
+        var allDoctors = dept.Doctors.OrderBy(d => d.PositionID.HasValue ? d.PositionID.Value : 999).ToList();
+
+        var leaders = new List<Doctor>();
+        var staff = new List<Doctor>();
+
+        foreach (var doc in allDoctors)
+        {
+            string pName = "";
+            if (doc.PositionID.HasValue && posMap != null && posMap.ContainsKey(doc.PositionID.Value))
+            {
+                pName = posMap[doc.PositionID.Value];
+            }
+
+            if (!string.IsNullOrEmpty(pName) && (pName.Contains("Trưởng khoa") || pName.Contains("Giám đốc")))
+            {
+                leaders.Add(doc);
+            }
+            else
+            {
+                staff.Add(doc);
+            }
+        }
+
+        <ul class="personnel-list">
+
+            @foreach (var doc in leaders)
+            {
+                string tenChucVu = posMap[doc.PositionID.Value];
+
+                <li class="main-list mb-2">
+                    <strong>@tenChucVu:</strong>
+                    <a href="#" class="text-decoration-none"
+                       data-bs-toggle="modal"
+                       data-bs-target="#personnelModal"
+                       data-name="@(doc.Degree) @(doc.FullName)"
+                       data-role="@tenChucVu"
+                       data-image="/asset/@(string.IsNullOrEmpty(doc.Avatar) ? "avatar-default.jpg" : doc.Avatar)"
+                       data-hocvi="@doc.Bio"
+                       data-chuyenkhoa="@deptName"
+                       data-chucvu="@tenChucVu"
+                       data-lichlamviec="Thứ 2 - Thứ 6: 7:00 - 16:30">
+                        @(doc.Degree) @(doc.FullName)
+                    </a>
+                </li>
+            }
+
+            @if (staff.Count > 0)
+            {
+
+                <li class="main-list list-dropdown">
+                    <strong>Bác sĩ điều trị:</strong>
+
+                    @* Danh sách lồng bên trong *@
+                    <ul class="doctor-list">
+                        @foreach (var doc in staff)
+                        {
+                            // Lấy tên chức vụ (dù là nhân viên cũng nên lấy để hiển thị trong Modal)
+                            string tenChucVu = "Bác sĩ";
+                            if (doc.PositionID.HasValue && posMap != null && posMap.ContainsKey(doc.PositionID.Value))
+                            {
+                                tenChucVu = posMap[doc.PositionID.Value];
+                            }
+
+                            <li>
+                                <a href="#" class="text-decoration-none"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#personnelModal"
+                                   data-name="@(doc.Degree) @(doc.FullName)"
+                                   data-role="@tenChucVu"
+                                   data-image="/asset/@(string.IsNullOrEmpty(doc.Avatar) ? "avatar-default.jpg" : doc.Avatar)"
+                                   data-hocvi="@doc.Bio"
+                                   data-chuyenkhoa="@deptName"
+                                   data-chucvu="@tenChucVu"
+                                   data-lichlamviec="Thứ 2 - Thứ 6: 7:00 - 16:30">
+                                    @(doc.Degree) @(doc.FullName)
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p class="text-muted fst-italic">Đang cập nhật danh sách nhân sự.</p>
+    }
+}
+
+
+@* =================== Content Section =================*@
+<section class="banner-title">
+    <div class="container">
+        @Html.Partial("_SectionTitle", "CẬN LÂM SÀNG")
+    </div>
+</section>
+
+<main class="page-container">
+    <div class="container">
+
+        @Html.Partial("_Breadcrumb", breadcrumbs)
+
+        <div class="mt-4">
+            <div class="row">
+
+                <div class="col-lg-3">
+                    @Html.Partial("_Sidebar", sidebarItems)
+                </div>
+
+                <div class="col-lg-9">
+
+                    <section id="khoa-xet-nghiem" class="content-section" data-aos="fade-right" data-aos-duration="1000">
+                        <h2>Khoa Xét nghiệm</h2>
+                        <div class="content-list">
+                            <p>
+                                Khoa Xét Nghiệm Bệnh viện đa khoa khu vực Thủ Đức với nhiệm
+                                vụ chính là thực hiện tất cả các xét nghiệm nhằm phục vụ cho
+                                công tác chẩn đoán và điều trị.
+                            </p>
+                            <p>
+                                Chúng tôi có hệ thống máy xét nghiệm hàng dầu thế giới như
+                                Abbot, Simen Sysmex. Becmen coulter, Array, với đội ngũ nhân
+                                viên không ngừng cải tiến, nâng cao trình độ. Vì vậy chúng
+                                tôi luôn đảm bảo chất lượng, đáp ứng đầy đủ và kịp thời các
+                                xét nghiệm cho người bệnh cũng như các khoa lâm sàng.
+                            </p>
+                            <p>
+                                Đây cũng là môi trường uy tín để đào tạo thực hành cho sinh
+                                viên các trường Đại học, Cao đẳng y khoa trong khu vực và
+                                các tỉnh lân cận.
+                            </p>
+                            <p>Slogan của khoa: “Đảm bảo chất lượng - đúng thời gian”</p>
+                        </div>
+
+                        <img src="~/asset/banner_01.jpg" class="img-fluid rounded mb-3" alt="" />
+
+                        <div class="personnel-section">
+                            <h3>Nhân sự</h3>
+                            <div class="row">
+                                <div class="col-md-6 img"><img src="~/asset/banner_03.jpg" class="img-fluid rounded shadow-sm" /></div>
+                                <div class="col-md-6">@RenderDoctors("Khoa xét nghiệm", Model, positionMap)</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="khoa-chan-doan-hinh-anh" class="content-section" data-aos="fade-left" data-aos-duration="1000">
+                        <h2>Khoa Chẩn Đoán Hình Ảnh</h2>
+                        <div class="content-list">
+                            <p>
+                                Khoa Chẩn đoán hình ảnh Bệnh viện Đa khoa Khu vực Thủ Đức
+                                được trang bị đầy đủ các máy móc hiện đại như MRI, CT
+                                Scanner, siêu âm và Xquang KTS để thực hiện các khảo sát
+                                chẩn đoán hình ảnh, các thủ thuật can thiệp, đáp ứng yêu cầu
+                                của bệnh nhân và bác sĩ điều trị.
+                            </p>
+                            <p>
+                                Chúng tôi có một một cơ sở rộng rãi, riêng biệt, đội ngũ
+                                nhân viên nhiều kinh nghiêm, năng động, nhiệt tình luôn sẵn
+                                sàng phục vụ người bệnh.
+                            </p>
+                            <p>
+                                Chúng tôi sẽ tiếp tục phát triển cả về máy móc, trang thiết
+                                bị và đội ngũ nhân lực để có thể đáp ứng yêu cầu nhiệm vụ
+                                cho một bệnh viện đa khoa khu vực hạng I với 1000 giường
+                                bệnh trong tương lai.
+                            </p>
+                            <p>
+                                Slogan của khoa: “Hình ảnh chuẩn đẹp - Kết quả chuẩn vàng -
+                                Sẵn sàng điều trị”
+                            </p>
+                        </div>
+
+
+                        <div class="personnel-section">
+                            <h3>Nhân sự</h3>
+                            <div class="row">
+                                <div class="col-md-6">@RenderDoctors("Khoa Chẩn Đoán Hình Ảnh", Model, positionMap)</div>
+                                <div class="col-md-6 img"><img src="~/asset/banner_03.jpg" class="img-fluid rounded shadow-sm" /></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="khoa-kiem-soat-nhiem-khuan" class="content-section" data-aos="fade-right" data-aos-duration="1000">
+                        <h2>Khoa Kiểm Soát Nhiễm Khuẩn</h2>
+                        <div class="content-list">
+                            <p>
+                                Khoa Kiểm soát nhiễm khuẩn là khoa cận lâm sàng, chịu sự
+                                quản lý trực tiếp của Ban giám đốc Bệnh vện, có chức năng
+                                tham mưu cho Giám đốc và tổ chức thực hiện các công tác kiểm
+                                soát nhiểm khuẩn trong Bệnh viện.
+                            </p>
+                            <p>
+                                Hiện tại chúng tôi đang sử dụng máy tiệt khuẩn bằng khí EO
+                                và các máy móc, trang thiết bị hiện đại để phục vụ công tác
+                                chuyên môn.
+                            </p>
+                            <p>
+                                Cùng với sự phát triển của bệnh viện, chúng tôi luôn nỗ lực
+                                hoàn thành tốt nhiệm vụ được giao nhằm đảm bảo an toàn cho
+                                người bệnh.
+                            </p>
+                            <p>
+                                Slogan của khoa: “An toàn của bạn nằm trong chất lượng của
+                                chúng tôi”
+                            </p>
+                        </div>
+
+                        <img src="~/asset/banner_01.jpg" class="img-fluid rounded mb-3" alt="" />
+
+                        <div class="personnel-section">
+                            <h3>Nhân sự</h3>
+                            <div class="row">
+                                <div class="col-md-6 img"><img src="~/asset/banner_03.jpg" class="img-fluid rounded shadow-sm" /></div>
+                                <div class="col-md-6">@RenderDoctors("Khoa Kiểm Soát Nhiễm Khuẩn", Model, positionMap)</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="khoa-duoc" class="content-section" data-aos="fade-left" data-aos-duration="1000">
+                        <h2>Khoa Dược</h2>
+                        <div class="content-list">
+                            <p>
+                                Cùng với sự phát triển về chuyên môn của Bệnh viện, Khoa
+                                Dược đã hoàn thành tốt chức năng, nhiệm vụ là cung cấp đầy
+                                đủ, kịp thời thuốc có chất lượng cũng như tư vấn, giám sát
+                                việc thực hiện sử dụng thuốc an toàn, hợp lý, đóng vai trò
+                                là cầu nối quan trọng giữa bệnh nhân và bác sỹ điều trị, góp
+                                phần nâng cao hiệu quả điều trị cho người bệnh.
+                            </p>
+                            <p>
+                                Đẩy mạnh công tác dược lâm sàng, thông tin, tư vấn về sử
+                                dụng thuốc cho bệnh nhân và nhân viên y tế, tham gia công
+                                tác cảnh giác dược, theo dõi, báo cáo thông tin liên quan
+                                đến tác dụng không mong muốn của thuốc.
+                            </p>
+                            <p>
+                                Công tác đào tạo cũng được triển khai hiệu quả, Khoa cũng là
+                                cơ sở thực tập cho các học viên, sinh viên dược của một số
+                                trường Đại học, trung cấp.
+                            </p>
+                            <p>
+                                Slogan của khoa: “Sử dụng thuốc trong điều trị, Khoa Dược
+                                luôn đồng hành cùng bạn”.
+                            </p>
+                        </div>
+
+                        <div class="personnel-section mt-3">
+                            <h3>Nhân sự</h3>
+                            <div class="row">
+                                <div class="col-md-6 img"><img src="~/asset/banner_03.jpg" class="img-fluid rounded shadow-sm" /></div>
+                                <div class="col-md-6">@RenderDoctors("Khoa Dược", Model, positionMap)</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="khoa-dinh-duong" class="content-section" data-aos="fade-right" data-aos-duration="1000">
+                        <h2>Khoa Dinh Dưỡng</h2>
+                        <div class="content-list">
+                            <p>
+                                Dinh dưỡng có vai trò vô cùng quan trọng đối với sức khoẻ và
+                                sự phát triển của cơ thể, vì vậy Khoa dinh dưỡng - tiết chế
+                                ra đời cùng với sự phát triển của Bệnh viện.
+                            </p>
+                            <p>
+                                Chức năng chính của chúng tôi là khám và tư vấn về dinh
+                                dưỡng cho người bệnh, đồng thời xây dựng các chế độ ăn uống
+                                phù hợp cho từng trường hợp bệnh cụ thể thông qua hoạt động
+                                khám, hội chẩn, tư vấn và hỗ trợ điều trị.
+                            </p>
+                            <p>
+                                Slogan của khoa: “Quan tâm đến dinh dưỡng là thương sức
+                                khỏe”
+                            </p>
+                        </div>
+
+
+                        <div class="personnel-section">
+                            <h3>Nhân sự</h3>
+                            <div class="row">
+                                <div class="col-md-6">@RenderDoctors("Khoa Dinh Dưỡng", Model, positionMap)</div>
+                                <div class="col-md-6 img"><img src="~/asset/banner_03.jpg" class="img-fluid rounded shadow-sm" /></div>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="modal fade" id="personnelModal" tabindex="-1" aria-labelledby="personnelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="personnelModalLabel">Thông tin Bác Sĩ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img id="modalDirectorImage" src="" class="img-fluid rounded" alt="Ảnh bác sĩ" />
+                    </div>
+                    <div class="col-md-8">
+                        <h3 id="modalDirectorName" class="director-name-modal"></h3>
+                        <span id="modalDirectorRole" class="director-role-modal"></span>
+                        <table class="table table-borderless table-sm mt-3">
+                            <tbody>
+                                <tr><td style="width: 120px"><strong>Thông tin:</strong></td><td id="modalDirectorHocVi"></td></tr>
+                                <tr><td><strong>Chuyên khoa:</strong></td><td id="modalDirectorChuyenKhoa"></td></tr>
+                                <tr><td><strong>Chức vụ:</strong></td><td id="modalDirectorChucVu"></td></tr>
+                                <tr><td><strong>Lịch làm việc:</strong></td><td id="modalDirectorLich"></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" style="background-color: var(--main); border-color: var(--main)">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var personnelModal = document.getElementById("personnelModal");
+            if (personnelModal) {
+                personnelModal.addEventListener("show.bs.modal", function (event) {
+                    // Lấy nút vừa được bấm
+                    var button = event.relatedTarget;
+
+                    // Lấy dữ liệu từ data attribute
+                    var name = button.getAttribute("data-name");
+                    var role = button.getAttribute("data-role");
+                    var image = button.getAttribute("data-image");
+                    var hocvi = button.getAttribute("data-hocvi");
+                    var chuyenkhoa = button.getAttribute("data-chuyenkhoa");
+                    var chucvu = button.getAttribute("data-chucvu");
+                    var lich = button.getAttribute("data-lichlamviec");
+
+                    // Đổ dữ liệu vào Modal
+                    personnelModal.querySelector("#modalDirectorName").textContent = name;
+                    personnelModal.querySelector("#modalDirectorRole").textContent = role;
+                    personnelModal.querySelector("#modalDirectorImage").src = image;
+                    personnelModal.querySelector("#modalDirectorHocVi").textContent = hocvi;
+                    personnelModal.querySelector("#modalDirectorChuyenKhoa").textContent = chuyenkhoa;
+                    personnelModal.querySelector("#modalDirectorChucVu").textContent = chucvu;
+                    personnelModal.querySelector("#modalDirectorLich").textContent = lich;
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,1033 @@
+﻿@*@model WebAppHealth.Models.RegisterServiceViewModel
+    @{
+        ViewBag.Title = "Đăng ký khám dịch vụ";
+        Layout = "~/Views/Shared/_ServiceLayout.cshtml";
+        bool isReschedule = ViewBag.IsReschedule == true;
+    }
+
+    @section Styles {
+        <link rel="stylesheet" href="~/Content/css/reg_standard_exam.css" />
+    }
+
+    <header class="form-header">
+        <h1>@(isReschedule ? "THAY ĐỔI LỊCH KHÁM DỊCH VỤ" : "ĐẶT LỊCH KHÁM DỊCH VỤ")</h1>
+    </header>
+
+    <form id="exam-form" novalidate>
+
+        @if (isReschedule)
+        {
+            <input type="hidden" name="OldAppointmentId" value="@ViewBag.RescheduleId" />
+        }
+
+        <div class="form-group">
+            <label for="FullName">Họ và Tên<span class="required-asterisk">*</span></label>
+            <input type="text" id="FullName" name="FullName" placeholder="Nguyễn Văn A"
+                   value="@(Model?.FullName)" />
+            <span class="error-message" id="FullName-error">Vui lòng nhập họ và tên.</span>
+        </div>
+
+        <div class="form-group">
+            <label for="DOB">Ngày sinh<span class="required-asterisk">*</span></label>
+            <input type="date" id="DOB" name="DOB"
+                   value="@(Model?.DOB.HasValue == true ? Model.DOB.Value.ToString("yyyy-MM-dd") : "")" />
+            <span class="error-message" id="DOB-error">Vui lòng chọn ngày sinh.</span>
+        </div>
+
+        <div class="form-group">
+            <label>Giới tính<span class="required-asterisk">*</span></label>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="Gender" value="Nam"
+                           @(Model?.Gender == "Nam" ? "checked" : "") /> Nam
+                </label>
+                <label>
+                    <input type="radio" name="Gender" value="Nữ"
+                           @(Model?.Gender == "Nữ" ? "checked" : "") /> Nữ
+                </label>
+            </div>
+            <span class="error-message" id="Gender-error">Vui lòng chọn giới tính.</span>
+        </div>
+
+        <div class="form-group">
+            <label for="CCCD">Số CCCD<span class="required-asterisk">*</span></label>
+            <input type="text" id="CCCD" name="CCCD" placeholder="Nhập 12 số CCCD" maxlength="12"
+                   value="@(Model?.CCCD)" />
+            <span class="error-message" id="CCCD-error">Vui lòng nhập đủ 12 số CCCD.</span>
+        </div>
+
+        <div class="form-group">
+            <label for="Phone">Số điện thoại<span class="required-asterisk">*</span></label>
+            <input type="tel" id="Phone" name="Phone" placeholder="09xxxxxxxx"
+                   value="@(Model?.Phone)" />
+            <span class="error-message" id="Phone-error">Vui lòng nhập số điện thoại hợp lệ.</span>
+        </div>
+
+        <div class="form-group">
+            <label for="Address">Địa chỉ<span class="required-asterisk">*</span></label>
+            <input type="text" id="Address" name="Address" placeholder="Địa chỉ chi tiết"
+                   value="@(Model?.Address)" />
+            <span class="error-message" id="Address-error">Vui lòng nhập địa chỉ.</span>
+        </div>
+
+        <div class="form-group">
+            <label for="DepartmentID">Chọn chuyên khoa<span class="required-asterisk">*</span></label>
+            <select id="DepartmentID" name="DepartmentID" required>
+                <option value="">-- Vui lòng chọn chuyên khoa --</option>
+                @if (ViewBag.Departments != null)
+                {
+                    foreach (var item in (SelectList)ViewBag.Departments)
+                    {
+                        // Logic Selected
+                        var selected = (Model != null && Model.DepartmentID.ToString() == item.Value) ? "selected" : "";
+                        <option value="@item.Value" @selected>@item.Text</option>
+                    }
+                }
+            </select>
+            <span class="error-message" id="DepartmentID-error">Vui lòng chọn chuyên khoa.</span>
+        </div>
+
+        <div class="form-group">
+            <label for="DoctorID">Chọn bác sĩ<span class="required-asterisk">*</span></label>
+
+            <select id="DoctorID" name="DoctorID" required @(ViewBag.Doctors != null ? "" : "disabled")>
+                @if (ViewBag.Doctors != null)
+                {
+                    <option value="">-- Chọn bác sĩ --</option>
+                    foreach (var item in (SelectList)ViewBag.Doctors)
+                    {
+                        var selected = (Model != null && Model.DoctorID.ToString() == item.Value) ? "selected" : "";
+                        <option value="@item.Value" @selected>@item.Text</option>
+                    }
+                }
+                else
+                {
+                    <option value="">-- Vui lòng chọn chuyên khoa trước --</option>
+                }
+            </select>
+            <span class="error-message" id="DoctorID-error">Vui lòng chọn bác sĩ.</span>
+        </div>
+
+        <div class="form-group">
+            <label for="Symptoms">Mô tả tình trạng bệnh</label>
+            <textarea id="Symptoms" name="Symptoms" rows="4" placeholder="Mô tả ngắn gọn triệu chứng...">@(Model?.Symptoms)</textarea>
+        </div>
+
+        <fieldset class="form-group fieldset-group" id="lich-hen-group">
+            <legend class="fieldset-legend">
+                Chọn Ngày và Giờ khám @(isReschedule ? "(MỚI)" : "")
+                <div class="week-navigation">
+                    <button type="button" id="prev-week-btn" class="week-nav-btn">&lt; Tuần trước</button>
+                    <button type="button" id="today-btn" class="week-nav-btn">Hôm nay</button>
+                    <button type="button" id="next-week-btn" class="week-nav-btn">Tuần sau &gt;</button>
+                </div>
+            </legend>
+
+            <div class="time-slots-container" id="time-slots-container">
+                <p class="text-center p-3">Vui lòng chọn chuyên khoa và bác sĩ để xem lịch hẹn.</p>
+            </div>
+            <span class="error-message" id="LichHen-error">Vui lòng chọn một mốc thời gian khám.</span>
+        </fieldset>
+
+        <div class="commitment-group">
+            <div>
+                <input type="checkbox" id="cam-ket" name="CamKet" />
+                <label for="cam-ket">Tôi cam kết các thông tin đã khai báo là đúng sự thật.<span class="required-asterisk">*</span></label>
+            </div>
+            <span class="error-message" id="CamKet-error">Bạn phải đồng ý với cam kết.</span>
+        </div>
+
+        <button type="submit" id="submit-button" class="submit-btn">@(isReschedule ? "CẬP NHẬT LỊCH" : "ĐĂNG KÝ")</button>
+    </form>
+
+    <div class="popup-overlay" id="popup">
+        <div class="popup-content">
+            <button type="button" class="popup-close-icon" id="popup-return-btn">&times;</button>
+            <h2>@(isReschedule ? "Cập nhật thành công!" : "Đăng ký thành công!")</h2>
+            <p>Vui lòng kiểm tra thông tin bên dưới.</p>
+            <div class="row mt-3 pt-3 border-top">
+                <div class="col-7 text-center p-8 popup-box">
+                    <div class="qr-code-placeholder" id="payment-qr">
+                        <img src="~/asset/QRCode.jpg" alt="Mã QR" style="max-width:100%; height:auto;" />
+                    </div>
+                    <div class="bank-info">
+                        <p><strong>Ngân hàng:</strong> <span>VIETCOMBANK</span></p>
+                        <p><strong>Tên thụ hưởng:</strong> <span>BỆNH VIỆN ĐA KHOA TAM BÌNH</span></p>
+                        <p><strong>Số tài khoản:</strong> <span>12345678945330</span></p>
+                        <p><strong>Tổng cộng:</strong> <span id="popup-total-cost" style="font-weight: bold; color: #d9534f">120.000 VNĐ</span></p>
+                        <p><strong>Nội dung CK:</strong> <span>HO TEN - SDT - DK KCB DICH VU</span></p>
+                    </div>
+                </div>
+                <div class="col-5 p-8 popup-box">
+                    <div class="popup-info">
+                        <p><strong>Họ tên:</strong> <span id="popup-ho-ten"></span></p>
+                        <p><strong>Chuyên khoa:</strong> <span id="popup-chuyen-khoa"></span></p>
+                        <p><strong>Bác sĩ:</strong> <span id="popup-bac-si"></span></p>
+                        <p><strong>Lịch hẹn:</strong> <span id="popup-lich-hen"></span></p>
+                        <p><strong>SĐT:</strong> <span id="popup-sdt"></span></p>
+                    </div>
+                    <div class="mt-4">
+                        <p class="mb-1 qr-box" style="font-weight: bold; text-align: left">
+                            Mã check-in (đưa mã cho nhân viên):
+                        </p>
+                        <svg id="checkin-barcode" class="qr-checkin-container"></svg>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="popup-finish-btn" class="popup-btn">Xong</button>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+        <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // ============================================================
+            // 1. CẤU HÌNH & BIẾN
+            // ============================================================
+            const slotsContainer = document.getElementById("time-slots-container");
+            const lichHenError = document.getElementById("LichHen-error");
+            // Kiểm tra xem có đang ở chế độ đổi lịch (đã có bác sĩ sẵn) không
+            const isEditMode = '@(ViewBag.IsReschedule)' === 'True';
+
+            const masterTimeSlots = [
+                { label: "07:00 - 08:00" }, { label: "08:00 - 09:00" },
+                { label: "09:00 - 10:00" }, { label: "10:00 - 11:00" },
+                { label: "13:00 - 14:00" }, { label: "14:00 - 15:00" },
+                { label: "15:00 - 16:00" }
+            ];
+
+            let currentRenderMonday = getMonday(new Date());
+
+            // ============================================================
+            // 2. CÁC HÀM HỖ TRỢ
+            // ============================================================
+            function getMonday(d) {
+                d = new Date(d);
+                var day = d.getDay(), diff = d.getDate() - day + (day == 0 ? -6 : 1);
+                return new Date(d.setDate(diff));
+            }
+
+            function formatDateISO(date) {
+                const offset = date.getTimezoneOffset();
+                date = new Date(date.getTime() - (offset * 60 * 1000));
+                return date.toISOString().split('T')[0];
+            }
+
+            function formatDateDisplay(date) {
+                const d = date.getDate().toString().padStart(2, "0");
+                const m = (date.getMonth() + 1).toString().padStart(2, "0");
+                return `${d}/${m}`;
+            }
+
+            function hideGroupError() {
+                document.getElementById("lich-hen-group").classList.remove("error");
+                lichHenError.classList.remove("show");
+            }
+
+            // ============================================================
+            // 3. LOGIC GỌI API & RENDER GRID
+            // ============================================================
+            function loadSchedule() {
+                const doctorId = document.getElementById("DoctorID").value;
+
+                if (!doctorId) {
+                    renderGrid(null);
+                    return;
+                }
+
+                slotsContainer.innerHTML = '<div class="text-center p-3"><div class="spinner-border text-primary spinner-border-sm"></div> Đang tải lịch...</div>';
+                const startDateStr = formatDateISO(currentRenderMonday);
+
+                fetch(`/ServicePortal/GetDoctorSchedule?doctorId=${doctorId}&startDate=${startDateStr}`)
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.success) {
+                            renderGrid(res.data);
+                        } else {
+                            slotsContainer.innerHTML = `<p class="text-danger text-center">Lỗi: ${res.message}</p>`;
+                        }
+                    })
+                    .catch(e => {
+                        console.error(e);
+                        slotsContainer.innerHTML = '<p class="text-danger text-center">Lỗi kết nối server.</p>';
+                    });
+            }
+
+            function renderGrid(availableSlotsFromDB) {
+                slotsContainer.innerHTML = "";
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+
+                // Nếu không có dữ liệu bác sĩ (null), hiện thông báo
+                if (availableSlotsFromDB === null) {
+                    slotsContainer.innerHTML = '<p class="text-center p-3 text-muted">Vui lòng chọn Chuyên khoa và Bác sĩ để xem lịch.</p>';
+                    return;
+                }
+
+                for (let i = 0; i < 7; i++) {
+                    const dayDate = new Date(currentRenderMonday);
+                    dayDate.setDate(currentRenderMonday.getDate() + i);
+
+                    if (dayDate.getDay() === 0) continue; // Bỏ CN
+
+                    const dateISO = formatDateISO(dayDate);
+                    const isPastDate = dayDate.getTime() < now.getTime();
+
+                    const group = document.createElement("div");
+                    group.className = "day-group";
+
+                    const dayNames = ["CN", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
+                    const dayName = dayNames[dayDate.getDay()];
+                    group.innerHTML = `<strong>${dayName} <span class="day-date">(${formatDateDisplay(dayDate)})</span></strong>`;
+
+                    const slotsDiv = document.createElement("div");
+                    slotsDiv.className = "slots";
+
+                    masterTimeSlots.forEach(slotMaster => {
+                        let isDisabled = false;
+
+                        if (isPastDate) {
+                            isDisabled = true;
+                        }
+                        else if (availableSlotsFromDB !== null) {
+                            const dbSlot = availableSlotsFromDB.find(s =>
+                                s.DateISO === dateISO && s.SlotLabel === slotMaster.label
+                            );
+                            if (!dbSlot) isDisabled = true;
+                        }
+
+                        const label = document.createElement("label");
+                        const input = document.createElement("input");
+                        input.type = "radio";
+                        input.name = "LichHen";
+                        input.value = `${dayName}_${formatDateDisplay(dayDate)}_${slotMaster.label}`;
+                        input.addEventListener("click", hideGroupError);
+
+                        const span = document.createElement("span");
+                        span.textContent = slotMaster.label;
+
+                        if (isDisabled) {
+                            input.disabled = true;
+                            label.style.opacity = "0.4";
+                            label.style.cursor = "not-allowed";
+                        }
+
+                        label.appendChild(input);
+                        label.appendChild(span);
+                        slotsDiv.appendChild(label);
+                    });
+
+                    group.appendChild(slotsDiv);
+                    slotsContainer.appendChild(group);
+                }
+            }
+
+            // ============================================================
+            // 4. SỰ KIỆN NÚT BẤM & CHANGE
+            // ============================================================
+            const btnPrev = document.getElementById("prev-week-btn");
+            const btnNext = document.getElementById("next-week-btn");
+            const btnToday = document.getElementById("today-btn");
+
+            if(btnPrev) btnPrev.addEventListener("click", () => { currentRenderMonday.setDate(currentRenderMonday.getDate() - 7); loadSchedule(); });
+            if(btnNext) btnNext.addEventListener("click", () => { currentRenderMonday.setDate(currentRenderMonday.getDate() + 7); loadSchedule(); });
+            if(btnToday) btnToday.addEventListener("click", () => { currentRenderMonday = getMonday(new Date()); loadSchedule(); });
+
+            const docSelect = document.getElementById("DoctorID");
+            docSelect.addEventListener("change", () => {
+                currentRenderMonday = getMonday(new Date());
+                loadSchedule();
+            });
+
+            const deptSelect = document.getElementById("DepartmentID");
+            deptSelect.addEventListener("change", function() {
+                const id = this.value;
+                docSelect.innerHTML = '<option value="">Đang tải...</option>';
+                docSelect.disabled = true;
+                renderGrid(null); // Reset lịch
+
+                if(id) {
+                    fetch('/ServicePortal/GetDoctorsByDepartment?departmentId=' + id)
+                        .then(r => r.json())
+                        .then(data => {
+                            docSelect.innerHTML = '<option value="">-- Chọn bác sĩ --</option>';
+                            if(data.length > 0) {
+                                data.forEach(d => {
+                                    const op = document.createElement("option");
+                                    op.value = d.DoctorID; op.text = d.FullName;
+                                    docSelect.appendChild(op);
+                                });
+                                docSelect.disabled = false;
+                            } else {
+                                docSelect.innerHTML = '<option value="">Không có bác sĩ</option>';
+                            }
+                        });
+                } else {
+                    docSelect.innerHTML = '<option value="">-- Chọn chuyên khoa trước --</option>';
+                }
+            });
+
+            // ============================================================
+            // 5. VALIDATION & SUBMIT
+            // ============================================================
+            const form = document.getElementById("exam-form");
+
+            function showError(input, errorId, msg) {
+                input.classList.add("error");
+                const el = document.getElementById(errorId);
+                if(el){ el.textContent = msg; el.classList.add("show"); }
+            }
+            function hideError(input, errorId) {
+                input.classList.remove("error");
+                const el = document.getElementById(errorId);
+                if(el) el.classList.remove("show");
+            }
+
+            const sdtRegex = /^(0[3|5|7|8|9])+([0-9]{8})\b$/;
+            const cccdRegex = /^\d{12}$/;
+
+            function validateForm() {
+                let isValid = true;
+                // Validate từng trường...
+                if(!deptSelect.value) { showError(deptSelect, "DepartmentID-error", "Chọn khoa."); isValid=false; }
+                else hideError(deptSelect, "DepartmentID-error");
+
+                if(!docSelect.value) { showError(docSelect, "DoctorID-error", "Chọn bác sĩ."); isValid=false; }
+                else hideError(docSelect, "DoctorID-error");
+
+                const hoTen = document.getElementById("FullName");
+                if(!hoTen.value.trim()){ showError(hoTen, "FullName-error", "Nhập họ tên."); isValid=false; }
+                else hideError(hoTen, "FullName-error");
+
+                const dob = document.getElementById("DOB");
+                if(!dob.value){ showError(dob, "DOB-error", "Chọn ngày sinh."); isValid=false; }
+                else hideError(dob, "DOB-error");
+
+                const cccd = document.getElementById("CCCD");
+                if(!cccdRegex.test(cccd.value)){ showError(cccd, "CCCD-error", "CCCD 12 số."); isValid=false; }
+                else hideError(cccd, "CCCD-error");
+
+                const phone = document.getElementById("Phone");
+                if(!sdtRegex.test(phone.value)){ showError(phone, "Phone-error", "SĐT không hợp lệ."); isValid=false; }
+                else hideError(phone, "Phone-error");
+
+                const addr = document.getElementById("Address");
+                if(!addr.value.trim()){ showError(addr, "Address-error", "Nhập địa chỉ."); isValid=false; }
+                else hideError(addr, "Address-error");
+
+                const lichHen = document.querySelector('input[name="LichHen"]:checked');
+                if(!lichHen){
+                    document.getElementById("lich-hen-group").classList.add("error");
+                    document.getElementById("LichHen-error").classList.add("show");
+                    isValid = false;
+                } else hideGroupError();
+
+                const ck = document.getElementById("cam-ket");
+                if(!ck.checked){ showError(ck, "CamKet-error", "Cần cam kết."); isValid=false; }
+                else hideError(ck, "CamKet-error");
+
+                return isValid;
+            }
+
+            form.addEventListener("submit", function(e) {
+                e.preventDefault();
+                if(validateForm()) {
+                    const btn = document.getElementById("submit-button");
+                    const oldText = btn.innerText;
+                    btn.disabled = true; btn.innerText = "Đang xử lý...";
+                    const formData = new FormData(form);
+
+                    fetch('@Url.Action("RegisterServiceExam", "ServicePortal")', {
+                        method: 'POST', body: formData
+                    })
+                    .then(r => r.json())
+                    .then(d => {
+                        btn.disabled = false; btn.innerText = oldText;
+                        if(d.success) {
+                            // --- ĐIỀN POPUP AN TOÀN ---
+                            const setText = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+
+                            setText("popup-ho-ten", document.getElementById("FullName").value);
+                            setText("popup-chuyen-khoa", deptSelect.options[deptSelect.selectedIndex].text);
+                            setText("popup-bac-si", docSelect.options[docSelect.selectedIndex].text);
+                            setText("popup-sdt", document.getElementById("Phone").value);
+
+                            const lhRadio = document.querySelector('input[name="LichHen"]:checked');
+                            if(lhRadio){
+                                // Tìm text Thứ...
+                                const dayGroup = lhRadio.closest(".day-group");
+                                const dayName = dayGroup ? dayGroup.querySelector("strong").textContent : "";
+                                // Tìm text giờ (span bên cạnh radio)
+                                const timeText = lhRadio.nextElementSibling.textContent;
+                                setText("popup-lich-hen", `${dayName} - ${timeText}`);
+                            }
+
+                            if(typeof JsBarcode !== 'undefined') {
+                                JsBarcode("#checkin-barcode", d.bookingCode, { format: "CODE128", displayValue: true, height: 50, fontSize: 14 });
+                            }
+                            document.getElementById("popup").classList.add("show");
+                        } else {
+                            alert(d.message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        btn.disabled = false; btn.innerText = oldText;
+                        alert("Lỗi kết nối.");
+                    });
+                } else {
+                    const err = document.querySelector(".error");
+                    if(err) err.scrollIntoView({behavior:"smooth", block:"center"});
+                }
+            });
+
+            // Xử lý Popup
+            document.getElementById("popup-return-btn").addEventListener("click", () => document.getElementById("popup").classList.remove("show"));
+            document.getElementById("popup-finish-btn").addEventListener("click", () => window.location.href = '@Url.Action("PatientDashboard", "ServicePortal")');
+
+            // Init: Chặn ngày sinh tương lai
+            const dobInput = document.getElementById("DOB");
+            const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+            dobInput.max = yesterday.toISOString().split("T")[0];
+
+            // Init: Nếu đang ở chế độ Edit (đã có bác sĩ), load lịch ngay
+            if (isEditMode && docSelect.value) {
+                loadSchedule();
+            } else {
+                renderGrid(null);
+            }
+        });
+        </script>
+    }*@
+
+@model WebAppHealth.Models.RegisterServiceViewModel
+@{
+    ViewBag.Title = "Đăng ký khám dịch vụ";
+    Layout = "~/Views/Shared/_ServiceLayout.cshtml";
+    // Biến kiểm tra chế độ Đổi lịch
+    bool isReschedule = ViewBag.IsReschedule == true;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/reg_standard_exam.css" />
+}
+
+<header class="form-header">
+    <h1>@(isReschedule ? "THAY ĐỔI LỊCH KHÁM DỊCH VỤ" : "ĐẶT LỊCH KHÁM DỊCH VỤ")</h1>
+</header>
+
+<form id="exam-form" novalidate>
+
+    @if (isReschedule)
+    {
+        <input type="hidden" name="OldAppointmentId" value="@ViewBag.RescheduleId" />
+    }
+
+    <div class="form-group">
+        <label for="FullName">Họ và Tên<span class="required-asterisk">*</span></label>
+        <input type="text" id="FullName" name="FullName" placeholder="Nguyễn Văn A"
+               value="@(Model?.FullName)" />
+        <span class="error-message" id="FullName-error">Vui lòng nhập họ và tên.</span>
+    </div>
+
+    <div class="form-group">
+        <label for="DOB">Ngày sinh<span class="required-asterisk">*</span></label>
+        <input type="date" id="DOB" name="DOB"
+               value="@(Model?.DOB.HasValue == true ? Model.DOB.Value.ToString("yyyy-MM-dd") : "")" />
+        <span class="error-message" id="DOB-error">Vui lòng chọn ngày sinh.</span>
+    </div>
+
+    <div class="form-group">
+        <label>Giới tính<span class="required-asterisk">*</span></label>
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="Gender" value="Nam"
+                       @(Model?.Gender == "Nam" ? "checked" : "") /> Nam
+            </label>
+            <label>
+                <input type="radio" name="Gender" value="Nữ"
+                       @(Model?.Gender == "Nữ" ? "checked" : "") /> Nữ
+            </label>
+        </div>
+        <span class="error-message" id="Gender-error">Vui lòng chọn giới tính.</span>
+    </div>
+
+    <div class="form-group">
+        <label for="CCCD">Số CCCD<span class="required-asterisk">*</span></label>
+        <input type="text" id="CCCD" name="CCCD" placeholder="Nhập 12 số CCCD" maxlength="12"
+               value="@(Model?.CCCD)" />
+        <span class="error-message" id="CCCD-error">Vui lòng nhập đủ 12 số CCCD.</span>
+    </div>
+
+    <div class="form-group">
+        <label for="Phone">Số điện thoại<span class="required-asterisk">*</span></label>
+        <input type="tel" id="Phone" name="Phone" placeholder="09xxxxxxxx"
+               value="@(Model?.Phone)" />
+        <span class="error-message" id="Phone-error">Vui lòng nhập số điện thoại hợp lệ.</span>
+    </div>
+
+    <div class="form-group">
+        <label for="Address">Địa chỉ<span class="required-asterisk">*</span></label>
+        <input type="text" id="Address" name="Address" placeholder="Địa chỉ chi tiết"
+               value="@(Model?.Address)" />
+        <span class="error-message" id="Address-error">Vui lòng nhập địa chỉ.</span>
+    </div>
+
+    <div class="form-group">
+        <label for="DepartmentID">Chọn chuyên khoa<span class="required-asterisk">*</span></label>
+        <select id="DepartmentID" name="DepartmentID" required>
+            <option value="">-- Vui lòng chọn chuyên khoa --</option>
+            @if (ViewBag.Departments != null)
+            {
+                foreach (var item in (SelectList)ViewBag.Departments)
+                {
+                    var selected = (Model != null && Model.DepartmentID.ToString() == item.Value) ? "selected" : "";
+                    <option value="@item.Value" @selected>@item.Text</option>
+                }
+            }
+        </select>
+        <span class="error-message" id="DepartmentID-error">Vui lòng chọn chuyên khoa.</span>
+    </div>
+
+    <div class="form-group">
+        <label for="DoctorID">Chọn bác sĩ<span class="required-asterisk">*</span></label>
+        <select id="DoctorID" name="DoctorID" required @(ViewBag.Doctors != null ? "" : "disabled")>
+            @if (ViewBag.Doctors != null)
+            {
+                <option value="">-- Chọn bác sĩ --</option>
+                foreach (var item in (SelectList)ViewBag.Doctors)
+                {
+                    var selected = (Model != null && Model.DoctorID.ToString() == item.Value) ? "selected" : "";
+                    <option value="@item.Value" @selected>@item.Text</option>
+                }
+            }
+            else
+            {
+                <option value="">-- Vui lòng chọn chuyên khoa trước --</option>
+            }
+        </select>
+        <span class="error-message" id="DoctorID-error">Vui lòng chọn bác sĩ.</span>
+    </div>
+
+    <div class="form-group">
+        <label for="Symptoms">Mô tả tình trạng bệnh</label>
+        <textarea id="Symptoms" name="Symptoms" rows="4" placeholder="Mô tả ngắn gọn triệu chứng...">@(Model?.Symptoms)</textarea>
+    </div>
+
+    <fieldset class="form-group fieldset-group" id="lich-hen-group">
+        <legend class="fieldset-legend">
+            Chọn Ngày và Giờ khám @(isReschedule ? "(MỚI)" : "")
+            <div class="week-navigation">
+                <button type="button" id="prev-week-btn" class="week-nav-btn">&lt; Tuần trước</button>
+                <button type="button" id="today-btn" class="week-nav-btn">Hôm nay</button>
+                <button type="button" id="next-week-btn" class="week-nav-btn">Tuần sau &gt;</button>
+            </div>
+        </legend>
+
+        <div class="time-slots-container" id="time-slots-container">
+            <p class="text-center p-3">Vui lòng chọn chuyên khoa và bác sĩ để xem lịch hẹn.</p>
+        </div>
+        <span class="error-message" id="LichHen-error">Vui lòng chọn một mốc thời gian khám.</span>
+    </fieldset>
+
+    <div class="commitment-group">
+        <div>
+            <input type="checkbox" id="cam-ket" name="CamKet" />
+            <label for="cam-ket">Tôi cam kết các thông tin đã khai báo là đúng sự thật.<span class="required-asterisk">*</span></label>
+        </div>
+        <span class="error-message" id="CamKet-error">Bạn phải đồng ý với cam kết.</span>
+    </div>
+
+    <button type="submit" id="submit-button" class="submit-btn">@(isReschedule ? "CẬP NHẬT LỊCH" : "ĐĂNG KÝ")</button>
+</form>
+
+<div class="popup-overlay" id="popup">
+    <div class="popup-content">
+        <button type="button" class="popup-close-icon" id="popup-return-btn">&times;</button>
+        <h2>@(isReschedule ? "Cập nhật thành công!" : "Đăng ký thành công!")</h2>
+        <p>Vui lòng chuyển khoản để hoàn tất.</p>
+        <div class="row mt-3 pt-3 border-top">
+            <div class="col-7 text-center p-8 popup-box">
+                <div class="qr-code-placeholder" id="payment-qr">
+                    <img src="~/asset/QRCode.jpg" alt="Mã QR" style="max-width:100%; height:auto;" />
+                </div>
+                <div class="bank-info">
+                    <p><strong>Ngân hàng:</strong> <span>VIETCOMBANK</span></p>
+                    <p><strong>Tên thụ hưởng:</strong> <span>BỆNH VIỆN ĐA KHOA TAM BÌNH</span></p>
+                    <p><strong>Số tài khoản:</strong> <span>12345678945330</span></p>
+                    <p><strong>Tổng cộng:</strong> <span id="popup-total-cost" style="font-weight: bold; color: #d9534f">120.000 VNĐ</span></p>
+                    <p><strong>Nội dung CK:</strong> <span>HO TEN - SDT - DK KCB DICH VU</span></p>
+                </div>
+            </div>
+            <div class="col-5 p-8 popup-box">
+                <div class="popup-info">
+                    <p><strong>Họ tên:</strong> <span id="popup-ho-ten"></span></p>
+                    <p><strong>Chuyên khoa:</strong> <span id="popup-chuyen-khoa"></span></p>
+                    <p><strong>Bác sĩ:</strong> <span id="popup-bac-si"></span></p>
+                    <p><strong>Lịch hẹn:</strong> <span id="popup-lich-hen"></span></p>
+                    <p><strong>SĐT:</strong> <span id="popup-sdt"></span></p>
+                </div>
+                <div class="mt-4">
+                    <p class="mb-1 qr-box" style="font-weight: bold; text-align: left">
+                        Mã check-in (đưa mã cho nhân viên):
+                    </p>
+                    <svg id="checkin-barcode" class="qr-checkin-container"></svg>
+                </div>
+            </div>
+        </div>
+        <button type="button" id="popup-finish-btn" class="popup-btn">Xong</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        // ============================================================
+        // 1. CẤU HÌNH & BIẾN
+        // ============================================================
+        const slotsContainer = document.getElementById("time-slots-container");
+        const lichHenError = document.getElementById("LichHen-error");
+
+        // Kiểm tra chế độ Đổi lịch
+        const isEditMode = '@(ViewBag.IsReschedule)' === 'True';
+
+        const masterTimeSlots = [
+            { label: "07:00 - 08:00" }, { label: "08:00 - 09:00" },
+            { label: "09:00 - 10:00" }, { label: "10:00 - 11:00" },
+            { label: "13:00 - 14:00" }, { label: "14:00 - 15:00" },
+            { label: "15:00 - 16:00" }
+        ];
+
+        let currentRenderMonday = getMonday(new Date());
+
+        // ============================================================
+        // 2. CÁC HÀM HỖ TRỢ
+        // ============================================================
+        function getMonday(d) {
+            d = new Date(d);
+            var day = d.getDay(), diff = d.getDate() - day + (day == 0 ? -6 : 1);
+            return new Date(d.setDate(diff));
+        }
+
+        function formatDateISO(date) {
+            const offset = date.getTimezoneOffset();
+            date = new Date(date.getTime() - (offset * 60 * 1000));
+            return date.toISOString().split('T')[0];
+        }
+
+        function formatDateDisplay(date) {
+            const d = date.getDate().toString().padStart(2, "0");
+            const m = (date.getMonth() + 1).toString().padStart(2, "0");
+            return `${d}/${m}`;
+        }
+
+        function hideGroupError() {
+            document.getElementById("lich-hen-group").classList.remove("error");
+            lichHenError.classList.remove("show");
+        }
+
+        // ============================================================
+        // 3. LOGIC GỌI API & RENDER GRID
+        // ============================================================
+        function loadSchedule() {
+            const doctorId = document.getElementById("DoctorID").value;
+
+            if (!doctorId) {
+                renderGrid(null);
+                return;
+            }
+
+            slotsContainer.innerHTML = '<div class="text-center p-3"><div class="spinner-border text-primary spinner-border-sm"></div> Đang tải lịch...</div>';
+
+            const startDateStr = formatDateISO(currentRenderMonday);
+
+            const url = '@Url.Action("GetDoctorSchedule", "ServicePortal")' + `?doctorId=${doctorId}&startDate=${startDateStr}`;
+
+            fetch(url)
+                .then(r => {
+                    if (!r.ok) throw new Error("Lỗi Server: " + r.status);
+                    return r.json();
+                })
+                .then(res => {
+                    if (res.success) {
+                        renderGrid(res.data);
+                    } else {
+                        slotsContainer.innerHTML = `<p class="text-danger text-center">Lỗi: ${res.message}</p>`;
+                    }
+                })
+                .catch(e => {
+                    console.error(e);
+                    slotsContainer.innerHTML = '<p class="text-danger text-center">Không thể tải lịch khám. Vui lòng thử lại.</p>';
+                });
+        }
+
+        function renderGrid(availableSlotsFromDB) {
+            slotsContainer.innerHTML = "";
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+
+            if (availableSlotsFromDB === null) {
+                slotsContainer.innerHTML = '<p class="text-center p-3 text-muted">Vui lòng chọn Chuyên khoa và Bác sĩ để xem lịch.</p>';
+                return;
+            }
+
+            for (let i = 0; i < 7; i++) {
+                const dayDate = new Date(currentRenderMonday);
+                dayDate.setDate(currentRenderMonday.getDate() + i);
+
+                if (dayDate.getDay() === 0) continue; // Bỏ CN
+
+                const dateISO = formatDateISO(dayDate);
+                const isPastDate = dayDate.getTime() < now.getTime();
+
+                const group = document.createElement("div");
+                group.className = "day-group";
+
+                const dayNames = ["CN", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
+                const dayName = dayNames[dayDate.getDay()];
+                group.innerHTML = `<strong>${dayName} <span class="day-date">(${formatDateDisplay(dayDate)})</span></strong>`;
+
+                const slotsDiv = document.createElement("div");
+                slotsDiv.className = "slots";
+
+                masterTimeSlots.forEach(slotMaster => {
+                    let isDisabled = false;
+
+                    if (isPastDate) {
+                        isDisabled = true;
+                    }
+                    else if (availableSlotsFromDB !== null) {
+                        const dbSlot = availableSlotsFromDB.find(s =>
+                            s.DateISO === dateISO && s.SlotLabel === slotMaster.label
+                        );
+                        if (!dbSlot) isDisabled = true;
+                    }
+
+                    const label = document.createElement("label");
+                    const input = document.createElement("input");
+                    input.type = "radio";
+                    input.name = "LichHen";
+                    input.value = `${dayName}_${formatDateDisplay(dayDate)}_${slotMaster.label}`;
+                    input.addEventListener("click", hideGroupError);
+
+                    const span = document.createElement("span");
+                    span.textContent = slotMaster.label;
+
+                    if (isDisabled) {
+                        input.disabled = true;
+                        label.style.opacity = "0.4";
+                        label.style.cursor = "not-allowed";
+                    }
+
+                    label.appendChild(input);
+                    label.appendChild(span);
+                    slotsDiv.appendChild(label);
+                });
+
+                group.appendChild(slotsDiv);
+                slotsContainer.appendChild(group);
+            }
+        }
+
+        // ============================================================
+        // 4. SỰ KIỆN NÚT BẤM & CHANGE
+        // ============================================================
+        const btnPrev = document.getElementById("prev-week-btn");
+        const btnNext = document.getElementById("next-week-btn");
+        const btnToday = document.getElementById("today-btn");
+
+        if(btnPrev) btnPrev.addEventListener("click", () => { currentRenderMonday.setDate(currentRenderMonday.getDate() - 7); loadSchedule(); });
+        if(btnNext) btnNext.addEventListener("click", () => { currentRenderMonday.setDate(currentRenderMonday.getDate() + 7); loadSchedule(); });
+        if(btnToday) btnToday.addEventListener("click", () => { currentRenderMonday = getMonday(new Date()); loadSchedule(); });
+
+        const docSelect = document.getElementById("DoctorID");
+        docSelect.addEventListener("change", () => {
+            currentRenderMonday = getMonday(new Date());
+            loadSchedule();
+        });
+
+        const deptSelect = document.getElementById("DepartmentID");
+        deptSelect.addEventListener("change", function() {
+            const id = this.value;
+            docSelect.innerHTML = '<option value="">Đang tải...</option>';
+            docSelect.disabled = true;
+            renderGrid(null); // Reset lịch
+
+            if(id) {
+                const url = '@Url.Action("GetDoctorsByDepartment", "ServicePortal")' + '?departmentId=' + id;
+                fetch(url)
+                    .then(r => r.json())
+                    .then(data => {
+                        docSelect.innerHTML = '<option value="">-- Chọn bác sĩ --</option>';
+                        if(data.length > 0) {
+                            data.forEach(d => {
+                                const op = document.createElement("option");
+                                op.value = d.DoctorID; op.text = d.FullName;
+                                docSelect.appendChild(op);
+                            });
+                            docSelect.disabled = false;
+                        } else {
+                            docSelect.innerHTML = '<option value="">Không có bác sĩ</option>';
+                        }
+                    })
+                    .catch(e => {
+                        console.error(e);
+                        docSelect.innerHTML = '<option value="">Lỗi tải dữ liệu</option>';
+                    });
+            } else {
+                docSelect.innerHTML = '<option value="">-- Chọn chuyên khoa trước --</option>';
+            }
+        });
+
+        // ============================================================
+        // 5. VALIDATION & SUBMIT
+        // ============================================================
+        const form = document.getElementById("exam-form");
+
+        function showError(input, errorId, msg) {
+            input.classList.add("error");
+            const el = document.getElementById(errorId);
+            if(el){ el.textContent = msg; el.classList.add("show"); }
+        }
+        function hideError(input, errorId) {
+            input.classList.remove("error");
+            const el = document.getElementById(errorId);
+            if(el) el.classList.remove("show");
+        }
+
+        const sdtRegex = /^(0[3|5|7|8|9])+([0-9]{8})\b$/;
+        const cccdRegex = /^\d{12}$/;
+
+        function validateForm() {
+            let isValid = true;
+            // Validate Selects
+            if(!deptSelect.value) { showError(deptSelect, "DepartmentID-error", "Chọn khoa."); isValid=false; }
+            else hideError(deptSelect, "DepartmentID-error");
+
+            if(!docSelect.value) { showError(docSelect, "DoctorID-error", "Chọn bác sĩ."); isValid=false; }
+            else hideError(docSelect, "DoctorID-error");
+
+            const hoTen = document.getElementById("FullName");
+            if(!hoTen.value.trim()){ showError(hoTen, "FullName-error", "Nhập họ tên."); isValid=false; }
+            else hideError(hoTen, "FullName-error");
+
+            const dob = document.getElementById("DOB");
+            if(!dob.value){ showError(dob, "DOB-error", "Chọn ngày sinh."); isValid=false; }
+            else hideError(dob, "DOB-error");
+
+            const cccd = document.getElementById("CCCD");
+            if(!cccdRegex.test(cccd.value)){ showError(cccd, "CCCD-error", "CCCD 12 số."); isValid=false; }
+            else hideError(cccd, "CCCD-error");
+
+            const phone = document.getElementById("Phone");
+            if(!sdtRegex.test(phone.value)){ showError(phone, "Phone-error", "SĐT không hợp lệ."); isValid=false; }
+            else hideError(phone, "Phone-error");
+
+            const addr = document.getElementById("Address");
+            if(!addr.value.trim()){ showError(addr, "Address-error", "Nhập địa chỉ."); isValid=false; }
+            else hideError(addr, "Address-error");
+
+            const lichHen = document.querySelector('input[name="LichHen"]:checked');
+            if(!lichHen){
+                document.getElementById("lich-hen-group").classList.add("error");
+                document.getElementById("LichHen-error").classList.add("show");
+                isValid = false;
+            } else hideGroupError();
+
+            const ck = document.getElementById("cam-ket");
+            if(!ck.checked){ showError(ck, "CamKet-error", "Cần cam kết."); isValid=false; }
+            else hideError(ck, "CamKet-error");
+
+            return isValid;
+        }
+
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            if(validateForm()) {
+                const btn = document.getElementById("submit-button");
+                const oldText = btn.innerText;
+                btn.disabled = true; btn.innerText = "Đang xử lý...";
+                const formData = new FormData(form);
+
+                // Dùng Url.Action để post
+                fetch('@Url.Action("RegisterServiceExam", "ServicePortal")', {
+                    method: 'POST', body: formData
+                })
+                .then(r => {
+                    if (!r.ok) throw new Error("Lỗi Server: " + r.status);
+                    return r.json();
+                })
+                .then(d => {
+                    btn.disabled = false; btn.innerText = oldText;
+                    if(d.success) {
+
+                        // === LOGIC MỚI: KIỂM TRA ĐỔI LỊCH (ĐỂ KHÔNG HIỆN POPUP) ===
+                        if (d.isUpdate) {
+                            alert(d.message);
+                            window.location.href = '@Url.Action("Results", "AppointmentManage")';
+                            return; // Dừng lại ở đây, không chạy code popup bên dưới
+                        }
+
+                        // === LOGIC CŨ: HIỆN POPUP (NẾU LÀ TẠO MỚI) ===
+                        const setText = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+
+                        setText("popup-ho-ten", document.getElementById("FullName").value);
+
+                        if (deptSelect.selectedIndex >= 0)
+                            setText("popup-chuyen-khoa", deptSelect.options[deptSelect.selectedIndex].text);
+                        if (docSelect.selectedIndex >= 0)
+                            setText("popup-bac-si", docSelect.options[docSelect.selectedIndex].text);
+
+                        setText("popup-sdt", document.getElementById("Phone").value);
+
+                        const lhRadio = document.querySelector('input[name="LichHen"]:checked');
+                        if(lhRadio){
+                            const dayGroup = lhRadio.closest(".day-group");
+                            const dayName = dayGroup ? dayGroup.querySelector("strong").textContent : "";
+                            const timeText = lhRadio.nextElementSibling.textContent;
+                            setText("popup-lich-hen", `${dayName} - ${timeText}`);
+                        }
+
+                        if(typeof JsBarcode !== 'undefined' && d.bookingCode) {
+                            JsBarcode("#checkin-barcode", d.bookingCode, { format: "CODE128", displayValue: true, height: 50, fontSize: 14 });
+                        }
+                        document.getElementById("popup").classList.add("show");
+                    } else {
+                        alert(d.message);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    btn.disabled = false; btn.innerText = oldText;
+                    alert("Lỗi kết nối hoặc xử lý.");
+                });
+            } else {
+                const err = document.querySelector(".error");
+                if(err) err.scrollIntoView({behavior:"smooth", block:"center"});
+            }
+        });
+
+        // Xử lý Popup
+        document.getElementById("popup-return-btn").addEventListener("click", () => document.getElementById("popup").classList.remove("show"));
+        document.getElementById("popup-finish-btn").addEventListener("click", () => window.location.href = '@Url.Action("PatientDashboard", "ServicePortal")');
+
+        // Init: Chặn ngày sinh tương lai
+        const dobInput = document.getElementById("DOB");
+        const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+        dobInput.max = yesterday.toISOString().split("T")[0];
+
+        // Init: Nếu đang ở chế độ Edit (đã có bác sĩ từ Pre-fill), load lịch ngay
+        if (isEditMode && docSelect.value) {
+            loadSchedule();
+        } else {
+            renderGrid(null);
+        }
+    });
+    </script>
+}
