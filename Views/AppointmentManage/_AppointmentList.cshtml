@@ -1,0 +1,42 @@
+﻿@model IEnumerable<WebAppHealth.Models.AppointmentListItemVM>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var item in Model)
+    {
+        // Định màu sắc badge trạng thái
+        string badgeClass = "bg-secondary";
+        if (item.Status == "Pending") { badgeClass = "bg-warning text-dark"; }
+        else if (item.Status == "Confirmed") { badgeClass = "bg-success"; }
+        else if (item.Status == "Cancelled") { badgeClass = "bg-danger"; }
+
+        <div class="card mb-3 shadow-sm appointment-item" style="cursor:pointer; transition:0.3s;" data-id="@item.AppointmentID">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="card-title text-primary fw-bold mb-0">@item.AppointmentCode</h6>
+                    <span class="badge @badgeClass rounded-pill">@item.StatusVN</span>
+                </div>
+
+                <p class="mb-1 small"><i class="fas fa-calendar-alt text-muted me-2"></i><strong>@item.AppointmentDate</strong> (Ca: @item.TimeSlot)</p>
+                <p class="mb-1 small"><i class="fas fa-user-md text-muted me-2"></i>@item.DoctorName</p>
+                <p class="mb-2 small"><i class="fas fa-hospital text-muted me-2"></i>@item.DepartmentName</p>
+
+                @if (item.AllowCancel)
+                {
+                    <div class="border-top pt-2 mt-2 d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-danger w-50 btn-cancel" data-id="@item.AppointmentID">
+                            <i class="fas fa-times me-1"></i>Hủy
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary w-50 btn-reschedule" data-id="@item.AppointmentID">
+                            <i class="fas fa-sync me-1"></i>Đổi lịch
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="alert alert-warning">Không có dữ liệu.</div>
+}

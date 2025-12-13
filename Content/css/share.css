@@ -1,0 +1,513 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+:root {
+    --main: #01cdb5;
+    --blue: #007bff;
+    --indigo: #6610f2;
+    --purple: #6f42c1;
+    --pink: #e83e8c;
+    --red: #dc3545;
+    --orange: #fd7e14;
+    --yellow: #ffc107;
+    --green: #28a745;
+    --teal: #20c997;
+    --cyan: #17a2b8;
+    --white: #fff;
+    --gray: #6c757d;
+    --gray-dark: #343a40;
+    --primary: #007bff;
+    --secondary: #6c757d;
+    --success: #28a745;
+    --info: #17a2b8;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --light-gray: #f4f4f4;
+    --medium-gray: #ddd;
+    --dark-gray: #333;
+    --disabled-bg: #eee;
+    --error-color: #d9534f;
+    --font-family-sans-serif: Montserrat, Roboto, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    --font-family-monospace: "Courier New", Courier, monospace;
+}
+
+html {
+    font-size: 62.5%;
+    line-height: 1.6;
+    font-family: Montserrat !important;
+}
+
+body {
+    font-size: 1.6rem;
+    color: var(--gray-dark);
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+/* =================================================================
+                        STYLE CHUNG (COMMON)
+==================================================================== */
+.container {
+    width: 120rem;
+}
+
+p {
+    text-align: justify
+}
+
+a {
+    text-decoration: none;
+    color: var(--main);
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+}
+
+/* Dấu gạch chân tiêu đề*/
+
+
+
+/* ==============================================================================================
+                                        BANNER TITLE
+================================================================================================= */
+.banner-title {
+    position: relative;
+    width: 100vw;
+    height: 25rem;
+    padding-top: 8rem !important;
+}
+
+.page-title {
+    width: 100%;
+    text-align: left;
+}
+
+.title-box {
+    display: inline-block;
+    text-align: center;
+}
+
+.title-text {
+    display: block;
+    text-align: left;
+    font-size: 2.6rem;
+    font-weight: 700;
+}
+
+.underline {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+    .underline .line {
+        width: 3rem;
+        height: 0.3rem;
+    }
+
+    .underline .line1 {
+        background-color: #00ebeb;
+        border-radius: 1rem 0 0 1rem;
+    }
+
+    .underline .line2 {
+        background-color: #c1cad2;
+        border-radius: 0 1rem 1rem 0;
+    }
+
+.section-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 4rem;
+    padding-bottom: 1rem;
+}
+
+/* =================================================================
+                        1. HEADER
+==================================================================== */
+
+.header-top {
+    width: 100vw;
+    background-color: var(--white);
+    height: auto;
+    min-height: 6.6rem;
+}
+
+.logo img {
+    height: 40px;
+}
+
+.header-top-item {
+    display: flex;
+    gap: 8px;
+    color: var(--main);
+    align-items: center;
+}
+
+.header-top .header-icon {
+    padding: 0.4rem;
+    border: 1px solid var(--main);
+    justify-content: center;
+    align-items: center;
+}
+
+    .header-top .header-icon i {
+        font-size: 1.8rem;
+        padding: 3px;
+    }
+
+.header-link {
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+
+    .header-link:hover {
+        color: var(--main) !important;
+        text-decoration: underline !important;
+    }
+
+/*====================================================================
+                            2. NAVBAR
+======================================================================  */
+.navbar .container {
+    width: unset;
+}
+
+.navbar.sticky-top {
+    background-color: var(--main) !important;
+    height: 4.5rem;
+}
+
+.navbar-nav .nav-item {
+    padding: 0.2rem 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.navbar-nav .nav-item.active {
+    background-color: #00ac98;
+}
+
+.navbar-nav .nav-link {
+    color: var(--white) !important;
+    font-size: 1.7rem;
+    font-weight: 500;
+}
+
+/* ICON HOME */
+.navbar-nav .nav-item .fa-house {
+    font-size: 22px;
+    font-weight: 200;
+}
+
+/* ICON KÍNH LÚP */
+.navbar-nav .nav-link#searchDropdown::after {
+    display: none !important;
+}
+
+.navbar .dropdown-menu[aria-labelledby="searchDropdown"] {
+    width: 320px;
+}
+
+.dropdown-menu .form-control {
+    border: 1px solid var(--main);
+    font-size: 1.6rem;
+}
+
+    .dropdown-menu .form-control:focus {
+        border-color: var(--main);
+        box-shadow: 0 0 0 0.1rem rgba(0, 176, 154, 0.25);
+    }
+
+.dropdown-menu .btn-success {
+    font-size: 1.6rem;
+    background-color: var(--main) !important;
+    border-color: var(--main) !important;
+    color: var(--white) !important;
+    transition: all 0.3s ease;
+}
+
+    .dropdown-menu .btn-success:hover {
+        background-color: var(--white) !important;
+        color: var(--main) !important;
+        border-color: var(--main) !important;
+    }
+
+/* Dropdown style */
+.dropdown-menu {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 0;
+    margin-top: 0;
+    padding: 0;
+    width: 28rem;
+}
+
+.dropdown-item {
+    position: relative;
+    display: block;
+    color: var(--dark) !important;
+    padding: 5px 20px;
+    transition: color 0.3s ease;
+    font-size: 1.6rem;
+}
+
+    .dropdown-item::after {
+        content: "";
+        position: absolute;
+        height: 2px;
+        background-color: var(--main);
+        left: 20px;
+        bottom: 5px;
+        width: 0px;
+        transition: width 0.3s ease-in-out;
+    }
+
+    .dropdown-item:hover {
+        color: var(--main) !important;
+        background-color: transparent;
+    }
+
+        .dropdown-item:hover::after {
+            width: calc(100% - 50px);
+        }
+
+/* ============================================================================================
+                                    12. FOOTER & COPYRIGHT
+=============================================================================================== */
+
+.main-footer {
+    background-color: var(--gray-dark);
+    padding: 6rem 0 0 !important;
+    font-size: 1.4rem;
+    line-height: 1.6;
+    color: #ccc;
+}
+
+    .main-footer .section-title {
+        position: relative;
+    }
+
+    .main-footer .underline {
+        left: 6%;
+        top: 3rem;
+    }
+
+.footer-col__title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.contact-list {
+    list-style: none;
+    padding: 0;
+    margin: -2rem 0 0;
+}
+
+    .contact-list li {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        margin-bottom: 15px;
+        line-height: 1.7;
+    }
+
+        .contact-list li i {
+            font-size: 1.6rem;
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            margin-right: 15px;
+            margin-top: 4px;
+            width: 3rem;
+            text-align: center;
+            line-height: 3rem;
+        }
+
+    .contact-list .contact-label {
+        color: var(--main);
+        margin-right: 8px;
+    }
+
+.social-links {
+    display: flex;
+    gap: 10px;
+    margin: -2rem 0 5rem 0 !important;
+}
+
+.social-links__icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--main);
+    color: #fff !important;
+    font-size: 2rem;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: opacity 0.3s ease;
+}
+
+    .social-links__icon:hover {
+        opacity: 0.6;
+    }
+
+.useful-links {
+    list-style: none;
+    padding: 0;
+    margin-top: -2rem;
+}
+
+    .useful-links li {
+        position: relative;
+        padding-left: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+        .useful-links li::before {
+            content: ">";
+            font-size: 1.6rem;
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .useful-links li a {
+            font-size: 1.6rem;
+            color: var(--white);
+            transition: color 0.3s ease;
+        }
+
+            .useful-links li a:hover {
+                color: var(--main);
+                text-decoration: none;
+            }
+
+.copyright {
+    background-color: var(--gray-dark);
+    font-size: 1.5rem;
+}
+
+    .copyright p {
+        text-align: center;
+    }
+
+    .copyright a {
+        color: var(--main) !important;
+    }
+
+        .copyright a:hover {
+            text-decoration: underline;
+        }
+
+/* ==============================================================================================
+                                    13. BACK-TO-TOP
+================================================================================================= */
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--main);
+    color: var(--white);
+    border: 1px solid transparent;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 1.6rem;
+    transition: opacity 0.3s, visibility 0.3s;
+    opacity: 1;
+    visibility: visible;
+    z-index: 1000;
+}
+
+    .back-to-top:hover {
+        color: var(--main);
+        background-color: transparent;
+        border-color: var(--main);
+    }
+
+/* ==============================================================================================
+                                    12. RESPONSIVE
+================================================================================================= */
+/* NAVBAR MIN-WIDTH */
+@media (min-width: 992px) {
+    .navbar .nav-item.dropdown:not(.click-to-open) .dropdown-menu {
+        display: block;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(10px);
+        transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+        margin-top: 0;
+        pointer-events: none;
+    }
+
+    .navbar .nav-item.dropdown:not(.click-to-open):hover .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .navbar .nav-item.dropdown:not(.click-to-open) > .nav-link {
+        pointer-events: none;
+    }
+}
+
+/* CSS cho Sticky Navbar */
+.sticky-navbar-active {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    background-color: var(--primary-color, #0d6efd);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    animation: slideDown 0.4s ease forwards;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* CSS cho Breadcrumb  */
+.breadcrumb-item .material-icons,
+.breadcrumb-item .text-decoration-none {
+    color: var(--gray);
+}
+
+    .breadcrumb-item .material-icons:hover,
+    .breadcrumb-item .text-decoration-none:hover {
+        color: var(--main);
+    }
+
+.breadcrumb-item span {
+    color: #000;
+}
+

@@ -1,0 +1,144 @@
+﻿@model IEnumerable<WebAppHealth.Areas.Admin.Models.PatientViewModel>
+
+@{
+    ViewBag.Title = "Quản lý Bệnh nhân";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách Bệnh nhân</h6>
+    </div>
+    <div class="card-body">
+
+        <form action="@Url.Action("Index")" method="get" class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Nhập tên, mã BN hoặc SĐT..." value="@ViewBag.Search">
+                    <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i> Tìm kiếm</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Mã BN</th>
+                        <th>Họ và Tên</th>
+                        <th>Thông tin cá nhân</th>
+                        <th>Liên hệ</th>
+                        <th>Trạng thái</th>
+                        <th class="text-center">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td><strong>@item.PatientCode</strong></td>
+                                <td>
+                                    <span class="fw-bold text-primary">@item.FullName</span>
+                                </td>
+                                <td>
+                                    <small>Giới tính: @item.Gender</small><br />
+                                    <small>Ngày sinh: @(item.DateOfBirth.HasValue ? item.DateOfBirth.Value.ToString("dd/MM/yyyy") : "--/--/----")</small>
+                                </td>
+                                <td>
+                                    <div><i class="fas fa-phone-alt text-muted me-1"></i> @item.PhoneNumber</div>
+                                    <div><i class="fas fa-envelope text-muted me-1"></i> @item.Email</div>
+                                    <div class="text-truncate" style="max-width: 200px;" title="@item.Address">
+                                        <i class="fas fa-map-marker-alt text-muted me-1"></i> @item.Address
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="badge bg-success">Hoạt động</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Đã khóa</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <a href="@Url.Action("Details", new { id = item.PatientID })" class="btn btn-sm btn-info text-white" title="Hồ sơ">
+                                        <i class="fas fa-file-medical"></i>
+                                    </a>
+
+                                    <button class="btn btn-sm @(item.IsActive ? "btn-danger" : "btn-warning") btn-lock"
+                                            data-id="@item.PatientID"
+                                            title="@(item.IsActive ? "Khóa tài khoản" : "Mở khóa")">
+                                        <i class="fas @(item.IsActive ? "fa-lock" : "fa-unlock")"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">Không tìm thấy bệnh nhân nào.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
+{
+    @Html.AntiForgeryToken()
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Xử lý sự kiện click nút Khóa/Mở khóa
+            $('.btn-lock').click(function () {
+                var btn = $(this);
+                var patientId = btn.data('id');
+                var isLocking = btn.find('i').hasClass('fa-lock'); // Đang là icon lock -> tức là hành động Khóa
+
+                var confirmMsg = isLocking
+                    ? "Bạn có chắc chắn muốn KHÓA tài khoản bệnh nhân này không?"
+                    : "Bạn muốn MỞ KHÓA tài khoản này?";
+
+                if (confirm(confirmMsg)) {
+                    var form = $('#__AjaxAntiForgeryForm');
+                    var token = $('input[name="__RequestVerificationToken"]', form).val();
+
+                    $.ajax({
+                        url: '/Admin/Patients/ToggleLock',
+                        type: 'POST',
+                        data: {
+                            id: patientId,
+                            __RequestVerificationToken: token
+                        },
+                        success: function (res) {
+                            if (res.success) {
+                                alert(res.message);
+                                location.reload();
+                            } else {
+                                alert("Lỗi: " + res.message);
+                            }
+                        },
+                        error: function () {
+                            alert("Đã xảy ra lỗi kết nối.");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Index</h2>
+

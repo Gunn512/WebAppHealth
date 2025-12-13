@@ -1,0 +1,114 @@
+.form-container {
+  width: 90%;
+  background-color: #fff;
+  padding: 4rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 3rem;
+  margin-bottom: 5rem;
+}
+
+.form-title {
+  font-weight: 700;
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 5rem;
+  padding-bottom: 10px;
+  color: var(--main);
+  text-transform: uppercase;
+}
+
+.custom-input {
+  border: none;
+  border-bottom: 1px solid #ced4da;
+  border-radius: 0;
+  padding: 1rem;
+  background-color: transparent;
+}
+
+.custom-input:focus {
+  box-shadow: 0 0.1rem 0.1rem var(--main);
+  border: 1px solid #00bfa5;
+}
+
+.form-label,
+.form-select {
+  font-size: 1.6rem;
+  color: #333;
+  margin-bottom: 0.4rem;
+}
+
+.form-label {
+  font-weight: 700;
+}
+
+.form-control {
+  font-size: 1.6rem;
+}
+
+.required-star {
+  color: red;
+  margin-left: 3px;
+}
+
+.gender-radio {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  height: 100%;
+  margin-top: -1rem !important;
+  margin-left: 3rem;
+}
+
+/* Nút upload file */
+.file-upload-wrapper {
+  margin-top: 10px;
+}
+
+.btn-file {
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  color: #333;
+}
+
+/* Footer area */
+.form-footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.download-link {
+  color: #00bfa5;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.download-link:hover {
+  text-decoration: underline;
+  color: #008f7a;
+}
+
+.btn-submit {
+  background-color: var(--main);
+  border: 1px solid transparent;
+  color: white;
+  font-weight: bold;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+}
+
+.btn-submit:hover {
+  background-color: transparent;
+  border-color: var(--main);
+  color: var(--main);
+}
+
+.form-check-input:checked {
+    background-color: var(--main);
+    border-color: var(--main);
+}

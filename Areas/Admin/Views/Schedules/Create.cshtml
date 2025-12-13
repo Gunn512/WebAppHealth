@@ -1,0 +1,71 @@
+﻿@model WebAppHealth.Areas.Admin.Models.CreateScheduleViewModel
+@{
+    ViewBag.Title = "Đăng ký Lịch làm việc";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+    // Lấy danh sách TimeSlots truyền từ Controller
+    var timeSlots = ViewBag.TimeSlots as List<WebAppHealth.Models.DataModel.TimeSlot>;
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Thêm mới Lịch làm việc</h6>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.DoctorID, "Bác sĩ", new { @class = "form-label fw-bold" })
+                        @Html.DropDownListFor(m => m.DoctorID, (SelectList)ViewBag.DoctorID, "--- Chọn Bác sĩ ---", new { @class = "form-select", required = "required" })
+                        @Html.ValidationMessageFor(m => m.DoctorID, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.DateWork, "Ngày làm việc", new { @class = "form-label fw-bold" })
+                        @Html.TextBoxFor(m => m.DateWork, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", required = "required" })
+                        @Html.ValidationMessageFor(m => m.DateWork, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Chọn các ca làm việc:</label>
+                        <div class="row g-2">
+                            @if (timeSlots != null && timeSlots.Any())
+                            {
+                                foreach (var slot in timeSlots)
+                                {
+                                    <div class="col-md-3 col-sm-4">
+                                        <div class="form-check border rounded p-2">
+                                            <input class="form-check-input ms-0 me-2" type="checkbox"
+                                                   name="SelectedSlotIDs"
+                                                   value="@slot.SlotID"
+                                                   id="slot_@slot.SlotID">
+                                            <label class="form-check-label stretched-link" for="slot_@slot.SlotID">
+                                                @slot.StartTime.Value.ToString(@"hh\:mm") - @slot.EndTime.Value.ToString(@"hh\:mm")
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning">
+                                    Chưa có dữ liệu TimeSlots. Vui lòng thêm dữ liệu vào bảng TimeSlots trong SQL.
+                                </div>
+                            }
+                        </div>
+                        @Html.ValidationMessageFor(m => m.SelectedSlotIDs, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <a href="@Url.Action("Index")" class="btn btn-secondary">Quay lại</a>
+                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Lưu lịch làm việc</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

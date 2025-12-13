@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "Tổng quan hệ thống";
+}
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Lịch hẹn mới</h5>
+                <p class="card-text display-6">15</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Bác sĩ trực</h5>
+                <p class="card-text display-6">8</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">Lịch hẹn cần xử lý gần đây</div>
+    <div class="card-body">
+        <table class="table table-striped" id="tblRecentAppointments">
+            <thead>
+                <tr>
+                    <th>Mã BN</th>
+                    <th>Họ tên</th>
+                    <th>Giờ khám</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>BN00123</td>
+                    <td>Nguyễn Văn A</td>
+                    <td>08:00 - 09:00</td>
+                    <td><span class="badge bg-warning">Chờ duyệt</span></td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-primary">Chi tiết</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

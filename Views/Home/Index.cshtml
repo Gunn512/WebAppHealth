@@ -1,0 +1,754 @@
+﻿@using WebAppHealth.Models
+@model HomeViewModel
+
+@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_HealthLayout.cshtml";
+}
+
+<section class="carousel-section">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="4"></button>
+        </div>
+
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="~/asset/banner_01.jpg" class="d-block w-100" alt="banner_01" />
+            </div>
+            <div class="carousel-item">
+                <img src="~/asset/banner_02.jpg" class="d-block w-100" alt="banner_02" />
+            </div>
+            <div class="carousel-item">
+                <img src="~/asset/banner_03.jpg" class="d-block w-100" alt="banner_03" />
+            </div>
+            <div class="carousel-item">
+                <img src="~/asset/banner_04.jpg" class="d-block w-100" alt="banner_04" />
+            </div>
+            <div class="carousel-item">
+                <img src="~/asset/banner_05.jpg" class="d-block w-100" alt="banner_05" />
+            </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</section>
+
+<section class="addom py-5">
+    <div class="container">
+        <div class="row g-0">
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fa-solid fa-truck-medical" aria-hidden="true"></i>
+                        <h3 class="h5">Cấp cứu</h3>
+                        <div class="addom-content">
+                            <div class="addom-line d-flex justify-content-between align-items-center">
+                                <span>Bệnh viện: </span><strong>@WebAppHealth.Models.ConfigHelper.Get("Hotline")</strong>
+                            </div>
+                            <div class="addom-line d-flex justify-content-between align-items-center">
+                                <span>Cấp cứu 115:</span><a href="@Url.Action("Contact","ContactUs")" class="btn btn-outline-light btn-sm">Chi tiết</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fa-solid fa-clock" aria-hidden="true"></i>
+                        <h3 class="h5">Giờ làm việc</h3>
+                        <div class="addom-content">
+                            <p class="mb-2">Thứ 2 đến thứ 6</p>
+                            <div class="addom-line d-flex justify-content-between align-items-center">
+                                <span>Sáng:</span><strong>7 giờ - 12 giờ</strong>
+                            </div>
+                            <div class="addom-line d-flex justify-content-between align-items-center">
+                                <span>Chiều:</span><strong>13 giờ - 16 giờ</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                <div class="card h-100 card-3">
+                    <div class="card-body">
+                        <i class="fa-solid fa-headset" aria-hidden="true"></i>
+                        <h3 class="h5">CSKH và ĐK Khám chữa bệnh trực tuyến</h3>
+                        <div class="addom-content">
+                            <div class="addom-line d-flex justify-content-between align-items-center">
+                                <span>Gọi ngay: </span><strong>1900066882</strong>
+                            </div>
+                            <div class="addom-line d-flex justify-content-between align-items-center">
+                                <span>Website:</span><a href="@Url.Action("PatientDashboard","ServicePortal")" class="btn btn-outline-light btn-sm">Tại đây</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <i class="fa-solid fa-user-doctor" aria-hidden="true"></i>
+                        <h3 class="h5">Bác sĩ</h3>
+                        <div class="addom-content">
+                            <a href="@Url.Action("Index","Doctors")" class="btn btn-outline-light btn-find-doctor">Tìm bác sĩ</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="main-news py-5">
+    <div class="container">
+        <div class="row">
+
+            <!-- Cột trái-->
+            <div class="col-lg-8">
+
+                <div class="d-flex justify-content-center" style="margin-bottom:2rem">
+                    <div class="p-3"> @Html.Partial("_SectionTitle", "TIN TỨC")</div>
+                </div>
+
+                <div class="news-list">
+                    @if (Model.LatestNews != null)
+                    {
+                        foreach (var news in Model.LatestNews)
+                        {
+                            <article class="card mb-3">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                        <img src="~/asset/@news.Image" alt="@news.Title" class="img-fluid rounded-start" />
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">
+                                                <a href="@Url.Action("Details", "News", new { id = news.NewsID })" class="text-decoration-none">@news.Title</a>
+                                                @if (news.PublishDate.HasValue && news.PublishDate.Value >= DateTime.Now.AddDays(-7))
+                                                {
+                                                    <span class="badge bg-danger ms-2">Mới</span>
+                                                }
+                                            </h5>
+                                            <div class="text-muted mb-2">
+                                                <i class="fa-regular fa-calendar-days" aria-hidden="true"></i>
+                                                <span class="date ms-1">
+                                                    @(news.PublishDate.HasValue ? news.PublishDate.Value.ToString("dd-MM-yyyy") : "")
+                                                </span>
+                                            </div>
+                                            <p class="card-text text-truncate">@news.Content</p>
+                                            <a href="@Url.Action("MedicalNews","News")" class="btn btn-link p-0">Xem thêm</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        }
+                    }
+                </div>
+
+
+                <!-- Video-->
+                <div class="video-section mt-5">
+
+                    <div class="d-flex justify-content-center" style="margin-bottom:2rem">
+                        <div class="p-3"> @Html.Partial("_SectionTitle", "VIDEO")</div>
+                    </div>
+
+                    <div id="videoCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+                        <div class="carousel-inner">
+                            @if (Model.ListVideos != null && Model.ListVideos.Any())
+                            {
+                                for (int i = 0; i < Model.ListVideos.Count; i += 2)
+                                {
+                                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="video-card">
+                                                    <div class="video-thumbnail-wrapper">
+                                                        <img src="~/asset/@Model.ListVideos[i].Thumbnail"
+                                                             class="card-img-top"
+                                                             alt="..." />
+                                                        <a href="#"
+                                                           class="play-icon"
+                                                           data-bs-toggle="modal"
+                                                           data-bs-target="#videoModal"
+                                                           data-bs-src="@Model.ListVideos[i].YoutubeLink"
+                                                           aria-label="Play video">
+                                                            <i class="fa-solid fa-play"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">
+                                                            @Model.ListVideos[i].Title
+                                                        </h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            @if (i + 1 < Model.ListVideos.Count)
+                                            {
+                                                <div class="col-md-6">
+                                                    <div class="video-card">
+                                                        <div class="video-thumbnail-wrapper">
+                                                            <img src="~/asset/@Model.ListVideos[i+1].Thumbnail"
+                                                                 class="card-img-top"
+                                                                 alt="..." />
+                                                            <a href="#"
+                                                               class="play-icon"
+                                                               data-bs-toggle="modal"
+                                                               data-bs-target="#videoModal"
+                                                               data-bs-src="@Model.ListVideos[i+1].YoutubeLink"
+                                                               aria-label="Play video">
+                                                                <i class="fa-solid fa-play"></i>
+                                                            </a>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">
+                                                                @Model.ListVideos[i + 1].Title
+                                                            </h5>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                        <button class="carousel-control-prev"
+                                type="button"
+                                data-bs-target="#videoCarousel"
+                                data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next"
+                                type="button"
+                                data-bs-target="#videoCarousel"
+                                data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột phải-->
+            <aside class="col-lg-4 mt-5 mt-lg-0 sidebar">
+                <div class="d-flex justify-content-center" style="margin-bottom:2rem">
+                    <div class="p-3"> @Html.Partial("_SectionTitle", "THÔNG TIN TỪ SỞ Y TẾ")</div>
+                </div>
+
+                <div class="widget">
+
+                    <div class="sidebar-widget-group mb-4">
+                        <h4>Văn bản</h4>
+                        <ul class="list-group list-group-flush">
+                            @if (Model.VanBans != null)
+                            {
+                                foreach (var doc in Model.VanBans.Take(3))
+                                {
+                                    <li class="list-group-item">
+                                        <a href="@doc.LinkUrl" target="_blank"
+                                           style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; line-height: 1.5;">@doc.Title</a>
+                                        @if (doc.IsNew.HasValue && doc.IsNew.Value)
+                                        {<span class="badge bg-success ms-1">Mới</span>}
+                                    </li>
+                                }
+                            }
+                        </ul>
+                        <a href="#" class="link d-block text-end mt-2" data-bs-toggle="modal" data-bs-target="#vanBanModal">Xem thêm</a>
+                    </div>
+
+                    <div class="sidebar-widget-group mb-4">
+                        <h4>Thông báo</h4>
+                        <ul class="list-group list-group-flush">
+                            @if (Model.ThongBaos != null)
+                            {
+                                foreach (var doc in Model.ThongBaos.Take(3))
+                                {
+                                    <li class="list-group-item">
+                                        <a href="@doc.LinkUrl" target="_blank"
+                                           style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; line-height: 1.5;">@doc.Title</a>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                        <a href="#" class="link d-block text-end mt-2" data-bs-toggle="modal" data-bs-target="#thongBaoModal">Xem thêm</a>
+                    </div>
+
+                    <div class="sidebar-widget-group mb-4">
+                        <h4>Thư mời</h4>
+                        <ul class="list-group list-group-flush">
+                            @if (Model.ThuMois != null)
+                            {
+                                foreach (var doc in Model.ThuMois.Take(3))
+                                {
+                                    <li class="list-group-item">
+                                        <a href="@doc.LinkUrl" target="_blank"
+                                           style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; line-height: 1.5;">@doc.Title</a>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                        <a href="#" class="link d-block text-end mt-2" data-bs-toggle="modal" data-bs-target="#thuMoiModal">Xem thêm</a>
+                    </div>
+
+                    <div class="sidebar-widget-group mb-4">
+                        <h4>Lịch công tác</h4>
+                        <ul class="list-group list-group-flush">
+                            @if (Model.LichCongTacs != null)
+                            {
+                                foreach (var doc in Model.LichCongTacs.Take(3))
+                                {
+                                    <li class="list-group-item">
+                                        <a href="@doc.LinkUrl" target="_blank"
+                                           style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; line-height: 1.5;">@doc.Title</a>
+                                        @if (doc.IsNew.HasValue && doc.IsNew.Value)
+                                        {<span class="badge bg-success ms-1">Mới</span>}
+                                    </li>
+                                }
+                            }
+                        </ul>
+                        <a href="#" class="link d-block text-end mt-2" data-bs-toggle="modal" data-bs-target="#lichCongTacModal">Xem thêm</a>
+                    </div>
+
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+
+
+<!-- Model văn bản từ sở y tế -->
+<div class="modal fade" id="vanBanModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">VĂN BẢN TỪ SỞ Y TẾ</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <ul class="list-group list-group-flush modal-list-bullets">
+                    @if (Model.VanBans != null)
+                    {
+                        foreach (var doc in Model.VanBans)
+                        {
+                            <li class="list-group-item"><a href="@doc.LinkUrl" target="_blank">@doc.Title</a></li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model thông báo-->
+<div class="modal fade" id="thongBaoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">THÔNG BÁO</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <ul class="list-group list-group-flush modal-list-bullets">
+                    @if (Model.ThongBaos != null)
+                    {
+                        foreach (var doc in Model.ThongBaos)
+                        {
+                            <li class="list-group-item"><a href="@doc.LinkUrl" target="_blank">@doc.Title</a></li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model thư mời-->
+<div class="modal fade" id="thuMoiModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">THƯ MỜI</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <ul class="list-group list-group-flush modal-list-bullets">
+                    @if (Model.ThuMois != null)
+                    {
+                        foreach (var doc in Model.ThuMois)
+                        {
+                            <li class="list-group-item"><a href="@doc.LinkUrl" target="_blank">@doc.Title</a></li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model lịch công tác-->
+<div class="modal fade" id="lichCongTacModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header"><h5 class="modal-title">LỊCH CÔNG TÁC</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body">
+                <ul class="list-group list-group-flush modal-list-bullets">
+                    @if (Model.LichCongTacs != null)
+                    {
+                        foreach (var doc in Model.LichCongTacs)
+                        {
+                            <li class="list-group-item"><a href="@doc.LinkUrl" target="_blank">@doc.Title</a></li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Model Video-->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="background-color: transparent; border: 0">
+            <div class="modal-header" style="border: 0">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="ratio ratio-16x9">
+                    <iframe id="youtubeVideoPlayer" src="" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section Khám chữa bệnh-->
+<section class="departments py-5 bg-light">
+    <div class="container">
+        <div class="d-flex justify-content-center" style="margin-bottom:2rem">
+            <div class="p-3"> @Html.Partial("_SectionTitle", "KHÁM CHỮA BỆNH")</div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-4 mb-4">
+                <a href="@Url.Action("InternalMedicine","Departments")">
+                    <div class="card department-card-v1 text-center shadow">
+                        <div class="department-card__image-wrapper">
+                            <img src="~/asset/banner_04.jpg" alt="Nội khoa" class="card-img-top" />
+                            <div class="overlay"></div><div class="view-more">Xem thêm</div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title h5">NỘI KHOA</h3><i class="fa-solid fa-heart-pulse fs-3" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <a href="@Url.Action("Surgery","Departments")">
+                    <div class="card department-card-v1 text-center shadow">
+                        <div class="department-card__image-wrapper">
+                            <img src="~/asset/banner_05.jpg" alt="Ngoại khoa" class="card-img-top" />
+                            <div class="overlay"></div><div class="view-more">Xem thêm</div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title h5">NGOẠI KHOA</h3><i class="fa-solid fa-user-doctor fs-3" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-4 mb-4">
+                <a href="@Url.Action("Paraclinical","Departments")">
+                    <div class="card department-card-v1 text-center shadow">
+                        <div class="department-card__image-wrapper">
+                            <img src="~/asset/banner_06.jpg" alt="Cận lâm sàng" class="card-img-top" />
+                            <div class="overlay"></div><div class="view-more">Xem thêm</div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title h5">CẬN LÂM SÀNG</h3><i class="fa-solid fa-microscope fs-3" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Section Dịch vụ khách hàng -->
+<section class="customer-services py-5">
+    <div class="container">
+        <div class="d-flex justify-content-center" style="margin-bottom:2rem">
+            <div class="p-3"> @Html.Partial("_SectionTitle", "DỊCH VỤ KHÁCH HÀNG")</div>
+        </div>
+        <div class="row mt-4 text-center">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 service-card">
+                    <div class="card-body">
+                        <i class="fa-solid fa-truck-medical"></i>
+                        <h3 class="card-title h5">CẤP CỨU NGOẠI VIỆN</h3>
+                        <p>
+                            Trực chiến 24/7, phản ứng nhanh chóng. Cam kết sơ cứu kịp thời và vận chuyển an toàn, tận dụng "thời gian vàng" để bảo vệ tính mạng người bệnh.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 service-card">
+                    <div class="card-body">
+                        <i class="fa-solid fa-person-chalkboard"></i>
+                        <h3 class="card-title h5">HUẤN LUYỆN SƠ CẤP CỨU</h3>
+                        <p>
+                            Đào tạo kỹ năng sơ cứu thực tế. Giúp học viên tự tin xử lý tai nạn, giảm thiểu rủi ro sức khỏe trước khi có sự can thiệp chuyên nghiệp.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 service-card">
+                    <div class="card-body">
+                        <i class="fa-solid fa-file-medical"></i>
+                        <h3 class="card-title h5">HỢP ĐỒNG KHÁM SK</h3>
+                        <p>
+                            Tổ chức khám sức khỏe định kỳ chuyên nghiệp cho doanh nghiệp. Quy trình linh hoạt, giúp đánh giá chính xác thể trạng và nâng cao chất lượng nguồn nhân lực.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 service-card">
+                    <div class="card-body">
+                        <i class="fa-solid fa-shield-heart"></i>
+                        <h3 class="card-title h5">BẢO HIỂM Y TẾ</h3>
+                        <p>
+                            Thủ tục BHYT đơn giản, nhanh gọn. Đảm bảo tối đa quyền lợi, giúp giảm gánh nặng tài chính nhưng vẫn thụ hưởng dịch vụ điều trị chất lượng cao.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 service-card">
+                    <div class="card-body">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <h3 class="card-title h5">KHÁM TẦM SOÁT</h3>
+                        <p>
+                            Tầm soát bệnh lý bằng công nghệ hiện đại. Phát hiện sớm các bất thường giúp tăng hiệu quả điều trị và chủ động bảo vệ sức khỏe dài lâu.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 service-card">
+                    <div class="card-body">
+                        <i class="fa-solid fa-hand-holding-medical"></i>
+                        <h3 class="card-title h5">HỒ SƠ SỨC KHỎE</h3>
+                        <p>
+                            Tra cứu hồ sơ bệnh án điện tử trực tuyến. Hệ thống bảo mật cao giúp bạn theo dõi lịch sử sức khỏe và kết quả khám mọi lúc mọi nơi.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section Dòng thời gian-->
+<section class="stats py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 col-6 mb-4 mb-md-0 stats__item">
+                <i class="fa-solid fa-hospital fs-1 mb-2"></i>
+                <span class="fs-3 fw-bold stats__number">20</span>
+                <p>năm hình thành</p>
+            </div>
+            <div class="col-md-3 col-6 mb-4 mb-md-0 stats__item">
+                <i class="fa-solid fa-bed fs-1 mb-2"></i>
+                <span class="fs-3 fw-bold stats__number">1,000+</span>
+                <p>giường bệnh</p>
+            </div>
+            <div class="col-md-3 col-6 stats__item">
+                <i class="fa-solid fa-users fs-1 mb-2"></i>
+                <span class="fs-3 fw-bold stats__number">900k+</span>
+                <p>bệnh nhân/năm</p>
+            </div>
+            <div class="col-md-3 col-6 stats__item">
+                <i class="fa-solid fa-user-doctor fs-1 mb-2"></i>
+                <span class="fs-3 fw-bold stats__number">600+</span>
+                <p>y bác sĩ</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section Góc tri ân -->
+<section class="testimonials py-5">
+    <div class="container">
+        <div class="d-flex justify-content-center" style="margin-bottom:2rem">
+            <div class="p-3"> @Html.Partial("_SectionTitle", "GÓC TRI ÂN")</div>
+        </div>
+
+        <div class="testimonial-slider-wrapper">
+            <div class="testimonial-track" id="track">
+                @if (Model.ListTriAns != null)
+                {
+                    foreach (var trian in Model.ListTriAns)
+                    {
+                        <div class="testimonial-item">
+                            <div class="testimonial-card-new">
+                                <h4 class="testimonial-card-title">
+                                    @trian.Title
+                                </h4>
+                                <div class="testimonial-card-body">
+                                    <p>@trian.Content</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="testimonial-controls text-center mt-3">
+            <button class="btn-carousel btn-prev" id="btnPrev">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button class="btn-carousel btn-next" id="btnNext">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const track = document.getElementById('track');
+            const btnNext = document.getElementById('btnNext');
+            const btnPrev = document.getElementById('btnPrev');
+            const sliderContainer = document.querySelector('.testimonial-slider-wrapper'); // Lấy khung bao ngoài để bắt sự kiện chuột
+
+            // Lấy danh sách các item
+            const items = document.querySelectorAll('.testimonial-item');
+            const totalItems = items.length;
+
+            let currentIndex = 0;
+            let itemsPerScreen = 3;
+            let autoPlayInterval; // Biến lưu timer
+
+            // 1. Cập nhật số lượng item hiển thị theo màn hình
+            function updateItemsPerScreen() {
+                if (window.innerWidth < 768) {
+                    itemsPerScreen = 1;
+                } else if (window.innerWidth < 992) {
+                    itemsPerScreen = 2;
+                } else {
+                    itemsPerScreen = 3;
+                }
+            }
+
+            // 2. Hàm di chuyển slider
+            function moveSlider() {
+                const widthPerItem = 100 / itemsPerScreen;
+                const translateX = -(currentIndex * widthPerItem);
+                track.style.transform = `translateX(${translateX}%)`;
+            }
+
+            // 3. Hàm xử lý Next
+            function nextSlide() {
+                // Nếu chưa đến cuối -> Tăng index
+                if (currentIndex < totalItems - itemsPerScreen) {
+                    currentIndex++;
+                } else {
+                    // Nếu đã đến cuối -> Quay về đầu (0)
+                    currentIndex = 0;
+                }
+                moveSlider();
+            }
+
+            // 4. Hàm xử lý Prev
+            function prevSlide() {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                } else {
+                    currentIndex = totalItems - itemsPerScreen;
+                }
+                moveSlider();
+            }
+
+            // 5. Thiết lập Auto Play (Tự trượt sau mỗi 4 giây)
+            function startAutoPlay() {
+                autoPlayInterval = setInterval(nextSlide, 3000);
+            }
+
+            function stopAutoPlay() {
+                clearInterval(autoPlayInterval);
+            }
+
+            // --- GÁN SỰ KIỆN ---
+
+            // Click nút Next
+            btnNext.addEventListener('click', function () {
+                stopAutoPlay(); // Dừng tự động khi người dùng bấm thủ công
+                nextSlide();
+                startAutoPlay(); // Chạy lại sau khi bấm
+            });
+
+            // Click nút Prev
+            btnPrev.addEventListener('click', function () {
+                stopAutoPlay();
+                prevSlide();
+                startAutoPlay();
+            });
+
+            // Di chuột vào slider -> Dừng trượt (để người dùng đọc)
+            sliderContainer.addEventListener('mouseenter', stopAutoPlay);
+
+            // Di chuột ra ngoài -> Tiếp tục trượt
+            sliderContainer.addEventListener('mouseleave', startAutoPlay);
+
+            // Resize màn hình
+            window.addEventListener('resize', function () {
+                updateItemsPerScreen();
+                currentIndex = 0;
+                moveSlider();
+            });
+
+            // --- KHỞI CHẠY ---
+            updateItemsPerScreen();
+            startAutoPlay(); // Bắt đầu tự động trượt ngay khi tải trang
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var videoModal = document.getElementById('videoModal');
+            var youtubePlayer = document.getElementById('youtubeVideoPlayer');
+
+            videoModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                var videoSrc = button.getAttribute('data-bs-src');
+                // Thêm autoplay khi mở
+                youtubePlayer.src = videoSrc + "?autoplay=1";
+            });
+
+            videoModal.addEventListener('hide.bs.modal', function () {
+                // Dừng video khi đóng modal
+                youtubePlayer.src = "";
+            });
+        });
+    </script>
+}

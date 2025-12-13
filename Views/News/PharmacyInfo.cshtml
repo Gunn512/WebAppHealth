@@ -1,0 +1,164 @@
+﻿@using WebAppHealth.Models
+@model MedicineViewModel
+
+@{
+    ViewBag.Title = "Thông tin dược";
+    Layout = "~/Views/Shared/_HealthLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/intro.css" />
+    <link rel="stylesheet" href="~/Content/css/medical-news.css" />
+    <link rel="stylesheet" href="~/Content/css/pharmacy-info.css" />
+}
+
+<section class="banner-title">
+    <div class="container">
+        @Html.Partial("_SectionTitle", "THÔNG TIN DƯỢC")
+    </div>
+</section>
+
+<section class="main-news page-container news-page-container py-5">
+    <div class="container">
+        <div class="row" data-aos="fade-up" data-aos-duration="1000">
+
+            <header class="page-header">
+                @Html.Partial("_Breadcrumb", new List<BreadcrumbItem> {
+                    new BreadcrumbItem { Title = "Tin tức", Url = "#" },
+                    new BreadcrumbItem { Title = "Tra cứu dược", Url = "" }
+                })
+            </header>
+
+            <div class="col-lg-12">
+                <section class="search-bar-section mb-4">
+                    @using (Html.BeginForm("PharmacyInfo", "Pharmacy", FormMethod.Get))
+                    {
+                        <div class="input-group input-group-lg">
+                            <label class="input-group-text search-label">Tìm kiếm</label>
+                            <input type="text" id="drug-search" name="keyword" class="form-control"
+                                   placeholder="Tìm kiếm tên thuốc, hoạt chất..."
+                                   value="@Model.SearchKeyword" />
+                            <button class="btn btn-success search-button" type="submit">
+                                <i class="fa-solid fa-magnifying-glass me-2"></i> Tìm kiếm
+                            </button>
+                        </div>
+                    }
+                </section>
+
+                <section id="drug-list" class="content-section">
+                    @if (Model.Medicines != null && Model.Medicines.Any())
+                    {
+                        foreach (var item in Model.Medicines)
+                        {
+                            <div class="drug-item">
+                                <div class="row g-4">
+                                    <div class="col-md-4">
+                                        <a href="@Url.Action("MedicineDetail", "Pharmacy", new { id = item.MedicineID })">
+                                            <div class="img">
+                                                <img src="@Url.Content("~/asset/Medicine/" + (string.IsNullOrEmpty(item.Image) ? "paracetamol500.jpg" : item.Image))"
+                                                     alt="@item.Name"
+                                                     class="img-fluid drug-image"
+                                                     onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=No+Image';" />
+                                            </div>
+                                        </a>
+                                    </div>
+
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h3 class="drug-title">
+                                                <a href="@Url.Action("MedicineDetail", "Pharmacy", new { id = item.MedicineID })">
+                                                    @item.Name.ToUpper()
+                                                </a>
+                                            </h3>
+
+                                            <ul class="drug-details">
+                                                @if (!string.IsNullOrEmpty(item.ActiveIngredient))
+                                                {
+                                                    <li class="box-content">
+                                                        <div class="title">Hoạt chất:</div>
+                                                        <div>@item.ActiveIngredient</div>
+                                                    </li>
+                                                }
+
+                                                @if (!string.IsNullOrEmpty(item.Concentration))
+                                                {
+                                                    <li class="box-content">
+                                                        <div class="title">Nồng độ/Hàm lượng:</div>
+                                                        <div>@item.Concentration</div>
+                                                    </li>
+                                                }
+
+                                                @if (!string.IsNullOrEmpty(item.DrugGroup))
+                                                {
+                                                    <li class="box-content">
+                                                        <div class="title">Nhóm thuốc:</div>
+                                                        <div>@item.DrugGroup</div>
+                                                    </li>
+                                                }
+
+                                                @if (!string.IsNullOrEmpty(item.DosageForm))
+                                                {
+                                                    <li class="box-content">
+                                                        <div class="title">Dạng bào chế:</div>
+                                                        <div>@item.DosageForm</div>
+                                                    </li>
+                                                }
+
+                                                @if (!string.IsNullOrEmpty(item.Manufacturer))
+                                                {
+                                                    <li class="box-content">
+                                                        <div class="title">Sản xuất:</div>
+                                                        <div>@item.Manufacturer</div>
+                                                    </li>
+                                                }
+
+                                                @if (!string.IsNullOrEmpty(item.InstructionFile))
+                                                {
+                                                    <li class="box-content">
+                                                        <div class="title">Tài liệu đính kèm:</div>
+                                                        <div>
+                                                            <a href="@Url.Action("ViewInstruction", "News", new { id = item.MedicineID })"
+                                                               class="text-decoration-none text-primary">
+                                                                <i class="fa-regular fa-file-pdf me-1"></i> Xem thêm tại đây
+                                                            </a>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning text-center mt-4">
+                            Không tìm thấy thuốc nào.
+                        </div>
+                    }
+                </section>
+            </div>
+
+            @if (Model.TotalPages > 1)
+            {
+                <nav aria-label="Phân trang thuốc" class="mt-4">
+                    <ul class="pagination justify-content-end">
+                        <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("PharmacyInfo", new { page = Model.CurrentPage - 1, keyword = Model.SearchKeyword })">&laquo;</a>
+                        </li>
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("PharmacyInfo", new { page = i, keyword = Model.SearchKeyword })">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("PharmacyInfo", new { page = Model.CurrentPage + 1, keyword = Model.SearchKeyword })">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+        </div>
+    </div>
+</section>

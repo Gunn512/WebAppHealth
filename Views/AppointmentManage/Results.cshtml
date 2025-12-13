@@ -1,0 +1,404 @@
+﻿@model List<WebAppHealth.Models.AppointmentDetailVM>
+@{
+    ViewBag.Title = "Kết Quả Tra Cứu";
+    Layout = "~/Views/Shared/_ServiceLayout.cshtml";
+}
+
+@section Styles {
+    <link href="~/Content/css/Results.css" rel="stylesheet" />
+}
+
+<div class="container py-4 result-container">
+    <div class="page-header">
+        <h2 class="page-title">DANH SÁCH LỊCH HẸN</h2>
+        <a href="@Url.Action("Index", "AppointmentManage")" class="btn btn-outline-secondary btn-sm mt-2 m-md-4 rounded-pill px-4">
+            <i class="fas fa-search me-2"></i>Tra cứu lại
+        </a>
+    </div>
+
+    @if (Model != null && Model.Count > 0)
+    {
+        <div class="accordion" id="appointmentAccordion">
+            @foreach (var item in Model)
+            {
+                // Xử lý màu sắc
+                string badgeClass = "bg-secondary text-white";
+                string statusText = item.Status;
+                string rowBorder = "";
+
+                if (item.Status == "Pending")
+                {
+                    badgeClass = "bg-warning text-dark";
+                    statusText = "Chờ duyệt";
+                }
+                else if (item.Status == "Confirmed")
+                {
+                    badgeClass = "bg-success text-white";
+                    statusText = "Đã xác nhận";
+                    rowBorder = "border-success";
+                }
+                else if (item.Status == "Cancelled")
+                {
+                    badgeClass = "bg-danger text-white";
+                    statusText = "Đã hủy";
+                }
+                else if (item.Status == "Completed")
+                {
+                    badgeClass = "bg-primary text-white";
+                    statusText = "Đã khám";
+                }
+
+                <div class="accordion-item @rowBorder">
+                    <h2 class="accordion-header" id="heading-@item.AppointmentID">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@item.AppointmentID" aria-expanded="false">
+
+                            <div class="header-grid">
+                                <div class="header-col">
+                                    <span class="header-label">Ngày:</span>
+                                    <i class="far fa-calendar-alt me-2 d-none d-md-inline"></i>@item.NgayKham
+                                </div>
+                                <div class="header-col fw-bold text-dark">
+                                    <span class="header-label">Khoa:</span>
+                                    @item.ChuyenKhoa
+                                </div>
+                                <div class="header-col text-muted">
+                                    <span class="header-label">Loại:</span>
+                                    @item.DoiTuong
+                                </div>
+                                <div class="header-col">
+                                    <span class="status-badge @badgeClass">@statusText</span>
+                                </div>
+                            </div>
+
+                        </button>
+                    </h2>
+                    <div id="collapse-@item.AppointmentID" class="accordion-collapse collapse" aria-labelledby="heading-@item.AppointmentID" data-bs-parent="#appointmentAccordion">
+                        <div class="accordion-body bg-light p-4">
+
+                            <div class="ticket-wrapper shadow-sm mx-auto">
+                                <div class="ticket-top-border"></div>
+
+                                <div class="row g-0">
+                                    <div class="col-lg-7 border-end">
+                                        <div class="ticket-header text-center">
+                                            <h4>PHIẾU HẸN KHÁM</h4>
+                                            <p class="text-muted small">BỆNH VIỆN ĐA KHOA TAM BÌNH</p>
+                                        </div>
+                                        <div class="ticket-body">
+                                            <div class="info-row">
+                                                <span class="info-label">Mã hồ sơ:</span>
+                                                <span class="info-value fw-bold">@item.MaKCB</span>
+                                            </div>
+                                            <div class="info-row">
+                                                <span class="info-label">Họ tên:</span>
+                                                <span class="info-value text-uppercase fw-bold">@item.HoTen</span>
+                                            </div>
+                                            <div class="info-row">
+                                                <span class="info-label">Ngày sinh:</span>
+                                                <span class="info-value">@item.NgaySinh</span>
+                                            </div>
+                                            <div class="info-row">
+                                                <span class="info-label">Ngày khám:</span>
+                                                <span class="info-value fw-bold">@item.NgayKham</span>
+                                            </div>
+                                            <div class="info-row">
+                                                <span class="info-label">Giờ khám:</span>
+                                                <span class="info-value fw-bold">@item.GioKham</span>
+                                            </div>
+                                            <div class="info-row">
+                                                <span class="info-label">Bác sĩ:</span>
+                                                <span class="info-value">@item.BacSi</span>
+                                            </div>
+                                            <div class="info-row border-0">
+                                                <span class="info-label">Triệu chứng:</span>
+                                                <span class="info-value fst-italic text-muted">@item.TrieuChung</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-5 bg-white">
+                                        <div class="p-4 h-100 d-flex flex-column justify-content-between">
+
+                                            <div class="barcode-box mb-3">
+                                                <svg class="barcode"
+                                                     data-format="CODE128"
+                                                     data-value="@item.BarcodeData"
+                                                     data-text="@item.BarcodeData"
+                                                     data-font-options="bold">
+                                                </svg>
+                                                <small class="text-muted mt-2 d-block">Đưa mã này tại quầy tiếp đón</small>
+                                            </div>
+
+                                            <div class="d-grid gap-2">
+                                                @if (item.Status == "Pending" || item.Status == "Confirmed")
+                                                {
+                                                    @*<a href="@Url.Action("RegisterStandardExam", "ServicePortal", new { rescheduleId = item.AppointmentID })" class="btn btn-warning fw-bold text-dark">
+                                                            <i class="fas fa-exchange-alt me-2"></i>Đổi lịch khám
+                                                        </a>*@
+                                                    <a href="@Url.Action("RedirectToReschedule", "AppointmentManage", new { id = item.AppointmentID })"
+                                                       class="btn btn-warning text-dark btn-action">
+                                                        <i class="fas fa-calendar-check me-2"></i>Đổi lịch
+                                                    </a>
+                                                    <button class="btn btn-outline-danger fw-bold btn-cancel" data-id="@item.AppointmentID">
+                                                        <i class="fas fa-times me-2"></i>Hủy lịch hẹn
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <button class="btn btn-secondary" disabled>Không thể thao tác</button>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center py-5">
+            <i class="fas fa-search-minus fa-3x mb-3 text-muted"></i>
+            <h4>Không tìm thấy lịch hẹn nào!</h4>
+            <p>Vui lòng kiểm tra lại thông tin tra cứu.</p>
+        </div>
+    }
+</div>
+
+<!-- Popup-->
+<div class="modal fade" id="cancelConfirmModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title fw-bold"><i class="fas fa-exclamation-triangle me-2"></i>XÁC NHẬN HỦY</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <p class="mb-1">Bạn có chắc chắn muốn hủy lịch hẹn này?</p>
+                <p class="text-muted small fst-italic">(Hành động này không thể hoàn tác)</p>
+            </div>
+            <div class="modal-footer justify-content-center pb-4 pt-0">
+                <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">Quay lại</button>
+                <button type="button" class="btn btn-danger px-4 rounded-pill fw-bold" id="btn-confirm-cancel-action">
+                    <i class="fas fa-trash-alt me-2"></i>Hủy lịch
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg">
+            <div class="modal-body p-4 text-center">
+                <div id="notify-icon" class="mb-3"></div>
+                <h4 id="notify-title" class="fw-bold mb-2"></h4>
+                <p id="notify-message" class="text-muted mb-4"></p>
+                <button type="button" class="btn btn-primary px-5 rounded-pill" data-bs-dismiss="modal" id="btn-close-notify">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*@section Scripts {
+        <script>
+            $(document).ready(function(){
+
+                // --- HÀM RENDER BARCODE ---
+                function renderBarcodes() {
+                    $(".barcode").each(function(){
+                        var val = $(this).data("value");
+                        if(val && typeof JsBarcode !== 'undefined'){
+                            try {
+                                JsBarcode(this, val, {
+                                    format: "CODE128",
+                                    lineColor: "#000",
+                                    width: 2,
+                                    height: 120,
+                                    displayValue: true,
+                                    fontSize: 16
+                                });
+                            } catch(e) {
+                                console.error("Lỗi tạo barcode:", e);
+                            }
+                        }
+                    });
+                }
+
+                // Gọi lần đầu khi trang load
+                renderBarcodes();
+
+                // Gọi lại khi bấm mở accordion (Fix lỗi barcode bị ẩn/nhỏ khi nằm trong tab ẩn)
+                $('.accordion-button').click(function() {
+                    setTimeout(renderBarcodes, 200); // Đợi hiệu ứng mở xong thì vẽ lại
+                });
+
+                // --- 2. LOGIC HỦY LỊCH VỚI POPUP ---
+                let appointmentIdToCancel = 0;
+                const cancelModal = new bootstrap.Modal(document.getElementById('cancelConfirmModal'));
+                const notifyModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+
+                // Khi bấm nút Hủy trên phiếu
+                $(document).on("click", ".btn-cancel", function(e) {
+                    e.preventDefault();
+                    appointmentIdToCancel = $(this).data("id");
+                    cancelModal.show();
+                });
+
+                // Khi bấm xác nhận trong Modal
+                $("#btn-confirm-cancel-action").click(function() {
+                    const btn = $(this);
+                    const originalHtml = btn.html();
+                    btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Đang xử lý...');
+
+                    $.ajax({
+                        url: '@Url.Action("CancelAppointment", "AppointmentManage")',
+                        type: 'POST',
+                        data: { id: appointmentIdToCancel },
+                        success: function(res) {
+                            cancelModal.hide();
+                            btn.prop('disabled', false).html(originalHtml);
+
+                            if (res.success) {
+                                showNotify("success", "Thành công!", res.message);
+                            } else {
+                                showNotify("error", "Lỗi!", res.message);
+                            }
+                        },
+                        error: function() {
+                            cancelModal.hide();
+                            btn.prop('disabled', false).html(originalHtml);
+                            showNotify("error", "Lỗi mạng!", "Không thể kết nối đến máy chủ.");
+                        }
+                    });
+                });
+
+                // Hàm hiện thông báo kết quả
+                function showNotify(type, title, msg) {
+                    const iconDiv = $("#notify-icon");
+                    const titleEl = $("#notify-title");
+
+                    if(type === "success") {
+                        iconDiv.html('<i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>');
+                        titleEl.removeClass("text-danger").addClass("text-success").text(title);
+                        $("#btn-close-notify").one("click", function() { location.reload(); }); // Reload khi đóng
+                    } else {
+                        iconDiv.html('<i class="fas fa-times-circle text-danger" style="font-size: 4rem;"></i>');
+                        titleEl.removeClass("text-success").addClass("text-danger").text(title);
+                        $("#btn-close-notify").off("click"); // Không reload nếu lỗi
+                    }
+                    $("#notify-message").text(msg);
+                    notifyModal.show();
+                }
+            });
+        </script>
+    }*@
+
+@section Scripts {
+    <script>
+        $(document).ready(function(){
+
+            // --- 1. RENDER BARCODE (Giữ nguyên) ---
+            function renderBarcodes() {
+                $(".barcode").each(function(){
+                    var val = $(this).data("value");
+                    if(val && typeof JsBarcode !== 'undefined'){
+                        try {
+                            JsBarcode(this, val, {
+                                format: "CODE128", lineColor: "#000",
+                                width: 3, height: 100,
+                                displayValue: true, fontSize: 20, background: "#ffffff"
+                            });
+                        } catch(e) { console.error("Lỗi barcode:", e); }
+                    }
+                });
+            }
+            renderBarcodes();
+            $('.accordion-button').click(function() { setTimeout(renderBarcodes, 200); });
+
+            // --- 2. LOGIC HỦY LỊCH VỚI POPUP (CẬP NHẬT) ---
+            let appointmentIdToCancel = 0;
+            const cancelModal = new bootstrap.Modal(document.getElementById('cancelConfirmModal'));
+            const notifyModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+
+            // Khi bấm nút Hủy trên phiếu
+            $(document).on("click", ".btn-cancel", function(e) {
+                e.preventDefault();
+                appointmentIdToCancel = $(this).data("id");
+                cancelModal.show();
+            });
+
+            // Khi bấm xác nhận trong Modal
+            $("#btn-confirm-cancel-action").click(function() {
+                const btn = $(this);
+                const originalHtml = btn.html();
+                btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Đang xử lý...');
+
+                $.ajax({
+                    url: '@Url.Action("CancelAppointment", "AppointmentManage")',
+                    type: 'POST',
+                    data: { id: appointmentIdToCancel },
+                    success: function(res) {
+                        cancelModal.hide();
+                        btn.prop('disabled', false).html(originalHtml);
+
+                        if (res.success) {
+                            // === XỬ LÝ CẬP NHẬT GIAO DIỆN TẠI CHỖ (KHÔNG RELOAD) ===
+                            updateUiToCancelled(appointmentIdToCancel);
+
+                            showNotify("success", "Thành công!", res.message);
+                        } else {
+                            showNotify("error", "Lỗi!", res.message);
+                        }
+                    },
+                    error: function() {
+                        cancelModal.hide();
+                        btn.prop('disabled', false).html(originalHtml);
+                        showNotify("error", "Lỗi mạng!", "Không thể kết nối đến máy chủ.");
+                    }
+                });
+            });
+
+            // Hàm cập nhật giao diện sau khi hủy thành công
+            function updateUiToCancelled(id) {
+                // 1. Tìm phần tử cha (Accordion Item)
+                var header = $("#heading-" + id);
+                var body = $("#collapse-" + id);
+
+                // 2. Đổi màu và text của Badge trạng thái
+                var badge = header.find(".status-badge");
+                badge.removeClass("bg-warning bg-success bg-secondary text-dark")
+                     .addClass("bg-danger text-white")
+                     .text("Đã hủy");
+
+                // 3. Thay đổi nút bấm bên trong
+                // Tìm div chứa các nút hành động (class d-grid)
+                var btnContainer = body.find(".d-grid");
+                btnContainer.html('<button class="btn btn-secondary" disabled><i class="fas fa-ban me-2"></i>Lịch hẹn đã hủy</button>');
+            }
+
+            // Hàm hiện thông báo kết quả (Đã bỏ reload)
+            function showNotify(type, title, msg) {
+                const iconDiv = $("#notify-icon");
+                const titleEl = $("#notify-title");
+                const closeBtn = $("#btn-close-notify");
+
+                // Reset sự kiện cũ để tránh reload không mong muốn
+                closeBtn.off("click");
+
+                if(type === "success") {
+                    iconDiv.html('<i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>');
+                    titleEl.removeClass("text-danger").addClass("text-success").text(title);
+                } else {
+                    iconDiv.html('<i class="fas fa-times-circle text-danger" style="font-size: 4rem;"></i>');
+                    titleEl.removeClass("text-success").addClass("text-danger").text(title);
+                }
+                $("#notify-message").text(msg);
+                notifyModal.show();
+            }
+        });
+    </script>
+}

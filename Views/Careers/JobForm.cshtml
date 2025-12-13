@@ -1,0 +1,284 @@
+﻿@using WebAppHealth.Models;
+@model WebAppHealth.Models.JobFormViewModel
+
+@{
+    ViewBag.Title = "Ứng tuyển trực tuyến";
+    Layout = "~/Views/Shared/_HealthLayout.cshtml";
+
+    var breadcrumbs = new List<BreadcrumbItem>
+{
+        new BreadcrumbItem { Title = "Tuyển dụng - Đào tạo", Url = Url.Action("JobOpenings", "Careers") },
+        new BreadcrumbItem { Title = "Ứng tuyển trực tuyến", Url = "#" }
+    };
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/job-form.css" />
+
+}
+
+<section class="banner-title">
+    <div class="container">
+        @Html.Partial("_SectionTitle", "ỨNG TUYỂN TRỰC TUYẾN")
+    </div>
+</section>
+
+<section class="main-news page-container news-page-container py-5">
+    <div class="container">
+        <div class="row">
+            @Html.Partial("_Breadcrumb", breadcrumbs)
+
+            <div class="d-flex justify-content-center">
+                <div class="col-lg-10 form-container">
+                    <h2 class="form-title text-center mb-4 fw-bold text-uppercase">FORM ỨNG TUYỂN</h2>
+
+                @*Thông báo ứng tuyển thành công*@
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
+                            <i class="fa-solid fa-check-circle me-2"></i>
+                            <strong>Thành công!</strong> @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
+                            <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                            <strong>Đã có lỗi xảy ra!</strong> Vui lòng kiểm tra lại thông tin bên dưới.
+                            <div class="mt-2">
+                                @Html.ValidationSummary(false, "", new { @class = "mb-0" })
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+
+                    @*Phần form điền thông tin*@
+                    @using (Html.BeginForm("JobForm", "Careers", FormMethod.Post, new { @class = "needs-validation", enctype = "multipart/form-data", novalidate = "novalidate", id = "recruitmentForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="row mb-4">
+                            <div class="col-md-5">
+                                <label class="form-label">Họ và tên <span class="required-star">*</span></label>
+                                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control custom-input", placeholder = "Nhập họ tên đầy đủ", required = "required" })
+                                @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Ngày tháng năm sinh <span class="required-star">*</span></label>
+                                @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control custom-input", type = "date", required = "required", max = DateTime.Now.ToString("yyyy-MM-dd") })
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Giới tính <span class="required-star">*</span></label>
+                                <div class="gender-radio mt-2">
+                                    <div class="form-check form-check-inline">
+                                        @Html.RadioButtonFor(m => m.Gender, "Nam", new { @class = "form-check-input", id = "genderMale", @checked = "checked" })
+                                        <label class="form-check-label" for="genderMale">Nam</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        @Html.RadioButtonFor(m => m.Gender, "Nữ", new { @class = "form-check-input", id = "genderFemale" })
+                                        <label class="form-check-label" for="genderFemale">Nữ</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">CMND/CCCD <span class="required-star">*</span></label>
+                                @Html.TextBoxFor(m => m.IdCard, new { @class = "form-control custom-input", placeholder = "12 chữ số", required = "required", maxlength = "12", pattern = "\\d{12}" })
+                                <div class="invalid-feedback">Vui lòng nhập đúng 12 số CCCD.</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Ngày cấp <span class="required-star">*</span></label>
+                                @Html.TextBoxFor(m => m.IssueDate, "{0:yyyy-MM-dd}", new { @class = "form-control custom-input", type = "date", required = "required", max = DateTime.Now.ToString("yyyy-MM-dd") })
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Nơi cấp <span class="required-star">*</span></label>
+                                @Html.TextBoxFor(m => m.IssuePlace, new { @class = "form-control custom-input", placeholder = "Cục CS QLHC...", required = "required" })
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Quê quán <span class="required-star">*</span></label>
+                                @Html.TextBoxFor(m => m.Hometown, new { @class = "form-control custom-input", placeholder = "Quê quán", required = "required" })
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">SĐT liên hệ <span class="required-star">*</span></label>
+                                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control custom-input", placeholder = "Số điện thoại", required = "required", pattern = "\\d{10}", type = "tel" })
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <label class="form-label">Địa chỉ thường trú <span class="required-star">*</span></label>
+                                @Html.TextBoxFor(m => m.Address, new { @class = "form-control custom-input", placeholder = "Địa chỉ đầy đủ", required = "required" })
+                            </div>
+                        </div>
+
+                        <hr class="my-4 text-muted" />
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Trình độ chuyên môn <span class="required-star">*</span></label>
+                                @Html.TextBoxFor(m => m.Qualification, new { @class = "form-control custom-input", placeholder = "Đại học, Cao đẳng...", required = "required" })
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Trường đào tạo <span class="required-star">*</span></label>
+                                @Html.TextBoxFor(m => m.University, new { @class = "form-control custom-input", placeholder = "Đại học Y Dược...", required = "required" })
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Hệ đào tạo</label>
+                                <select class="form-select custom-input" name="TrainingSystem">
+                                    <option value="">Chọn hệ đào tạo...</option>
+                                    <option value="Chính quy">Chính quy</option>
+                                    <option value="Liên thông">Liên thông</option>
+                                    <option value="Tại chức">Tại chức</option>
+                                    <option value="Vừa làm vừa học">Vừa học vừa làm</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Năm tốt nghiệp <span class="required-star">*</span></label>
+                                @Html.TextBoxFor(m => m.GradYear, new { @class = "form-control custom-input", placeholder = "Chọn năm tốt nghiệp...", required = "required", type = "number", min = "1970", max = "2100" })
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Xếp loại tốt nghiệp <span class="required-star">*</span></label>
+                                <select class="form-select custom-input" name="GradRank" required>
+                                    <option value="">Chọn xếp loại...</option>
+                                    <option value="Xuất sắc">Xuất sắc</option>
+                                    <option value="Giỏi">Giỏi</option>
+                                    <option value="Khá">Khá</option>
+                                    <option value="Trung bình khá">Trung bình khá</option>
+                                    <option value="Trung bình">Trung bình</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Ngoại ngữ</label>
+                                <select class="form-select custom-input" name="LanguageCert">
+                                    <option value="">Chọn chứng chỉ</option>
+                                    <option value="Anh B1">Anh B1</option>
+                                    <option value="Anh A1">Anh A1</option>
+                                    <option value="Anh A2">Anh A2</option>
+                                    <option value="IELTS">IELTS</option>
+                                    <option value="TOEIC">TOEIC</option>
+                                    <option value="Khác">Khác</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tin học</label>
+                                <select class="form-select custom-input" name="InformaticsCert">
+                                    <option value="">Chọn chứng chỉ</option>
+                                    <option value="Tin học B">Tin học B</option>
+                                    <option value="Tin học A">Tin học A</option>
+                                    <option value="Cơ bản">Tin học Cơ bản</option>
+                                    <option value="Nâng cao">Tin học Nâng cao</option>
+                                    <option value="MOS">MOS</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <label class="form-label">Kinh nghiệm</label>
+                                @Html.TextAreaFor(m => m.Experience, new { @class = "form-control custom-input", rows = "2", placeholder = "Mô tả kinh nghiệm (nếu có)" })
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <label class="form-label">Hồ sơ đính kèm (.doc, .pdf) <span class="required-star">*</span></label>
+                                <input type="file" name="CVFile" class="form-control" accept=".doc,.docx,.pdf" required />
+                                <div class="invalid-feedback">Vui lòng tải lên CV.</div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <label class="form-label">Hình ảnh văn bằng, chứng chỉ (ảnh) <span class="required-star">*</span></label>
+                                <input type="file" name="CertificateImages" class="form-control" accept="image/*" multiple required />
+                                <div class="form-text">Có thể chọn nhiều ảnh cùng lúc.</div>
+                            </div>
+                        </div>
+
+                        <div class="form-footer mt-4 d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="mb-1">Tải file mẫu:</p>
+                                <a href="@Url.Content("~/asset/Phieu-dang-ky-tuyen-dung-lao-dong.docx")" download="Phieu-Dang-Ky-Tuyen-Dung.docx" class="download-link text-decoration-none">
+                                    <i class="fa-solid fa-download me-1"></i> Phiếu đăng ký tuyển dụng
+                                </a>
+                            </div>
+                            <button type="submit" class="btn btn-submit btn-lg shadow-sm">
+                                Đăng ký ứng tuyển
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("recruitmentForm");
+
+            // Các trường cần kiểm tra riêng
+            const idCardInput = document.getElementById("IdCard");
+            const gradYearInput = document.getElementById("GradYear");
+            const dobInput = document.getElementById("DateOfBirth");
+            const issueDateInput = document.getElementById("IssueDate");
+
+            // Logic chặn ngày tương lai (Client-side)
+            const today = new Date().toISOString().split("T")[0];
+            if (dobInput) dobInput.setAttribute("max", today);
+            if (issueDateInput) issueDateInput.setAttribute("max", today);
+
+            // Validation khi Submit
+            form.addEventListener("submit", function (event) {
+                let isValid = true;
+
+                // 1. Kiểm tra CCCD 12 số
+                if (idCardInput.value.length !== 12) {
+                    idCardInput.setCustomValidity("Vui lòng nhập đúng 12 chữ số.");
+                    isValid = false;
+                } else {
+                    idCardInput.setCustomValidity("");
+                }
+
+                // 2. Kiểm tra Năm tốt nghiệp 4 số
+                if (gradYearInput.value.length !== 4) {
+                    gradYearInput.setCustomValidity("Năm tốt nghiệp phải có 4 chữ số.");
+                    isValid = false;
+                } else {
+                    gradYearInput.setCustomValidity("");
+                }
+
+                // Nếu không hợp lệ thì chặn submit để hiển thị lỗi Bootstrap
+                if (!form.checkValidity() || !isValid) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+
+                form.classList.add("was-validated");
+            }, false);
+
+            // Xóa lỗi khi người dùng nhập lại (UX)
+            idCardInput.addEventListener("input", function () {
+                if (this.value.length === 12) this.setCustomValidity("");
+            });
+            gradYearInput.addEventListener("input", function () {
+                if (this.value.length === 4) this.setCustomValidity("");
+            });
+        });
+    </script>
+}

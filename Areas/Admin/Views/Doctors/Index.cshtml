@@ -1,0 +1,96 @@
+﻿@model IEnumerable<WebAppHealth.Areas.Admin.Models.DoctorViewModel>
+
+@{
+    ViewBag.Title = "Quản lý Bác sĩ";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách Đội ngũ Bác sĩ</h6>
+        <a href="@Url.Action("Create", "Doctors")" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus"></i> Thêm mới
+        </a>
+    </div>
+
+    <div class="card-body">
+        <form method="get" action="@Url.Action("Index")" class="row g-3 mb-4">
+            <div class="col-auto">
+                <input type="text" name="search" class="form-control" placeholder="Tìm theo tên, email..." value="@ViewBag.Search">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-secondary"><i class="fas fa-search"></i> Tìm</button>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle" id="dataTable" width="100%" cellspacing="0">
+                <thead class="table-light">
+                    <tr>
+                        <th width="5%">#</th>
+                        <th width="30%">Thông tin Bác sĩ</th>
+                        <th>Chuyên khoa</th>
+                        <th>Liên hệ</th>
+                        <th>Trạng thái</th>
+                        <th class="text-center">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.DoctorID</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        @{
+                                            // Xử lý ảnh: Nếu null thì dùng ảnh mặc định
+                                            string avatarPath = string.IsNullOrEmpty(item.Avatar) ? "/Content/img/default-avatar.png" : "/Uploads/Doctors/" + item.Avatar;
+                                        }
+                                        <img src="@avatarPath" alt="@item.FullName" class="rounded-circle me-3" width="50" height="50" style="object-fit:cover;">
+                                        <div>
+                                            <div class="fw-bold">@item.Degree @item.FullName</div>
+                                            <small class="text-muted">ID: @item.DoctorID</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info text-dark">@item.DepartmentName</span>
+                                </td>
+                                <td>
+                                    <div><i class="fas fa-envelope text-muted me-1"></i> @item.Email</div>
+                                    <div><i class="fas fa-phone text-muted me-1"></i> @item.Phone</div>
+                                </td>
+                                <td>
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="badge bg-success">Hoạt động</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Đã khóa</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <a href="@Url.Action("Edit", "Doctors", new { id = item.DoctorID })" class="btn btn-sm btn-warning" title="Sửa">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-danger btn-lock" data-id="@item.DoctorID" title="Khóa/Mở khóa">
+                                        <i class="fas fa-lock"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">Chưa có dữ liệu bác sĩ.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

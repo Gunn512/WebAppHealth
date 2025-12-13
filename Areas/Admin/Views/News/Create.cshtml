@@ -1,0 +1,77 @@
+﻿@model WebAppHealth.Areas.Admin.Models.NewsViewModel
+@{
+    ViewBag.Title = "Thêm mới Tin tức";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Soạn thảo bài viết</h6>
+            </div>
+            <div class="card-body">
+                @using (Html.BeginForm("Create", "News", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                    <div class="row">
+                        <div class="col-md-4 border-end">
+                            <div class="mb-3">
+                                @Html.LabelFor(m => m.CategoryID, new { @class = "form-label fw-bold" })
+                                @Html.DropDownListFor(m => m.CategoryID, (SelectList)ViewBag.CategoryID, "--- Chọn danh mục ---", new { @class = "form-select", required = "required" })
+                                @Html.ValidationMessageFor(m => m.CategoryID, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="mb-3">
+                                @Html.LabelFor(m => m.ImageFile, new { @class = "form-label fw-bold" })
+                                <input type="file" name="ImageFile" class="form-control" accept="image/*" onchange="previewImage(this)" />
+                                <div class="mt-2 text-center">
+                                    <img id="imgPreview" src="~/Content/img/placeholder.jpg" style="max-width: 100%; height: auto; display: none;" class="rounded border" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                @Html.LabelFor(m => m.Title, new { @class = "form-label fw-bold" })
+                                @Html.TextBoxFor(m => m.Title, new { @class = "form-control", placeholder = "Nhập tiêu đề bài viết..." })
+                                @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="mb-3">
+                                @Html.LabelFor(m => m.Content, new { @class = "form-label fw-bold" })
+                                @Html.TextAreaFor(m => m.Content, new { @class = "form-control", rows = "10", placeholder = "Nội dung bài viết..." })
+                                @Html.ValidationMessageFor(m => m.Content, "", new { @class = "text-danger" })
+                                <small class="text-muted">Gợi ý: Có thể tích hợp CKEditor hoặc Summernote vào đây.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                        <a href="@Url.Action("Index")" class="btn btn-secondary">Hủy bỏ</a>
+                        <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Đăng bài</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        CKEDITOR.replace('Content');
+
+        // Hàm xem trước ảnh khi upload
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imgPreview').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}

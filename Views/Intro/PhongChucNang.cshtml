@@ -1,0 +1,245 @@
+﻿@using WebAppHealth.Models
+@model List<Department>
+
+@{
+    ViewBag.Title = "Phòng Chức Năng";
+    Layout = "~/Views/Shared/_HealthLayout.cshtml";
+
+    var breadcrumbs = new List<BreadcrumbItem>
+{
+        new BreadcrumbItem { Title = "Giới thiệu", Url = Url.Action("Intro", "Home") },
+        new BreadcrumbItem { Title = "Phòng chức năng", Url = "" }
+    };
+
+    var sidebarItems = new List<SidebarItem>();
+    if (Model != null)
+    {
+        foreach (var dept in Model)
+        {
+            sidebarItems.Add(new SidebarItem
+            {
+                Title = dept.Name,
+                Url = "#" + dept.slug
+            });
+        }
+    }
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/intro.css" />
+    <style>
+        img{
+            margin-top: 3rem;
+        }
+    </style>
+}
+
+<section class="banner-title">
+    <div class="container">
+        @Html.Partial("_SectionTitle", "PHÒNG CHỨC NĂNG")
+    </div>
+</section>
+
+<main class="page-container">
+    <div class="container">
+
+        @Html.Partial("_Breadcrumb", breadcrumbs)
+
+        <div class="mt-4">
+            <div class="row">
+
+                <div class="col-lg-3">
+                    @Html.Partial("_Sidebar", sidebarItems)
+                </div>
+
+                <div class="col-lg-9">
+
+                    <section id="phong-ke-hoach-tong-hop" class="content-section" data-aos="fade-up" data-aos-duration="1000">
+                        <h2>Phòng Kế hoạch tổng hợp</h2>
+
+                        <div class="content-list">
+                            <p>
+                                Phòng Kế hoạch tổng hợp là phòng nghiệp vụ chịu sự lãnh đạo trực tiếp của Giám đốc Bệnh viện. Đây là cơ quan tham mưu quan trọng, chịu trách nhiệm trước Giám đốc về toàn bộ kế hoạch hoạt động của các khoa, phòng; đôn đốc và kiểm tra việc thực hiện quy chế Bệnh viện; tổ chức chỉ đạo công tác nghiệp vụ chuyên môn toàn Bệnh viện.
+                            </p>
+                            <p>
+                                Nhiệm vụ trọng tâm của phòng bao gồm xây dựng quy hoạch phát triển chuyên môn kỹ thuật, trình Giám đốc xét duyệt và báo cáo cấp trên. Phòng cũng đảm nhiệm việc định kỳ sơ kết, tổng kết công tác điều trị, báo cáo thống kê và lưu trữ hồ sơ bệnh án theo đúng quy định.
+                            </p>
+                            <p>
+                                Bên cạnh đó, Phòng Kế hoạch tổng hợp còn tổ chức việc điều hòa, phối hợp công tác giữa các khoa, phòng trong bệnh viện và giữa bệnh viện với các cơ quan chuyên môn khác nhằm nâng cao hiệu quả khám chữa bệnh, đảm bảo quy trình chuyên môn được vận hành trơn tru và hiệu quả nhất.
+                            </p>
+                        </div>
+
+                        <img src="~/asset/banner_01.jpg" class="img-fluid room-image" alt="Phòng Kế hoạch tổng hợp" />
+                        <hr class="my-5" />
+                    </section>
+
+
+                    <section id="phong-to-chuc-can-bo" class="content-section" data-aos="fade-up" data-aos-duration="1000">
+                        <h2>Phòng Tổ chức cán bộ</h2>
+
+                        <div class="content-list">
+                            <p>
+                                Phòng Tổ chức cán bộ là đơn vị chức năng chịu sự lãnh đạo trực tiếp của Giám đốc Bệnh viện, có vai trò tham mưu về công tác tổ chức cán bộ, bảo vệ chính trị nội bộ và thực hiện các chế độ chính sách đối với người lao động.
+                            </p>
+                            <p>
+                                Với phương châm "Công tâm - Minh bạch - Hiệu quả", phòng luôn nỗ lực trong việc xây dựng đề án vị trí việc làm, quy hoạch và đào tạo cán bộ, quản lý hồ sơ nhân sự một cách khoa học. Phòng đảm bảo thực hiện đầy đủ, kịp thời các chế độ tiền lương, bảo hiểm xã hội, khen thưởng và kỷ luật theo đúng quy định của pháp luật, giúp nhân viên yên tâm công tác.
+                            </p>
+                            <p>
+                                Ngoài ra, phòng còn phối hợp với các đoàn thể tổ chức các phong trào thi đua, xây dựng văn hóa công sở, góp phần xây dựng đội ngũ nhân lực chất lượng cao, đáp ứng yêu cầu phát triển ngày càng cao của Bệnh viện trong thời kỳ mới.
+                            </p>
+                        </div>
+
+                        <img src="~/asset/banner_02.jpg" class="img-fluid room-image" alt="Phòng Tổ chức cán bộ" />
+                        <hr class="my-5" />
+                    </section>
+
+
+                    <section id="phong-tai-chinh-ke-toan" class="content-section" data-aos="fade-up" data-aos-duration="1000">
+                        <h2>Phòng Tài chính kế toán</h2>
+
+                        <div class="content-list">
+                            <p>
+                                Phòng Tài chính kế toán chịu trách nhiệm trước Giám đốc về toàn bộ hoạt động tài chính của Bệnh viện. Phòng có chức năng quản lý các nguồn thu, các khoản chi, xây dựng dự toán ngân sách hàng năm và tổ chức thực hiện công tác kế toán theo đúng quy định của Nhà nước.
+                            </p>
+                            <p>
+                                Chúng tôi cam kết đảm bảo tính chính xác, trung thực và kịp thời trong các báo cáo tài chính. Thực hiện kiểm tra, giám sát chặt chẽ các khoản thu chi, chống lãng phí và tham ô. Đồng thời, tham mưu cho Ban Giám đốc các giải pháp tài chính linh hoạt nhằm nâng cao đời sống cho cán bộ nhân viên.
+                            </p>
+                            <p>
+                                Phòng cũng đóng vai trò then chốt trong việc cân đối nguồn lực tài chính để đầu tư phát triển cơ sở hạ tầng, mua sắm trang thiết bị y tế hiện đại, góp phần nâng cao chất lượng dịch vụ khám chữa bệnh của Bệnh viện.
+                            </p>
+                        </div>
+
+                        <img src="~/asset/banner_03.jpg" class="img-fluid room-image" alt="Phòng Tài chính kế toán" />
+                        <hr class="my-5" />
+                    </section>
+
+
+                    <section id="phong-hanh-chinh-quan-tri" class="content-section" data-aos="fade-up" data-aos-duration="1000">
+                        <h2>Phòng Hành chính quản trị</h2>
+
+                        <div class="content-list">
+                            <p>
+                                Phòng Hành chính quản trị là "hậu phương vững chắc", đầu mối cung cấp hậu cần, đảm bảo cơ sở vật chất, trang thiết bị thông dụng, điện nước, vận chuyển và an ninh trật tự cho toàn Bệnh viện.
+                            </p>
+                            <p>
+                                Nhiệm vụ hàng ngày bao gồm: quản lý và sửa chữa tài sản, đảm bảo hệ thống điện nước, thang máy hoạt động ổn định 24/7; quản lý đội xe cấp cứu và vận chuyển; đảm bảo vệ sinh cảnh quan môi trường xanh - sạch - đẹp. Phòng cũng chịu trách nhiệm về công tác văn thư, lưu trữ, lễ tân và tổ chức chu đáo các hội nghị, sự kiện của Bệnh viện.
+                            </p>
+                            <p>
+                                Đội ngũ nhân viên kỹ thuật, bảo vệ, lái xe của phòng luôn sẵn sàng trực chiến để xử lý nhanh nhất các sự cố, góp phần đảm bảo hoạt động khám chữa bệnh diễn ra thông suốt và an toàn.
+                            </p>
+                        </div>
+
+                        <img src="~/asset/banner_04.jpg" class="img-fluid room-image" alt="Phòng Hành chính quản trị" />
+                        <hr class="my-5" />
+                    </section>
+
+
+                    <section id="phong-dieu-duong" class="content-section" data-aos="fade-up" data-aos-duration="1000">
+                        <h2>Phòng Điều dưỡng</h2>
+
+                        <div class="content-list">
+                            <p>
+                                Phòng Điều dưỡng chịu trách nhiệm tổ chức, chỉ đạo và giám sát công tác chăm sóc người bệnh toàn diện trong Bệnh viện. Chúng tôi xây dựng các quy trình kỹ thuật chăm sóc, quy định về y đức và giao tiếp ứng xử chuẩn mực cho đội ngũ điều dưỡng, hộ sinh, kỹ thuật viên.
+                            </p>
+                            <p>
+                                Với phương châm "Thân thiện - Tận tụy - Chuyên nghiệp", định kỳ hàng tháng, phòng tổ chức các buổi bình phiếu chăm sóc, kiểm tra tay nghề để không ngừng nâng cao năng lực chuyên môn. Chúng tôi luôn tâm niệm người điều dưỡng là người gần gũi nhất với bệnh nhân.
+                            </p>
+                            <p>
+                                Sự tận tâm, ân cần và chuyên nghiệp của đội ngũ điều dưỡng chính là liều thuốc tinh thần quý giá, giúp người bệnh yên tâm điều trị và mau chóng hồi phục sức khỏe.
+                            </p>
+                        </div>
+
+                        <img src="~/asset/banner_05.jpg" class="img-fluid room-image" alt="Phòng Điều dưỡng" />
+                        <hr class="my-5" />
+                    </section>
+
+
+                    <section id="phong-cong-nghe-thong-tin" class="content-section" data-aos="fade-up" data-aos-duration="1000">
+                        <h2>Phòng Công nghệ thông tin</h2>
+
+                        <div class="content-list">
+                            <p>
+                                Trong kỷ nguyên số 4.0, Phòng Công nghệ thông tin đóng vai trò then chốt trong việc quản lý vận hành hệ thống phần mềm quản lý bệnh viện (HIS), hệ thống lưu trữ hình ảnh (PACS), và các ứng dụng y tế thông minh khác.
+                            </p>
+                            <p>
+                                Nhiệm vụ cốt lõi của phòng là đảm bảo an toàn, an ninh thông tin dữ liệu bệnh nhân; duy trì hạ tầng mạng, máy chủ hoạt động ổn định, không gián đoạn. Chúng tôi liên tục cập nhật và triển khai các giải pháp chuyển đổi số tiên tiến như: Đăng ký khám bệnh online, Bệnh án điện tử, Thanh toán viện phí không dùng tiền mặt.
+                            </p>
+                            <p>
+                                Mục tiêu hướng tới là xây dựng mô hình "Bệnh viện thông minh", giúp giảm thiểu thủ tục hành chính, tiết kiệm thời gian chờ đợi và mang lại trải nghiệm tiện ích nhất cho người dân.
+                            </p>
+                        </div>
+
+                        <img src="~/asset/banner_01.jpg" class="img-fluid room-image" alt="Phòng Công nghệ thông tin" />
+                        <hr class="my-5" />
+                    </section>
+
+
+                    <section id="phong-quan-ly-chat-luong" class="content-section" data-aos="fade-up" data-aos-duration="1000">
+                        <h2>Phòng Quản lý chất lượng</h2>
+
+                        <div class="content-list">
+                            <p>
+                                Phòng Quản lý chất lượng là đơn vị đầu mối triển khai và giám sát việc thực hiện Bộ tiêu chí chất lượng bệnh viện do Bộ Y tế ban hành. Mục tiêu của chúng tôi là không ngừng nâng cao chất lượng dịch vụ y tế hướng tới sự hài lòng của người bệnh.
+                            </p>
+                            <p>
+                                Nhiệm vụ của phòng bao gồm xây dựng mạng lưới quản lý chất lượng, chuẩn hóa các quy trình chuyên môn, giám sát sự tuân thủ phác đồ điều trị. Chúng tôi thường xuyên thực hiện các khảo sát hài lòng người bệnh và nhân viên y tế để lắng nghe ý kiến đóng góp, từ đó tìm ra những điểm cần cải thiện.
+                            </p>
+                            <p>
+                                Phòng cũng chịu trách nhiệm báo cáo sự cố y khoa, phân tích nguyên nhân gốc rễ và đề xuất các giải pháp an toàn người bệnh, xây dựng môi trường bệnh viện an toàn, chất lượng và văn minh.
+                            </p>
+                        </div>
+
+                        <img src="~/asset/banner_04.jpg" class="img-fluid room-image" alt="Phòng Quản lý chất lượng" />
+                        <hr class="my-5" />
+                    </section>
+
+
+                    <section id="phong-vat-tu-thiet-bi-y-te" class="content-section" data-aos="fade-up" data-aos-duration="1000">
+                        <h2>Phòng Vật tư - Thiết bị y tế</h2>
+
+                        <div class="content-list">
+                            <p>
+                                Phòng Vật tư - Thiết bị y tế có nhiệm vụ lập kế hoạch, tổ chức đấu thầu, mua sắm, quản lý và bảo dưỡng toàn bộ trang thiết bị y tế phục vụ công tác khám chữa bệnh của Bệnh viện.
+                            </p>
+                            <p>
+                                Chúng tôi đảm bảo cung ứng đầy đủ, kịp thời các loại vật tư tiêu hao, hóa chất xét nghiệm đạt chuẩn chất lượng. Thường xuyên kiểm tra, bảo trì định kỳ các máy móc hiện đại như máy CT-Scanner, MRI, máy thở, máy chạy thận nhân tạo... để đảm bảo độ chính xác và an toàn tuyệt đối cho người bệnh khi sử dụng.
+                            </p>
+                            <p>
+                                Đội ngũ kỹ sư của phòng luôn túc trực để xử lý các sự cố kỹ thuật phát sinh, đảm bảo hệ thống máy móc luôn trong trạng thái sẵn sàng hoạt động tốt nhất.
+                            </p>
+                        </div>
+
+                        <img src="~/asset/banner_02.jpg" class="img-fluid room-image" alt="Phòng Vật tư - Thiết bị y tế" />
+                        <hr class="my-5" />
+                    </section>
+
+
+                    <section id="phong-cong-tac-xa-hoi" class="content-section" data-aos="fade-up" data-aos-duration="1000">
+                        <h2>Phòng Công tác xã hội</h2>
+
+                        <div class="content-list">
+                            <p>
+                                Phòng Công tác xã hội là cầu nối yêu thương giữa Bệnh viện, các nhà hảo tâm và những bệnh nhân có hoàn cảnh khó khăn. Sứ mệnh của chúng tôi là "Hỗ trợ - Chia sẻ - Đồng hành".
+                            </p>
+                            <p>
+                                Nhiệm vụ chính bao gồm đón tiếp, chỉ dẫn, cung cấp thông tin và hỗ trợ người bệnh trong quá trình khám chữa bệnh. Hoạt động nổi bật của phòng là vận động tài trợ để hỗ trợ viện phí cho bệnh nhân nghèo, tổ chức các chương trình thiện nguyện như "Bữa cơm tình thương", "Chuyến xe 0 đồng", mang lại niềm vui và hy vọng cho người bệnh.
+                            </p>
+                            <p>
+                                Bên cạnh đó, phòng còn hỗ trợ tư vấn tâm lý cho người bệnh và thân nhân, giúp họ giải tỏa lo âu, yên tâm điều trị và hợp tác tốt với nhân viên y tế.
+                            </p>
+                        </div>
+
+                        <img src="~/asset/banner_03.jpg" class="img-fluid room-image" alt="Phòng Công tác xã hội" />
+                        <hr class="my-5" />
+                    </section>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>AOS.init();</script>
+}

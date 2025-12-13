@@ -1,0 +1,151 @@
+.lv1 {
+  margin-left: 3rem;
+}
+
+/* Khối danh mục (Viên chức, Lao động) */
+.recruitment-categories {
+  margin-bottom: 3rem;
+}
+
+.category-vienchuc div {
+  font-size: 1.7rem;
+  font-weight: 600;
+  background-color: var(--main);
+  color: var(--white);
+  padding: 1rem 3rem;
+  margin-bottom: 3rem;
+}
+
+.category-vienchuc a {
+  display: block;
+  color: var(--gray-dark) !important;
+  font-size: 1.6rem;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.category-vienchuc a:hover {
+  color: var(--main) !important;
+  text-decoration: underline;
+}
+.recruitment-categories {
+  margin-bottom: 0 !important;
+}
+/* Khung chua item tuyen dung */
+.content-section {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+.job-item {
+  background-color: var(--white);
+  border-bottom: 1px solid var(--gray);
+  padding: 2rem 8rem;
+}
+
+.content-section .left-content .content-group h3 {
+  font-size: 2rem !important;
+  font-weight: 700;
+  margin: 0;
+  display: inline-block;
+}
+
+/* Nhom content */
+.job-item-details {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 4rem;
+  font-size: 1.4rem;
+}
+
+.job-item-details li {
+  color: var(--gray-dark);
+  margin-bottom: 0.8rem;
+}
+.job-item-details li i {
+  color: var(--main);
+  width: 25px;
+  text-align: center;
+  margin-right: 0.5rem;
+}
+.job-item-details li strong {
+  color: var(--dark);
+}
+
+.job-item-footer {
+  margin-top: 1rem;
+  margin-left: 8rem;
+}
+
+.view-job-detail {
+  font-size: 1.5rem;
+  color: var(--main);
+  text-decoration: none;
+}
+.view-job-detail:hover {
+  color: var(--main);
+  text-decoration: underline;
+}
+
+/* Nhom buttton */
+.job-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+.job-buttons .btn {
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: 0.8rem !important;
+  border-radius: 5px;
+}
+.btn-apply {
+  background-color: var(--main);
+  border-color: var(--main);
+  color: var(--white);
+}
+.btn-apply:hover {
+  background-color: transparent;
+  border-color: var(--main);
+  color: var(--main);
+}
+.btn-register {
+  background-color: var(--danger);
+  border-color: var(--danger);
+  color: var(--white);
+}
+.btn-register:hover {
+  background-color: transparent;
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* Popup */
+.modal-dialog {
+  /* border: 1px solid red !important; */
+}
+
+.modal-content {
+  min-height: 70vh;
+}
+
+.modal-title {
+  font-weight: 600 !important;
+}
+
+.job-modal-body h5 {
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: var(--black);
+  margin-top: 1.5rem;
+}
+
+.job-modal-body div {
+  font-size: 1.5rem;
+  line-height: 1.7;
+}
+
+.btn-secondary {
+  font-size: 1.5rem;
+}

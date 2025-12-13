@@ -1,0 +1,111 @@
+﻿@model WebAppHealth.Areas.Admin.Models.MedicineViewModel
+@{
+    ViewBag.Title = "Thêm thuốc mới";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Thông tin Thuốc & Dược phẩm</h6>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("Create", "Medicines", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+            <div class="row">
+                <div class="col-md-6 border-end">
+                    <h5 class="text-secondary mb-3">Thông tin định danh</h5>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Name, new { @class = "form-label fw-bold" })
+                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "VD: Panadol Extra" })
+                        @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Price, new { @class = "form-label fw-bold" })
+                            @Html.TextBoxFor(m => m.Price, new { @class = "form-control", type = "number" })
+                            @Html.ValidationMessageFor(m => m.Price, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Unit, new { @class = "form-label fw-bold" })
+                            @Html.TextBoxFor(m => m.Unit, new { @class = "form-control", placeholder = "VD: Hộp / Viên" })
+                            @Html.ValidationMessageFor(m => m.Unit, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Packaging, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Packaging, new { @class = "form-control", placeholder = "VD: Hộp 10 vỉ x 10 viên" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.ImageFile, new { @class = "form-label fw-bold" })
+                        <input type="file" name="ImageFile" class="form-control" accept="image/*" onchange="previewImage(this)" />
+                        <div class="mt-2">
+                            <img id="imgPreview" src="#" style="max-width: 150px; display: none;" class="border rounded" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <h5 class="text-secondary mb-3">Thông tin dược lý</h5>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.ActiveIngredient, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.ActiveIngredient, new { @class = "form-control", placeholder = "VD: Paracetamol" })
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.Concentration, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Concentration, new { @class = "form-control", placeholder = "VD: 500mg" })
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            @Html.LabelFor(m => m.DosageForm, new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.DosageForm, new { @class = "form-control", placeholder = "VD: Viên nén bao phim" })
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.Manufacturer, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Manufacturer, new { @class = "form-control" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.DrugGroup, new { @class = "form-label" })
+                        @Html.DropDownListFor(m => m.DrugGroup, new SelectList(new[] { "Kháng sinh", "Giảm đau - Hạ sốt", "Vitamin", "Tiêu hóa", "Tim mạch", "Khác" }), "--- Chọn nhóm ---", new { @class = "form-select" })
+                    </div>
+
+                    <div class="mb-3">
+                        @Html.LabelFor(m => m.InstructionDoc, new { @class = "form-label" })
+                        <input type="file" name="InstructionDoc" class="form-control" accept=".pdf,.doc,.docx" />
+                        <small class="text-muted">Tải lên file HDSD nếu có (PDF/Word).</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                <a href="@Url.Action("Index")" class="btn btn-secondary">Hủy bỏ</a>
+                <button type="submit" class="btn btn-success px-4"><i class="fas fa-save"></i> Lưu thuốc</button>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imgPreview').attr('src', e.target.result).show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}

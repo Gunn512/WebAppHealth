@@ -1,0 +1,98 @@
+﻿@using WebAppHealth.Models
+@{
+    ViewBag.Title = "Liên hệ";
+    Layout = "~/Views/Shared/_HealthLayout.cshtml";
+
+    var breadcrumbs = new List<BreadcrumbItem>
+{
+        new BreadcrumbItem { Title = "Liên hệ - Hỏi đáp", Url = "#" },
+        new BreadcrumbItem { Title = "Liên hệ", Url = "" }
+    };
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/intro.css" />
+    <link rel="stylesheet" href="~/Content/css/contact.css" />
+}
+
+<section class="banner-title">
+    <div class="container">
+        @Html.Partial("_SectionTitle", "THÔNG TIN LIÊN HỆ")
+    </div>
+</section>
+
+<main class="page-container">
+    <div class="container">
+
+        @Html.Partial("_Breadcrumb", breadcrumbs)
+
+        <div class="mt-5 mb-5">
+            <section class="contact-info-section mb-5">
+                <div class="row text-center">
+
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="contact-box">
+                            <div class="icon-box">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <h3>Điện Thoại</h3>
+                            <p>@WebAppHealth.Models.ConfigHelper.Get("Telephone_1")</p>
+                            <p class="text-muted small">(Đường dây nóng) @WebAppHealth.Models.ConfigHelper.Get("Hotline")</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="contact-box">
+                            <div class="icon-box">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <h3>Địa Chỉ</h3>
+                            <p>@WebAppHealth.Models.ConfigHelper.Get("Address")</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="contact-box">
+                            <div class="icon-box">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h3>Email</h3>
+                            <p>@WebAppHealth.Models.ConfigHelper.Get("Email")</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6 mb-4">
+                        <div class="contact-box">
+                            <div class="icon-box">
+                                <i class="fas fa-fax"></i>
+                            </div>
+                            <h3>Fax</h3>
+                            <p>@WebAppHealth.Models.ConfigHelper.Get("Fax")</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <hr class="my-5" style="opacity: 0.1" />
+
+            <section class="contact-map-section">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <h2 class="section-heading mb-5">Hướng dẫn đường đi</h2>
+                        <div class="map-container border p-1 rounded">
+                            <iframe src="@WebAppHealth.Models.ConfigHelper.Get("MapLink")"
+                                    width="100%"
+                                    height="400"
+                                    style="border: 0"
+                                    allowfullscreen=""
+                                    loading="lazy"
+                                    referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>

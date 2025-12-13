@@ -1,0 +1,169 @@
+﻿@using WebAppHealth.Models
+@model NewsViewModel
+
+@{
+    ViewBag.Title = "Sự kiện";
+    Layout = "~/Views/Shared/_HealthLayout.cshtml";
+
+    var breadcrumbs = new List<BreadcrumbItem>
+{
+        new BreadcrumbItem { Title = "Tin tức", Url = "" },
+        new BreadcrumbItem { Title = "Sự kiện", Url = "" }
+    };
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/css/intro.css" />
+    <link rel="stylesheet" href="~/Content/css/medical-news.css" />
+}
+
+<!--============================== BANNER TIEU DE ================================-->
+<section class="banner-title">
+    <div class="container">
+        @Html.Partial("_SectionTitle", "SỰ KIỆN")
+    </div>
+</section>
+
+<!-- ============================ MAIN ==================================== -->
+<section class="main-news page-container news-page-container py-5">
+    <div class="container">
+        @Html.Partial("_Breadcrumb", breadcrumbs)
+
+        <div class="row">
+            <!-- CỘT TRÁI -->
+            <div class="col-lg-8">
+
+                <!-- FEATURED -->
+                @if (Model.FeaturedArticle != null)
+                {
+                    <section id="featured-article" class="content-section">
+                        <a href="@Url.Action("ArticleDetail", "News", new { id = Model.FeaturedArticle.NewsID })"
+                           class="featured-article-link">
+
+                            <img src="@Url.Content("~/asset/" + Model.FeaturedArticle.Image)"
+                                 class="img-fluid rounded shadow-sm mb-3"
+                                 alt="@Model.FeaturedArticle.Title"
+                                 onerror="this.src='@Url.Content("~/asset/default-news.jpg")'" />
+
+                            <h2>@Model.FeaturedArticle.Title.ToUpper()</h2>
+
+                            <div class="tag-lable">
+                                <span class="badge-main">
+                                    @(Model.FeaturedArticle.NewsCategory?.CategoryName ?? "Sự kiện")
+                                </span>
+                                <div class="text-muted mb-2">
+                                    <i class="fa-regular fa-calendar-days" aria-hidden="true"></i>
+                                    <span class="date ms-1">
+                                        @(Model.FeaturedArticle.PublishDate.HasValue ? Model.FeaturedArticle.PublishDate.Value.ToString("dd-MM-yyyy") : "")
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    </section>
+                }
+
+                <!-- DANH SÁCH TIN  -->
+                <section id="news-list" class="content-section">
+                    <h2 class="mb-4">Tin tức chung</h2>
+                    <div class="row g-5">
+                        @if (Model.GeneralNewsList != null && Model.GeneralNewsList.Any())
+                        {
+                            foreach (var news in Model.GeneralNewsList)
+                            {
+                                <div class="col-lg-6 mb-4" data-aos="fade-up" data-aos-duration="1000">
+                                    <a href="@Url.Action("ArticleDetail", "News", new { id = news.NewsID })"
+                                       class="news-card-link">
+                                        <div class="card news-card">
+                                            <div class="news-card-img-wrapper">
+                                                <img src="@Url.Content("~/asset/" + news.Image)"
+                                                     alt="@news.Title"
+                                                     onerror="this.src='@Url.Content("~/asset/default-news.jpg")'" />
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">@news.Title</h5>
+                                                <div class="tag-lable">
+                                                    <span class="badge-main">
+                                                        @(news.NewsCategory?.CategoryName ?? "Sự kiện")
+                                                    </span>
+                                                    <div class="text-muted mb-2">
+                                                        <i class="fa-regular fa-calendar-days" aria-hidden="true"></i>
+                                                        <span class="date ms-1">
+                                                            @(news.PublishDate.HasValue ? news.PublishDate.Value.ToString("dd-MM-yyyy") : "")
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p>Đang cập nhật tin tức...</p>
+                        }
+                    </div>
+                </section>
+            </div>
+
+            <!-- SIDEBAR -->
+            <aside class="col-lg-4 mt-5 mt-lg-0 sidebar">
+                <div class="widget">
+                    <div class="sidebar-widget-group news-sidebar-widget-group mb-4">
+                        <h3>Tin nổi bật</h3>
+                        <ul class="list-group list-group-flush">
+                            @if (Model.SidebarNewsList != null)
+                            {
+                                foreach (var item in Model.SidebarNewsList)
+                                {
+                                    <li class="list-group-item">
+                                        <a href="@Url.Action("ArticleDetail", "News", new { id = item.NewsID })">
+                                            @item.Title
+                                        </a>
+                                        <div class="tag-lable">
+                                            <span class="badge-main">
+                                                @(item.NewsCategory?.CategoryName ?? "Sự kiện")
+                                            </span>
+                                            <div class="text-muted mb-2">
+                                                <i class="fa-regular fa-calendar-days" aria-hidden="true"></i>
+                                                <span class="date ms-1">
+                                                    @(item.PublishDate.HasValue ? item.PublishDate.Value.ToString("dd-MM-yyyy") : "")
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- PAGINATION -->
+            @if (Model.TotalPages > 1)
+            {
+                <nav aria-label="Phân trang tin tức" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <!-- Previous -->
+                        <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("Events", new { page = Model.CurrentPage - 1 })">&laquo;</a>
+                        </li>
+
+                        <!-- Render các số trang -->
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Events", new { page = i })">@i</a>
+                            </li>
+                        }
+
+                        <!-- Next -->
+                        <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("Events", new { page = Model.CurrentPage + 1 })">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+        </div>
+    </div>
+</section>

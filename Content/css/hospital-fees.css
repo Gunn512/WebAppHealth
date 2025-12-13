@@ -1,0 +1,40 @@
+.pdf-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 5rem;
+  margin-bottom: 3.5rem;
+}
+
+.pdf-tab-button {
+  background-color: var(--white);
+  color: var(--main);
+  border: 2px solid var(--main);
+  border-radius: 50px;
+  padding: 0.8rem 1.8rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.pdf-tab-button.active,
+.pdf-tab-button:hover {
+  background-color: var(--main);
+  color: var(--white);
+  border-color: var(--main);
+}
+
+.pdf-viewer-container {
+  width: 100%;
+  height: 120vh;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.pdf-viewer-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
